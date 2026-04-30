@@ -1,0 +1,6 @@
+minitron*
+engine*
+.claude
+__pycache__/
+*.pyc
+figures/
