@@ -4,7 +4,7 @@ from __future__ import annotations
 import pandas as pd
 
 from src.data_store import StoreConfig, list_local_symbols, build_close_panel
-from src.universe import compute_universe_at_time
+from src.universe import compute_universe_at_time, filter_top_n_by_liquidity
 from src.pair_selection import PairConfig, score_pairs
 
 
@@ -31,6 +31,19 @@ def main():
     train_days = 180
     train_start = (t0 - pd.Timedelta(days=train_days)).floor(cfg.interval)
     train_end = t0.floor(cfg.interval)
+
+    # Liquidity filter: keep top N by mean USDT volume over the training window.
+    # Computed only on training data, so no look-ahead into the test period.
+    liquid_top_n = 50
+    universe = filter_top_n_by_liquidity(
+        cfg=cfg,
+        symbols=universe,
+        start=train_start,
+        end_exclusive=train_end,
+        top_n=liquid_top_n,
+        min_coverage=0.80,
+    )
+    print(f"After liquidity filter (top {liquid_top_n} by mean USDT vol): {len(universe)}")
 
     print(f"Building training close panel [{train_start}, {train_end})...")
     close_panel = build_close_panel(
