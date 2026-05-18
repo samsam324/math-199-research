@@ -4,3 +4,4 @@ engine*
 __pycache__/
 *.pyc
 figures/
+minitron
