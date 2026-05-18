@@ -88,14 +88,14 @@ def trading_metrics(test: pd.DataFrame, pred_class: np.ndarray) -> Dict[str, flo
     if len(pnl) == 0:
         return {}
     pnl_sd = float(np.std(pnl, ddof=1)) if len(pnl) > 1 else 0.0
-    sharpe = float(np.sqrt(365.0) * np.mean(pnl) / pnl_sd) if pnl_sd > 0 else 0.0
+    pnl_mean_to_std = float(np.mean(pnl) / pnl_sd) if pnl_sd > 0 else 0.0
     equity = np.cumsum(pnl)
     drawdown = equity - np.maximum.accumulate(equity) if len(equity) else np.array([0.0])
     return {
         "trades": int(active.sum()),
         "mean_pnl": float(np.mean(pnl)),
         "total_pnl": float(np.sum(pnl)),
-        "sharpe_like": sharpe,
+        "pnl_mean_to_std": pnl_mean_to_std,
         "max_drawdown": float(drawdown.min()),
         "win_rate": float((pnl[active] > 0).mean()) if active.any() else 0.0,
     }

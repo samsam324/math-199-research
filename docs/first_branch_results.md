@@ -26,25 +26,33 @@ model training, and common evaluation.
 
 ## Metrics
 
-The reported PnL metrics are in log-spread units and are intended for relative
-model comparison, not as a transaction-cost-complete trading backtest.
+The reported PnL metrics are in log-spread units and are intended for rough
+relative model comparison only. They are not portfolio returns, and they are not
+a transaction-cost-complete trading backtest. The original run reported a
+`sharpe_like` column; that label was too strong because the samples are
+overlapping 24-hour spread changes rather than independent portfolio returns.
 
-| Model | Accuracy | Macro F1 | Trades | Total PnL | Sharpe-like | Max Drawdown | Win Rate |
+| Model | Accuracy | Macro F1 | Trades | Total PnL | PnL Mean/Std | Max Drawdown | Win Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| zscore_rule | 0.2060 | 0.1821 | 4019 | 12.1627 | 1.3637 | -4.1925 | 0.5673 |
-| sklearn_hist_gradient_boosting | 0.4856 | 0.3186 | 4996 | 5.1814 | 1.2670 | -5.4414 | 0.5222 |
-| lstm | 0.5152 | 0.3476 | 5000 | 10.5653 | 2.6012 | -4.6387 | 0.5474 |
-| transformer | 0.5708 | 0.3930 | 5000 | 18.8906 | 4.7487 | -2.9760 | 0.6048 |
+| zscore_rule | 0.2060 | 0.1821 | 4019 | 12.1627 | 0.0714 | -4.1925 | 0.5673 |
+| sklearn_hist_gradient_boosting | 0.4856 | 0.3186 | 4996 | 5.1814 | 0.0663 | -5.4414 | 0.5222 |
+| lstm | 0.5152 | 0.3476 | 5000 | 10.5653 | 0.1362 | -4.6387 | 0.5474 |
+| transformer | 0.5708 | 0.3930 | 5000 | 18.8906 | 0.2485 | -2.9760 | 0.6048 |
 
 ## Interpretation
 
 On this run, the transformer produced the strongest classification and
-spread-signal metrics, followed by the LSTM. The classical z-score rule had weak
-classification accuracy but still produced positive spread-signal PnL in this
-comparison. The gradient-boosting baseline was directionally useful but weaker
-than the sequence models on this dataset.
+spread-signal comparison metrics, followed by the LSTM. The classical z-score
+rule had weak classification accuracy but still produced positive spread-signal
+PnL in this comparison. The gradient-boosting baseline was directionally useful
+but weaker than the sequence models on this dataset.
 
 The main caveat is that the strict cointegration screen did not find passing
 pairs, so these results should be treated as a pipeline/modeling baseline over
 correlated liquid pairs rather than evidence of true cointegrated statistical
 arbitrage.
+
+Before making any trading-performance claim, the evaluation needs a proper
+portfolio backtest: non-overlapping or correctly marked-to-market positions,
+capital normalization, transaction costs, slippage, per-leg returns, turnover,
+and a Sharpe ratio computed from an actual return stream.
