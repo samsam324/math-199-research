@@ -1,0 +1,121 @@
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from src.data_store import StoreConfig, build_close_panel, list_local_symbols, load_symbol
+from src.features import FeatureConfig, build_feature_store, load_ohlcv_panel
+from src.ml_dataset import DatasetConfig, add_walk_forward_splits, build_samples_from_features, save_dataset
+from src.modeling import TrainingConfig, baseline_zscore_rule, combine_results, train_lstm, train_transformer, train_xgboost_baseline
+from src.pair_selection import PairConfig, rank_pairs_by_correlation, score_pairs
+from src.universe import compute_universe_at_time, filter_top_n_by_liquidity
+
+
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="Run Binance statistical-arbitrage branch: features, ML dataset, models, evaluation.")
+    p.add_argument("--data-dir", default="data")
+    p.add_argument("--out-dir", default="artifacts/first_branch")
+    p.add_argument("--t0", default="2026-01-01T00:00:00Z")
+    p.add_argument("--train-days", type=int, default=180)
+    p.add_argument("--liquid-top-n", type=int, default=50)
+    p.add_argument("--top-pairs", type=int, default=20)
+    p.add_argument("--max-pairs-to-test", type=int, default=6000)
+    p.add_argument("--window", type=int, default=168)
+    p.add_argument("--horizon", type=int, default=24)
+    p.add_argument("--max-train-samples", type=int, default=12000)
+    p.add_argument("--max-test-samples", type=int, default=5000)
+    p.add_argument("--dl-epochs", type=int, default=5)
+    p.add_argument("--skip-deep", action="store_true", help="Run feature, dataset, XGBoost/fallback, and z-score baseline only.")
+    return p.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    cfg = StoreConfig(interval="1h", data_dir=args.data_dir)
+    local_symbols = list_local_symbols(cfg)
+    if not local_symbols:
+        raise RuntimeError("No local data found. Run: python3 store_data.py")
+
+    t0 = pd.Timestamp(args.t0)
+    train_start = (t0 - pd.Timedelta(days=args.train_days)).floor(cfg.interval)
+    train_end = t0.floor(cfg.interval)
+    btc = load_symbol(cfg, "BTCUSDT", columns=["close"])
+    if btc is None or btc.empty:
+        raise RuntimeError("BTCUSDT is required for market-context features.")
+    test_end = min(btc.index.max() + pd.Timedelta(hours=1), train_end + pd.Timedelta(days=60))
+
+    print(f"Local symbols: {len(local_symbols)}", flush=True)
+    universe = compute_universe_at_time(cfg, local_symbols, t0)
+    print(f"Universe at {t0}: {len(universe)}", flush=True)
+
+    liquid = filter_top_n_by_liquidity(cfg, universe, train_start, train_end, top_n=args.liquid_top_n, min_coverage=0.80)
+    print(f"Liquidity-filtered universe: {len(liquid)}", flush=True)
+    (out_dir / "liquid_universe.json").write_text(json.dumps(liquid, indent=2), encoding="utf-8")
+
+    close_panel = build_close_panel(cfg, liquid, train_start, train_end, min_symbol_coverage=0.80)
+    print(f"Training close panel: {close_panel.shape}", flush=True)
+    if close_panel.shape[1] < 2:
+        raise RuntimeError("Not enough symbols after liquidity and coverage filtering.")
+
+    pcfg = PairConfig(max_pairs_to_test=args.max_pairs_to_test, min_obs=1200)
+    pairs = score_pairs(close_panel, pcfg)
+    if pairs.empty:
+        print("No pairs passed strict filters; using correlation fallback for downstream pipeline.", flush=True)
+        pairs = rank_pairs_by_correlation(close_panel, top_n=max(args.top_pairs, 20), min_corr=0.20)
+    else:
+        pairs["selection_method"] = "strict_cointegration"
+    if pairs.empty:
+        raise RuntimeError("No pairs available after strict and fallback selection.")
+    pairs_out = out_dir / "selected_pairs.parquet"
+    pairs.to_parquet(pairs_out, engine="pyarrow", index=False)
+    print(f"Selected pairs: {len(pairs)}; saved {pairs_out}", flush=True)
+    print(pairs.head(args.top_pairs).to_string(index=False), flush=True)
+
+    panels = load_ohlcv_panel(cfg, sorted(set(liquid + ["BTCUSDT"])), train_start, test_end, min_symbol_coverage=0.75)
+    fcfg = FeatureConfig(target_horizon=args.horizon)
+    features_dir = out_dir / "features"
+    features = build_feature_store(panels["close"], panels["volume_usdt"], pairs, features_dir, fcfg=fcfg, top_pairs=args.top_pairs)
+    if features.empty:
+        raise RuntimeError("Feature store is empty.")
+    print(f"Feature rows: {len(features)}; pairs: {features['pair'].nunique()}", flush=True)
+
+    dcfg = DatasetConfig(window=args.window, horizon=args.horizon)
+    samples, sequences, _ = build_samples_from_features(features, dcfg)
+    samples = add_walk_forward_splits(samples, dcfg)
+    dataset_dir = out_dir / "dataset"
+    save_dataset(samples, sequences, dataset_dir, dcfg)
+    if samples.empty:
+        raise RuntimeError("ML dataset is empty.")
+    print(f"Dataset samples: {len(samples)}; sequences: {sequences.shape}; saved {dataset_dir}", flush=True)
+
+    tcfg = TrainingConfig(
+        max_train_samples=args.max_train_samples,
+        max_test_samples=args.max_test_samples,
+        dl_epochs=args.dl_epochs,
+    )
+    results = [baseline_zscore_rule(samples), train_xgboost_baseline(samples, tcfg)]
+    if not args.skip_deep:
+        results.append(train_lstm(samples, sequences, tcfg))
+        results.append(train_transformer(samples, sequences, tcfg))
+
+    preds, metrics = combine_results(results)
+    preds.to_parquet(out_dir / "predictions.parquet", engine="pyarrow", index=False)
+    metrics.to_csv(out_dir / "metrics.csv", index=False)
+    print("Metrics:", flush=True)
+    print(metrics.to_string(index=False), flush=True)
+    print(f"Saved outputs under {out_dir}", flush=True)
+
+
+if __name__ == "__main__":
+    main()

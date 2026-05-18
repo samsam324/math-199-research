@@ -4,3 +4,6 @@ requests
 pyarrow
 statsmodels
 tqdm
+scikit-learn
+xgboost
+torch

@@ -4,3 +4,5 @@ engine*
 __pycache__/
 *.pyc
 figures/
+artifacts/
+.venv/

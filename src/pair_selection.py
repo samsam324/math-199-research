@@ -20,6 +20,8 @@ class PairConfig:
 
     # Stationarity filter
     max_adf_pvalue: float = 0.05
+    adf_maxlag: int = 24
+    adf_autolag: str | None = None
 
     # Mean reversion band preferences
     half_life_min_hours: float = 4.0
@@ -158,7 +160,12 @@ def score_pairs(close_panel: pd.DataFrame, pcfg: PairConfig) -> pd.DataFrame:
 
         # ADF on residual, use autolag for robustness
         try:
-            adf_stat, adf_pvalue, _, _, _, _ = adfuller(resid, regression="c", autolag="AIC")
+            adf_stat, adf_pvalue, _, _, _, _ = adfuller(
+                resid,
+                maxlag=pcfg.adf_maxlag,
+                regression="c",
+                autolag=pcfg.adf_autolag,
+            )
             adf_stat = float(adf_stat)
             adf_pvalue = float(adf_pvalue)
         except Exception:
@@ -242,6 +249,7 @@ def score_pairs(close_panel: pd.DataFrame, pcfg: PairConfig) -> pd.DataFrame:
             "sym_a",
             "sym_b",
             "corr",
+            "alpha",
             "beta_a_on_b",
             "beta_instability",
             "spread_vol",
@@ -251,3 +259,54 @@ def score_pairs(close_panel: pd.DataFrame, pcfg: PairConfig) -> pd.DataFrame:
             "score",
         ]
     ]
+
+
+def rank_pairs_by_correlation(close_panel: pd.DataFrame, top_n: int = 20, min_corr: float = 0.20) -> pd.DataFrame:
+    """
+    Fallback pair selector for running downstream feature/model experiments when
+    the stricter stationarity filters return no pairs on a limited local slice.
+
+    These pairs are not claimed to be cointegrated; they are high-correlation,
+    liquid-universe candidates with static OLS hedge ratios.
+    """
+    if close_panel.empty or close_panel.shape[1] < 2:
+        return pd.DataFrame()
+
+    logp = np.log(close_panel)
+    rets = logp.diff().dropna()
+    corr = rets.corr()
+
+    rows = []
+    for a, b in combinations(close_panel.columns, 2):
+        c = float(corr.loc[a, b])
+        if not np.isfinite(c) or c < min_corr:
+            continue
+        y = logp[a].values
+        x = logp[b].values
+        model = OLS(y, add_constant(x)).fit()
+        alpha = float(model.params[0])
+        beta = float(model.params[1])
+        resid = y - (alpha + beta * x)
+        spread_vol = float(np.std(resid, ddof=1))
+        rows.append(
+            {
+                "pair": f"{a}_{b}",
+                "sym_a": a,
+                "sym_b": b,
+                "corr": c,
+                "alpha": alpha,
+                "beta_a_on_b": beta,
+                "beta_instability": np.nan,
+                "spread_vol": spread_vol,
+                "adf_stat": np.nan,
+                "adf_pvalue": np.nan,
+                "half_life_hours": np.nan,
+                "score": c,
+                "selection_method": "correlation_fallback",
+            }
+        )
+
+    out = pd.DataFrame(rows)
+    if out.empty:
+        return out
+    return out.sort_values("score", ascending=False).head(top_n).reset_index(drop=True)
