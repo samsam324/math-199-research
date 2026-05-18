@@ -14,7 +14,17 @@ if str(ROOT) not in sys.path:
 from src.data_store import StoreConfig, build_close_panel, list_local_symbols, load_symbol
 from src.features import FeatureConfig, build_feature_store, load_ohlcv_panel
 from src.ml_dataset import DatasetConfig, add_walk_forward_splits, build_samples_from_features, save_dataset
-from src.modeling import TrainingConfig, baseline_zscore_rule, combine_results, train_lstm, train_transformer, train_xgboost_baseline
+from src.modeling import (
+    TrainingConfig,
+    baseline_majority_class,
+    baseline_persist_class,
+    baseline_random_stratified,
+    baseline_zscore_rule,
+    combine_results,
+    train_lstm,
+    train_transformer,
+    train_xgboost_baseline,
+)
 from src.pair_selection import PairConfig, rank_pairs_by_correlation, score_pairs
 from src.universe import compute_universe_at_time, filter_top_n_by_liquidity
 
@@ -104,7 +114,13 @@ def main() -> None:
         max_test_samples=args.max_test_samples,
         dl_epochs=args.dl_epochs,
     )
-    results = [baseline_zscore_rule(samples), train_xgboost_baseline(samples, tcfg)]
+    results = [
+        baseline_persist_class(samples, tcfg),
+        baseline_majority_class(samples, tcfg),
+        baseline_random_stratified(samples, tcfg),
+        baseline_zscore_rule(samples, tcfg),
+        train_xgboost_baseline(samples, tcfg),
+    ]
     if not args.skip_deep:
         results.append(train_lstm(samples, sequences, tcfg))
         results.append(train_transformer(samples, sequences, tcfg))

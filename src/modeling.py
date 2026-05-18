@@ -129,6 +129,56 @@ def train_xgboost_baseline(samples: pd.DataFrame, cfg: TrainingConfig = Training
     return pred_df, metrics
 
 
+def _prediction_frame(test: pd.DataFrame, model_name: str, pred: np.ndarray) -> pd.DataFrame:
+    pred_df = test[["sample_id", "pair", "timestamp", "current_spread", "y_regression", "y_class"]].copy()
+    pred_df["model"] = model_name
+    pred_df["pred_class"] = pred.astype(int)
+    return pred_df
+
+
+def _metrics_for_predictions(
+    model_name: str,
+    train: pd.DataFrame,
+    test: pd.DataFrame,
+    pred: np.ndarray,
+) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    y_test = test["y_class"].to_numpy(dtype=int)
+    pred_df = _prediction_frame(test, model_name, pred)
+    metrics = {"model": model_name, "train_samples": int(len(train)), "test_samples": int(len(test))}
+    metrics.update(evaluate_predictions(y_test, pred))
+    metrics.update(trading_metrics(pred_df, pred))
+    return pred_df, metrics
+
+
+def baseline_majority_class(samples: pd.DataFrame, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    train, test = _split_frame(samples)
+    train = _balanced_tail(train, cfg.max_train_samples)
+    test = _balanced_tail(test, cfg.max_test_samples)
+    majority = int(train["y_class"].mode().iloc[0]) if not train.empty else 1
+    pred = np.full(len(test), majority, dtype=int)
+    return _metrics_for_predictions("majority_class", train, test, pred)
+
+
+def baseline_persist_class(samples: pd.DataFrame, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    train, test = _split_frame(samples)
+    test = _balanced_tail(test, cfg.max_test_samples)
+    pred = np.ones(len(test), dtype=int)
+    return _metrics_for_predictions("persist_class", train.iloc[0:0], test, pred)
+
+
+def baseline_random_stratified(samples: pd.DataFrame, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    train, test = _split_frame(samples)
+    train = _balanced_tail(train, cfg.max_train_samples)
+    test = _balanced_tail(test, cfg.max_test_samples)
+    rng = np.random.default_rng(cfg.seed)
+    counts = train["y_class"].value_counts(normalize=True).reindex([0, 1, 2], fill_value=0.0).to_numpy(dtype=float)
+    if not np.isfinite(counts).all() or counts.sum() <= 0:
+        counts = np.array([1 / 3, 1 / 3, 1 / 3], dtype=float)
+    probs = counts / counts.sum()
+    pred = rng.choice(np.array([0, 1, 2], dtype=int), size=len(test), p=probs)
+    return _metrics_for_predictions("random_stratified", train, test, pred)
+
+
 def _require_torch():
     import torch
     import torch.nn as nn
@@ -192,14 +242,7 @@ def _train_torch_classifier(
             preds.append(torch.argmax(logits, dim=1).cpu().numpy())
     pred = np.concatenate(preds).astype(int)
 
-    pred_df = test[["sample_id", "pair", "timestamp", "current_spread", "y_regression", "y_class"]].copy()
-    pred_df["model"] = model_name
-    pred_df["pred_class"] = pred
-
-    metrics = {"model": model_name, "train_samples": int(len(train)), "test_samples": int(len(test))}
-    metrics.update(evaluate_predictions(y_test, pred))
-    metrics.update(trading_metrics(pred_df, pred))
-    return pred_df, metrics
+    return _metrics_for_predictions(model_name, train, test, pred)
 
 
 def train_lstm(samples: pd.DataFrame, sequences: np.ndarray, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
@@ -240,19 +283,17 @@ def train_transformer(samples: pd.DataFrame, sequences: np.ndarray, cfg: Trainin
     return _train_torch_classifier("transformer", TransformerClassifier, samples, sequences, cfg)
 
 
-def baseline_zscore_rule(samples: pd.DataFrame, threshold: float = 1.5) -> Tuple[pd.DataFrame, Dict[str, float]]:
+def baseline_zscore_rule(
+    samples: pd.DataFrame,
+    cfg: TrainingConfig = TrainingConfig(),
+    threshold: float = 1.5,
+) -> Tuple[pd.DataFrame, Dict[str, float]]:
     test = _split_frame(samples)[1].copy()
+    test = _balanced_tail(test, cfg.max_test_samples)
     z = test["latest_spread_z"].to_numpy(dtype=float)
     pred = np.ones(len(test), dtype=int)
     pred[np.abs(z) >= threshold] = 0
-    y_test = test["y_class"].to_numpy(dtype=int)
-    pred_df = test[["sample_id", "pair", "timestamp", "current_spread", "y_regression", "y_class"]].copy()
-    pred_df["model"] = "zscore_rule"
-    pred_df["pred_class"] = pred
-    metrics = {"model": "zscore_rule", "train_samples": 0, "test_samples": int(len(test))}
-    metrics.update(evaluate_predictions(y_test, pred))
-    metrics.update(trading_metrics(pred_df, pred))
-    return pred_df, metrics
+    return _metrics_for_predictions("zscore_rule", test.iloc[0:0], test, pred)
 
 
 def combine_results(results: Iterable[Tuple[pd.DataFrame, Dict[str, float]]]) -> Tuple[pd.DataFrame, pd.DataFrame]:
