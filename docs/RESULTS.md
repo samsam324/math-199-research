@@ -28,6 +28,25 @@ state. No re-fitting on test.
 - Relationships real but non-stationary
 - Source: `artifacts/kalman_oos/kalman_oos_comparison.csv`
 
+### Generalization to the full universe
+
+Same protocol on all 1219 pairs in the liquidity top-50 universe:
+
+| p threshold | static OLS passes | Kalman passes |
+| --- | ---: | ---: |
+| p < 0.001 | 0 (0.0%) | 1,174 (96.3%) |
+| p < 0.005 | 1 (0.1%) | 1,188 (97.5%) |
+| p < 0.010 | 10 (0.8%) | 1,198 (98.3%) |
+| p < 0.050 | 66 (5.4%) | 1,215 (99.7%) |
+| p < 0.100 | 142 (11.6%) | 1,217 (99.8%) |
+
+- Static finds cointegration on 5.4% of pairs at p<0.05 OOS
+- Kalman finds it on 99.7%
+- Kalman OOS p-values reach 5e-10 for the strongest pairs
+- The finding is not a property of the top-10 selected pairs; it holds
+  across essentially the entire liquidity universe
+- Source: `artifacts/kalman_screen/kalman_pair_screen.csv`
+
 ## 2. Walk-forward, post-audit Kalman pipeline
 
 27 splits, block-bootstrap 5/95% CIs (block_size=3):
