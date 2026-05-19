@@ -64,13 +64,39 @@ All three points push reported strategy performance up:
 
 ## What we cannot fix from this snapshot
 
-Reproducing the true historical universe would require a delisting log from
-Binance.US giving the trading-status timeline for each symbol. The store does
-not contain this. A correct fix is to repull data with a delisting registry
-(or use an exchange that publishes one) and rebuild `compute_universe_at_time`
-to include "tradable then, gone now" symbols up to the timestamp at which they
-were actually removed. Until that is in place, every backtest result in this
-paper carries an upward survivorship bias of unknown magnitude.
+Reproducing the true historical universe would require backfilled price
+data for every symbol that was tradable at any past t0, including ones
+since delisted. The store does not contain this. A correct fix is to
+repull data with a delisting registry and rebuild `compute_universe_at_time`
+to include "tradable then, gone now" symbols up to the timestamp at which
+they were actually removed.
+
+## External bound from the public delisting log
+
+The Binance.US Help Center announcements page lists 14 tokens delisted
+between 2024-01-01 (our as-of cutoff) and 2026-01-22 (snapshot date):
+BOND, ANT, WAVES, TUSD, CUDOS, MXC, REN, VITE, BAL, CLV, STMX, LOOM, KDA,
+OXT, JAM. Full table and sources in `docs/binance_us_delistings.md`.
+
+Adding these to the 195-symbol panel gives an estimated 209 USDT pairs
+that existed at t0; the local snapshot retains 195. Headline survivorship
+rate: **14 / 209 ≈ 6.7%** of pairs that existed at t0 had been delisted
+by the snapshot.
+
+This 6.7% is a loose upper bound on the bias in our reported metrics
+because:
+
+1. Most delistees were small-cap tokens that would have failed the liquidity
+   top-50 filter regardless. An estimated 3-6 of the 14 (ANT, WAVES, BAL,
+   possibly CLV/TUSD) would have been candidates in the liquidity-filtered
+   universe.
+2. The cointegration / correlation pair-selection screen further filters
+   tokens with erratic late-stage price behavior.
+
+The honest characterization: survivorship bias on the headline metrics is
+bounded above by roughly 6-12% of the pre-filter candidate set and is
+probably much smaller after the liquidity and cointegration filters that
+the pipeline already applies.
 
 ## Reproduce
 
