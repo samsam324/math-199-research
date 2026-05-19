@@ -198,21 +198,47 @@ Post-audit pipeline, 27 splits:
 - 27 splits drop it to #4 with CI [-0.057, 0.148]
 - Walk-forward + bootstrap CIs = minimum standard
 
-## Big transformer caveat
+## Big transformer caveat (resolved)
 
 Headline transformer was small (2 layers, 2 heads, d_model=32, 4 epochs)
-matched to LSTM param count. Larger transformer (4 layers, 4 heads,
-d_model=128, 20 epochs, cosine LR, val early stopping) on per-pair-label
-single split:
+matched to LSTM parameter count. We re-ran with a larger transformer
+(4 layers, 4 heads, d_model=128, ff=512, 20 epochs, cosine LR with
+warmup, validation-based early stopping). On the per-pair-label dataset,
+27 walk-forward splits:
 
-| Model | acc | win rate | pnl_mean_to_std |
-| --- | ---: | ---: | ---: |
-| small | 0.584 | 0.156 | -0.009 |
-| big | 0.715 | 0.913 | 0.380 |
+| Metric | small transformer | big transformer |
+| --- | ---: | ---: |
+| accuracy | 0.584 | **0.668** |
+| macro F1 | 0.254 | **0.509** |
+| pnl_mean_to_std | -0.009 | **0.334** |
+| win rate | 0.156 | **0.845** |
+| total_pnl | 9.83 | 308.19 |
+| trades | 7,179 | 37,689 |
 
-- Walk-forward 27-split rerun in progress
-- If confirmed: small transformer is undertrained, big version competitive
-- If not: original finding stands
+- Big transformer pnl_mean_to_std 0.334 puts it close to LSTM (0.376)
+  and booster (0.356); definitely not "indistinguishable from random"
+- Win rate 0.845 actually exceeds both LSTM (0.795) and booster (0.741)
+- The "transformer is no better than random" headline was a capacity
+  artifact, not a property of the architecture
+- Apples-to-apples comparison: big transformer ran on the pre-audit
+  per-pair-label dataset, so the booster/LSTM numbers in finding 2
+  shouldn't be directly stacked against the 0.334. A post-audit
+  re-run is straightforward but not in flight.
+- Source: `artifacts/big_tx_pp_walk/walk_forward_summary.csv`,
+  `src/modeling_big_transformer.py`
+
+## Revised finding 2 framing
+
+Reading the walk-forward tables (post-audit LSTM/booster/zscore +
+pre-audit big transformer all considered):
+
+- **LSTM, booster, big transformer, z-score are within striking distance
+  of each other on signal quality** (pnl_mean_to_std in the 0.28-0.38
+  range). The ML models edge zscore by 0.05-0.10.
+- **Z-score still wins on per-trade win rate** (0.96 vs 0.74-0.85 for
+  ML) by being much more selective.
+- **Small transformer matched to LSTM parameter count fails.** That's
+  a parameter-count finding, not an architecture finding.
 
 ## Limitations
 
