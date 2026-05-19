@@ -49,6 +49,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--min-history-days", type=float, default=0.0, help="Minimum days of history before t0 for a symbol to enter the as-of universe.")
     p.add_argument("--per-pair-label", action="store_true", help="Use per-pair-z-scored 3-class label threshold instead of fixed 0.001.")
     p.add_argument("--label-scale-factor", type=float, default=0.5, help="Scale factor on per-pair std(|d(|spread|)|) for the label threshold.")
+    p.add_argument("--pairs-path", default=None, help="Optional pre-selected pairs parquet (e.g. from run_kalman_pair_screen). Bypasses score_pairs / correlation fallback.")
     return p.parse_args()
 
 
@@ -83,13 +84,23 @@ def main() -> None:
     if close_panel.shape[1] < 2:
         raise RuntimeError("Not enough symbols after liquidity and coverage filtering.")
 
-    pcfg = PairConfig(max_pairs_to_test=args.max_pairs_to_test, min_obs=1200)
-    pairs = score_pairs(close_panel, pcfg)
-    if pairs.empty:
-        print("No pairs passed strict filters; using correlation fallback for downstream pipeline.", flush=True)
-        pairs = rank_pairs_by_correlation(close_panel, top_n=max(args.top_pairs, 20), min_corr=0.20)
+    if args.pairs_path:
+        print(f"Loading pre-selected pairs from {args.pairs_path}", flush=True)
+        pairs = pd.read_parquet(args.pairs_path, engine="pyarrow")
+        # Restrict to symbols present in our liquid close_panel, otherwise downstream breaks
+        keep_mask = pairs["sym_a"].isin(close_panel.columns) & pairs["sym_b"].isin(close_panel.columns)
+        dropped = (~keep_mask).sum()
+        if dropped:
+            print(f"  dropping {dropped} pairs whose symbols aren't in the liquidity-filtered close panel", flush=True)
+        pairs = pairs[keep_mask].reset_index(drop=True)
     else:
-        pairs["selection_method"] = "strict_cointegration"
+        pcfg = PairConfig(max_pairs_to_test=args.max_pairs_to_test, min_obs=1200)
+        pairs = score_pairs(close_panel, pcfg)
+        if pairs.empty:
+            print("No pairs passed strict filters; using correlation fallback for downstream pipeline.", flush=True)
+            pairs = rank_pairs_by_correlation(close_panel, top_n=max(args.top_pairs, 20), min_corr=0.20)
+        else:
+            pairs["selection_method"] = "strict_cointegration"
     if pairs.empty:
         raise RuntimeError("No pairs available after strict and fallback selection.")
     pairs_out = out_dir / "selected_pairs.parquet"
