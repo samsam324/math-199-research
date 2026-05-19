@@ -11,9 +11,10 @@ Read README first.
 - Kalman dynamic hedge recovers cointegration that static OLS misses. OOS
   with MLE-fit Q on train, forward-rolled on test: 10/10 pairs at p<0.001,
   static OLS holds only 2/10 at p<0.05.
-- 27-split walk-forward on post-audit Kalman pipeline: booster
-  pnl_mean_to_std 0.356 [0.342, 0.368], strictly above zscore
-  0.282 [0.274, 0.291]. Per-trade win rate: zscore 0.96, booster 0.74.
+- 27-split walk-forward on post-audit Kalman pipeline: LSTM
+  pnl_mean_to_std 0.376 [0.362, 0.388] > booster 0.356 [0.342, 0.368]
+  > zscore 0.282 [0.274, 0.291] > transformer 0.018 [-0.025, 0.064].
+  Per-trade win rate: zscore 0.96, LSTM 0.80, booster 0.74.
 - Pre-cost Sharpe ~8 with proper entry/exit state machine. Break-even
   ~5 bps round-trip per leg. Binance.US taker (15 bps) destroys it.
 - 2-state Gaussian HMM filter doesn't help. Generalizes to 3-state.

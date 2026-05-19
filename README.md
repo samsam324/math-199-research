@@ -24,17 +24,21 @@ pending the data sample.
 
 1. **Static OLS hedge ratios fail out-of-sample on this market.** Of 10
    top correlation-ranked pairs, only 2 maintain ADF p < 0.05 on the
-   held-out test slice when the hedge ratio is fitted in-sample.
-2. **Kalman dynamic hedge ratios recover cointegration.** With Kalman
-   parameters MLE-fitted on training only and forward-rolled on test
-   (no peeking), 10 of 10 pairs hold cointegration at p < 0.001 OOS.
+   held-out test slice. Generalizes to the full 1,219-pair universe:
+   static OLS holds cointegration at p < 0.05 OOS on only 5.4% of pairs.
+2. **Kalman dynamic hedge ratios recover cointegration on essentially
+   every pair.** Parameters MLE-fit on training only, forward-rolled on
+   test, no peeking. 10/10 selected pairs hold p < 0.001 OOS. Across
+   the full universe: **99.7% of pairs hold p < 0.05 OOS** (1,215 / 1,219).
    This is the central methodological result.
-3. **Once the right spread is used, classical z-score matches ML on
-   signal quality and dominates on trade selectivity.** Across 27
-   walk-forward splits: boost `pnl_mean_to_std` 0.307 [0.291, 0.323]
-   vs z-score 0.282 [0.272, 0.292] vs LSTM 0.279 [0.258, 0.297] vs
-   transformer 0.047 [-0.057, 0.148] (CI includes zero). Z-score
-   per-trade win rate is 96.0% [95.7%, 96.4%] at 6× fewer trades.
+3. **LSTM leads on signal quality, z-score dominates on trade
+   selectivity.** Across 27 walk-forward splits on the post-audit
+   pipeline: LSTM `pnl_mean_to_std` 0.376 [0.362, 0.388] > booster
+   0.356 [0.342, 0.368] > z-score 0.282 [0.274, 0.291] > transformer
+   0.018 [-0.025, 0.064] (CI includes zero). Per-trade win rate:
+   z-score 96.3% [95.9%, 96.6%], LSTM 79.5% [76.8%, 82.4%], booster
+   74.1% [72.0%, 76.0%]. Z-score makes 4× fewer trades and wins on
+   selectivity; LSTM wins on edge per bar.
 4. **Hourly USDT pair-spread alpha on Binance.US has a cost ceiling of
    roughly 5 bps round-trip per leg.** Pre-cost Sharpe ≈ 8 with proper
    entry/exit state machine; maker fees (~5 bps round-trip) leave it
@@ -76,8 +80,8 @@ pip install -r requirements.txt   # numpy pandas statsmodels sklearn torch hmmle
 #     Incremental on re-run; safe to interrupt and resume.
 python3 store_data.py             # populates data/spot_1h/{SYMBOL}.parquet for all listed USDT pairs
 
-# 1. Build the long Kalman dataset (uses local data store from store_data.py)
-python3 scripts/run_first_branch.py --use-kalman --skip-deep \
+# 1. Build the long Kalman dataset with per-pair labels (post-audit)
+python3 scripts/run_first_branch.py --use-kalman --skip-deep --per-pair-label \
   --out-dir artifacts/kalman_long \
   --t0 2024-01-01T00:00:00Z --train-days 180 --test-days 750 \
   --min-history-days 180 --liquid-top-n 50 --top-pairs 20
@@ -88,39 +92,53 @@ python3 scripts/run_walk_forward.py \
   --out-dir artifacts/walk_forward_kalman_long \
   --deep --dl-epochs 4 --max-train-samples 12000 --max-test-samples 5000
 
-# 3. Out-of-sample Kalman validation (the central finding)
+# 3. Out-of-sample Kalman validation on 10 selected pairs
 python3 scripts/run_kalman_oos.py \
   --pairs-path artifacts/kalman_long/selected_pairs.parquet \
   --out-dir artifacts/kalman_oos --top-pairs 10
 
-# 4. HMM ablation
+# 4. Full-universe Kalman cointegration screen (1,219 pairs)
+python3 scripts/run_kalman_pair_screen.py \
+  --out-dir artifacts/kalman_screen \
+  --t0 2024-01-01T00:00:00Z --train-days 90 --test-days 30 \
+  --liquid-top-n 50 --min-history-days 180
+
+# 5. HMM ablation (negative result, robust)
 python3 scripts/run_hmm_ablation.py \
   --walk-forward-dir artifacts/walk_forward_kalman_long \
   --features-dir artifacts/kalman_long/features \
   --dataset-dir artifacts/kalman_long/dataset \
   --out-dir artifacts/hmm_kalman_long
 
-# 5. Portfolio backtest with proper entry/exit state machine
+# 6. Cost-aware portfolio backtest with entry/exit state machine
 python3 scripts/run_portfolio_backtest.py \
   --predictions-path artifacts/walk_forward_kalman_long/walk_forward_predictions.parquet \
   --pairs-path artifacts/kalman_long/selected_pairs.parquet \
   --dataset-dir artifacts/kalman_long/dataset \
-  --out-dir artifacts/backtest_kalman_long_sm \
+  --out-dir artifacts/backtest_sm_15bps \
   --state-machine --sm-entry-z 2.0 --sm-exit-z 0.5
+#  ... change --taker-fee-bps / --slippage-bps for 0 and 5 bps variants
 
-# 6. Backtester sanity tests
+# 7. Backtester sanity tests + leakage audit tests
 python3 tests/test_backtest_sanity.py
+python3 tests/test_leakage_audit.py
 
-# 7. Feature ablation (closes the time_since_zero_crossing leak suspicion)
+# 8. Feature ablation
 python3 scripts/run_feature_ablation.py \
   --dataset-dir artifacts/kalman_long/dataset \
-  --out-path docs/feature_ablation_kalman_long.csv
+  --out-path docs/feature_ablation_fixed.csv
 
-# 8. Figures
+# 9. HAC-corrected Sharpe (Newey-West lag 24)
+python3 scripts/run_hac_sharpe.py \
+  --predictions-path artifacts/walk_forward_kalman_long/walk_forward_predictions.parquet \
+  --out-path docs/hac_sharpe_fixed.csv --lag 24
+
+# 10. Figures
 python3 scripts/plot_kalman_oos.py --csv artifacts/kalman_oos/kalman_oos_comparison.csv --out-path figures/kalman_oos_comparison.png
-python3 scripts/plot_walk_forward_summary.py --metrics-csv artifacts/walk_forward_kalman_long/walk_forward_metrics_by_split.csv --out-path figures/long_walk_forward_pnl_mean_to_std.png --metric pnl_mean_to_std
-python3 scripts/plot_feature_importance.py --dataset-dir artifacts/kalman_long/dataset --out-path figures/long_feature_importance.png
-python3 scripts/plot_cumulative_pnl.py --backtest-dir artifacts/backtest_kalman_long_sm --out-path figures/long_cumulative_pnl.png --title "Cumulative PnL, state machine, 15bps round-trip"
+python3 scripts/plot_kalman_screen.py --csv artifacts/kalman_screen/kalman_pair_screen.csv --out-path figures/kalman_screen_cdf.png
+python3 scripts/plot_walk_forward_summary.py --metrics-csv artifacts/walk_forward_kalman_long/walk_forward_metrics_by_split.csv --out-path figures/walk_forward_pnl_mean_to_std.png --metric pnl_mean_to_std --block-size 3
+python3 scripts/plot_feature_importance.py --dataset-dir artifacts/kalman_long/dataset --out-path figures/feature_importance.png
+python3 scripts/plot_cumulative_pnl.py --backtest-dir artifacts/backtest_sm_15bps --out-path figures/cumulative_pnl_15bps.png --title "Cumulative PnL, state machine, 15bps round-trip"
 ```
 
 Step 2 takes ~30 minutes wall-clock on an M-series Mac (deep models on
