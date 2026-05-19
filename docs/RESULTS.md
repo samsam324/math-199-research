@@ -113,19 +113,20 @@ Single-split feature ablation:
 
 Entry/exit state machine. Open: flat AND pred=0 AND |z|>=2. Close:
 |z|<=0.5 OR pred=2 OR sign flip. 27 splits, $10k/leg/pair, 20 pairs.
+Post-audit pipeline.
 
-| Round-trip cost per leg | LSTM Sharpe | LSTM $ | zscore Sharpe | zscore $ |
-| --- | ---: | ---: | ---: | ---: |
-| 0 bps | 8.06 | +125,340 | 7.83 | +125,116 |
-| 5 bps (maker) | 0.69 | +10,604 | 0.74 | +11,654 |
-| 15 bps (Binance.US taker) | -14.25 | -218,870 | -13.73 | -215,270 |
+| Round-trip cost per leg | LSTM Sharpe | LSTM $ | zscore Sharpe | zscore $ | booster Sharpe | booster $ |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 bps | 8.08 | +130,385 | 8.03 | +130,798 | 8.27 | +131,810 |
+| 5 bps (maker) | 0.80 | +12,656 | 0.83 | +13,268 | 0.90 | +14,076 |
+| 15 bps (Binance.US taker) | -14.04 | -222,802 | -13.88 | -221,791 | -14.17 | -221,393 |
 
-- Pre-cost Sharpe ~8, 61% per-trade win rate
-- Break-even ~5 bps round-trip per leg
-- Binance.US taker: destroyed
-- Binance.US maker: at the boundary
+- Pre-cost Sharpe ~8 on all three top models, 62% per-trade win rate
+- Break-even ~5 bps round-trip per leg (LSTM/booster/zscore all just positive)
+- Binance.US taker (10 bps/side, 20 bps round-trip per leg): destroyed
+- Binance.US maker (~5 bps round-trip per leg): at the boundary
 - Backtester sanity-checked (6 hand-computable tests, all pass)
-- Source: `artifacts/backtest_sm_{0,5,15}bps/portfolio_metrics.csv`
+- Source: `artifacts/backtest_fixed_sm_{0,5,15}bps/portfolio_metrics.csv`
 
 ## Negative results
 
