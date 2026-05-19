@@ -6,9 +6,10 @@ inferences about market efficiency? Authors: Jack Lutz, Sammy Adham,
 Frank Kronewitter.
 
 The proposal (`proposal.md`) follows Gatev, Goetzmann, and Rouwenhorst
-(2006) on equity pairs trading, adapted to crypto. This README is the
-entry point an advisor should read first; detailed results in
-`docs/RESULTS.md` and methodology in `docs/METHODS.md`.
+(2006) on equity pairs trading, adapted to crypto. Read this README
+first, then `docs/RESULTS.md` for the headline findings and
+`docs/NOTES.md` for open questions, concerns, and what's still
+unresolved. Methodology details in `docs/METHODS.md`.
 
 ## Status
 
@@ -182,6 +183,7 @@ tests/test_backtest_sanity.py  Six hand-computable backtester sanity checks
 
 docs/                      Detailed writeups (see RESULTS.md for headline)
   RESULTS.md                *** Headline findings, read first ***
+  NOTES.md                  *** Open questions, concerns, unresolved threads ***
   METHODS.md                *** Methodology details ***
   long_pipeline_results.md   Full 27-split tables
   state_machine_results.md   Cost-sensitivity sweep
@@ -199,6 +201,7 @@ minitron/                  Sibling project (Candella Quant backtester) (gitignor
 ## Pointers
 
 - `docs/RESULTS.md` — all four headline findings with reproducible tables.
+- `docs/NOTES.md` — open questions, concerns, what's not done, phase-2 plan.
 - `docs/METHODS.md` — every methodological choice and why.
 - `proposal.md` — original proposal; section "Remaining Work" is now mostly
   done and superseded by RESULTS.md.
