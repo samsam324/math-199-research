@@ -125,6 +125,11 @@ def main() -> None:
         horizon=args.horizon,
         per_pair_label=args.per_pair_label,
         label_scale_factor=args.label_scale_factor,
+        # Anchor the per-pair label threshold to data strictly before t0
+        # (which is the latest training boundary across all walk-forward
+        # splits). Without this anchor, the threshold leaked future-of-test
+        # spread vol into the label distribution.
+        label_train_end=train_end if args.per_pair_label else None,
     )
     samples, sequences, _ = build_samples_from_features(features, dcfg)
     samples = add_walk_forward_splits(samples, dcfg)

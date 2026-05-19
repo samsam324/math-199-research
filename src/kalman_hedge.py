@@ -227,11 +227,21 @@ def fit_kalman_mle(
     q_beta = float(np.exp(log_q_beta))
     r = float(np.exp(log_r))
 
-    # Run the filter forward once with the fitted params to record the final state.
+    # Run the filter forward once with the fitted params to record both the
+    # final state AND the training-period residuals. Returning the residuals
+    # lets callers (build_kalman_spread_overrides, run_kalman_oos) build a
+    # train+test spread series with a single consistent set of parameters,
+    # rather than re-running kalman_dynamic_hedge with default params on
+    # training data (which would create a parameter discontinuity at the
+    # train/test boundary).
     Q = np.diag([q_alpha, q_beta])
     state = np.array([alpha0, beta0], dtype=float)
     P = np.diag([p0, p0])
-    for t in range(len(y)):
+    T = len(y)
+    train_alphas = np.empty(T, dtype=float)
+    train_betas = np.empty(T, dtype=float)
+    train_residuals = np.empty(T, dtype=float)
+    for t in range(T):
         P_pred = P + Q
         H = np.array([1.0, x[t]], dtype=float)
         S = float(H @ P_pred @ H + r)
@@ -239,6 +249,9 @@ def fit_kalman_mle(
         K = (P_pred @ H) / S
         state = state + K * innov
         P = P_pred - np.outer(K, H) @ P_pred
+        train_alphas[t] = state[0]
+        train_betas[t] = state[1]
+        train_residuals[t] = innov
 
     return {
         "q_alpha": q_alpha,
@@ -252,6 +265,11 @@ def fit_kalman_mle(
         "converged": bool(res.success),
         "alpha_train_final": float(state[0]),
         "beta_train_final": float(state[1]),
+        # Training-period series computed with FITTED params (not defaults).
+        # Use these in concatenated train+test spread series for consistency.
+        "train_alphas": train_alphas,
+        "train_betas": train_betas,
+        "train_residuals": train_residuals,
     }
 
 

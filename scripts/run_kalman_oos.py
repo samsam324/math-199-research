@@ -113,10 +113,12 @@ def main() -> None:
             continue
         _, _, kalman_oos = kalman_forward_residuals(y_te, x_te, fitted)
 
-        # For reference also compute the cheating in-sample Kalman residuals
-        from src.kalman_hedge import kalman_dynamic_hedge
-
-        _, _, kalman_is, _ = kalman_dynamic_hedge(y_tr, x_tr)
+        # For reference also report the in-sample Kalman residuals, computed
+        # with the SAME fitted parameters as the OOS pass (not defaults). This
+        # is the "cheating" comparison because the residuals are from the same
+        # data the parameters were fit on; the contrast with the OOS column
+        # below is the whole point of the test.
+        kalman_is = np.asarray(fitted["train_residuals"], dtype=float)
 
         stat_is, p_is = _adf(static_is)
         stat_oos, p_oos = _adf(static_oos)

@@ -219,10 +219,20 @@ def build_kalman_spread_overrides(
     """
     For each pair: fit Kalman MLE on close history strictly before train_end,
     then forward-roll the filter across the full available history to produce
-    a dynamic-beta residual series indexed on close.index. The MLE fit uses
-    only training data; the forward pass uses fitted parameters held fixed
-    and the trained final state, so the resulting spread series carries no
-    in-sample whitening past train_end.
+    a dynamic-beta residual series indexed on close.index.
+
+    Both the training-period and test-period residuals are computed with the
+    SAME (MLE-fitted) Q_alpha, Q_beta, R parameters. This is essential to
+    avoid a parameter discontinuity at the train/test boundary: an earlier
+    version of this function used kalman_dynamic_hedge() with default
+    parameters for the training period, which meant the spread series jumped
+    at train_end as the filter switched from default to fitted Q. That was
+    a real methodological bug (caught in the paranoia audit).
+
+    The training residuals are the innovations from the same forward pass
+    that fit_kalman_mle runs after optimization to record the final state,
+    so they ARE the fitted-parameter residuals. The MLE fit itself uses only
+    training data, so no leakage into the test residuals.
     """
     from src.kalman_hedge import fit_kalman_mle, kalman_forward_residuals  # local import
 
@@ -245,14 +255,13 @@ def build_kalman_spread_overrides(
             fitted = fit_kalman_mle(train[sym_a].to_numpy(), train[sym_b].to_numpy())
         except Exception:
             continue
-        # In-sample residuals from the fitted-state forward run on training.
-        from src.kalman_hedge import kalman_dynamic_hedge
 
-        _, _, train_resid, _ = kalman_dynamic_hedge(
-            train[sym_a].to_numpy(),
-            train[sym_b].to_numpy(),
-        )
-        # OOS residuals from the held-out test forward run.
+        # Training residuals: computed inside fit_kalman_mle with FITTED params
+        # during the final forward pass that records the final state. Same
+        # parameters as the OOS pass, so no boundary discontinuity.
+        train_resid = np.asarray(fitted["train_residuals"], dtype=float)
+
+        # OOS residuals: forward-roll on test using fitted params + trained state.
         if not test.empty:
             _, _, test_resid = kalman_forward_residuals(
                 test[sym_a].to_numpy(),

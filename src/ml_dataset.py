@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -21,11 +21,22 @@ class DatasetConfig:
     step_days: int = 30
     # If True, replace the fixed classification_threshold with a per-pair
     # threshold = label_scale_factor * std(|future_abs - current_abs|) computed
-    # on the first label_train_fraction of that pair's data. This normalises the
-    # 3-class label distribution across pairs of different spread vol.
+    # on a pair-specific training window. This normalises the 3-class label
+    # distribution across pairs of different spread vol.
+    #
+    # Leakage note (caught in paranoia audit): an earlier version used the
+    # first `label_train_fraction` of each pair's data, which extended past
+    # most walk-forward test windows and so leaked future-of-test information
+    # into the label threshold. The current implementation prefers an explicit
+    # `label_train_end` cutoff timestamp: data with timestamp < label_train_end
+    # is used for the threshold, everything after is held out. The fraction
+    # fallback remains for backwards-compatibility, but the cutoff form is the
+    # recommended one and is what scripts/run_first_branch.py passes when
+    # --per-pair-label is set (label_train_end = t0).
     per_pair_label: bool = False
     label_scale_factor: float = 0.5
-    label_train_fraction: float = 0.5
+    label_train_fraction: float = 0.5  # used only when label_train_end is None
+    label_train_end: Optional[pd.Timestamp] = None
 
 
 TABULAR_COLUMNS = [
@@ -88,8 +99,23 @@ def build_samples_from_features(
         arr = g[FEATURE_COLUMNS].to_numpy(dtype=np.float32)
 
         if cfg.per_pair_label:
-            n_train_for_label = max(cfg.window, int(len(g) * cfg.label_train_fraction))
-            label_train = g.iloc[:n_train_for_label]
+            # Pick the label-training window for THIS pair.
+            # Preferred: explicit timestamp cutoff (no leakage past it).
+            # Fallback: fractional cutoff (kept for backwards-compat; may leak
+            # if the fraction extends past walk-forward test windows).
+            if cfg.label_train_end is not None:
+                cutoff = pd.Timestamp(cfg.label_train_end)
+                if cutoff.tzinfo is None:
+                    cutoff = cutoff.tz_localize("UTC")
+                pair_ts = pd.to_datetime(g["timestamp"], utc=True)
+                label_train = g.loc[pair_ts < cutoff]
+                # Need at least one full feature window to be meaningful.
+                if len(label_train) < cfg.window:
+                    label_train = g.iloc[: cfg.window]
+            else:
+                n_train_for_label = max(cfg.window, int(len(g) * cfg.label_train_fraction))
+                label_train = g.iloc[:n_train_for_label]
+
             label_change = (
                 (label_train["spread"] + label_train["target_spread_change_24h"]).abs()
                 - label_train["spread"].abs()
