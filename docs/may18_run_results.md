@@ -57,16 +57,45 @@ fallback pairs:
 Kalman residual std is 4-15x smaller than static, and ADF p-values drop by
 12+ orders of magnitude on the strongest pairs.
 
+**Adversarial concern (resolved out-of-sample).** A Kalman filter is built
+to produce whitened innovations; ADF on its own in-sample residuals risks
+testing the filter rather than the market. To rule that out, the next pass
+(`artifacts/kalman_oos/kalman_oos_comparison.csv`) fits the filter
+parameters by MLE on a 90-day training slice only and forward-rolls the
+filter on a held-out 30-day test slice. Both static OLS and Kalman are
+evaluated on residuals from the same test slice with parameters held fixed
+from training. With that honest split:
+
+| Pair | static_adf_p_oos | kalman_adf_p_oos | kalman_std_oos / static_std_oos |
+| --- | ---: | ---: | ---: |
+| DOGEUSDT_SUIUSDT | 0.923 | 1.5e-7 | 0.15 |
+| SOLUSDT_DOGEUSDT | 0.985 | 2.2e-7 | 0.21 |
+| XRPUSDT_SOLUSDT | 0.373 | 3.0e-7 | 0.15 |
+| XRPUSDT_DOGEUSDT | 0.092 | 2.5e-6 | 0.21 |
+| ADAUSDT_HBARUSDT | 0.094 | 7.3e-6 | 0.10 |
+| SOLUSDT_ADAUSDT | 0.823 | 2.9e-5 | 0.20 |
+| ETHUSDT_ADAUSDT | 0.411 | 3.4e-5 | 0.15 |
+| XRPUSDT_ADAUSDT | 0.011 | 1.5e-4 | 0.21 |
+| XRPUSDT_ETHUSDT | 0.029 | 2.1e-4 | 0.10 |
+| ETHUSDT_SOLUSDT | 0.013 | 8.0e-4 | 0.16 |
+
+Out of sample, static OLS holds cointegration at p < 0.05 on 2 of 10 pairs.
+Kalman holds it on 10 of 10, with the worst pair at p = 8e-4. MLE-fitted
+`Q_beta` lands in 1e-8 to 3e-5 — small enough that the filter cannot be
+trivially absorbing noise into a fast-moving beta.
+
 **What this says.** The pair relationships in crypto are real but
 non-stationary: a single OLS hedge ratio over a 180-day window is the wrong
 model. The relationship between two coins drifts continuously, and any
 analysis that holds beta fixed (including most academic pairs-trading
-papers, including Gatev/Goetzmann/Rouwenhorst) will conclude that there is
-no cointegration when there actually is, just under a time-varying hedge.
-This is the central methodological finding of the project so far.
+papers in the Gatev/Goetzmann/Rouwenhorst lineage) will conclude that
+there is no cointegration when there actually is, just under a time-varying
+hedge. This is the central methodological finding of the project, now
+verified out-of-sample.
 
-Source: `artifacts/kalman/kalman_comparison.csv`. Per-pair overlay plots in
-`artifacts/kalman/kalman_*.png`.
+Source: `artifacts/kalman/kalman_comparison.csv` (in-sample),
+`artifacts/kalman_oos/kalman_oos_comparison.csv` (out-of-sample),
+per-pair overlay plots in `artifacts/kalman/kalman_*.png`.
 
 ## 3. HMM regime filter hurts every model on these pairs
 

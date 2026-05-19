@@ -148,6 +148,157 @@ def kalman_spread_series(
     return out
 
 
+def kalman_log_likelihood(
+    y: np.ndarray,
+    x: np.ndarray,
+    log_q_alpha: float,
+    log_q_beta: float,
+    log_r: float,
+    alpha0: float,
+    beta0: float,
+    p0: float = 1.0,
+) -> float:
+    """
+    Negative log-likelihood of the 2-state Kalman filter on (y, x), used as
+    the objective for MLE fitting of Q and R. Parameters are taken in log
+    space so the optimizer stays in the positive orthant.
+    """
+    y = np.asarray(y, dtype=float).ravel()
+    x = np.asarray(x, dtype=float).ravel()
+    T = len(y)
+    if T == 0 or len(x) != T:
+        raise ValueError("y and x must be non-empty and the same length")
+
+    q_alpha = float(np.exp(log_q_alpha))
+    q_beta = float(np.exp(log_q_beta))
+    r = float(np.exp(log_r))
+
+    Q = np.diag([q_alpha, q_beta])
+    state = np.array([alpha0, beta0], dtype=float)
+    P = np.diag([p0, p0])
+
+    nll = 0.0
+    for t in range(T):
+        P_pred = P + Q
+        H = np.array([1.0, x[t]], dtype=float)
+        y_hat = float(H @ state)
+        innov = y[t] - y_hat
+        S = float(H @ P_pred @ H + r)
+        if not np.isfinite(S) or S <= 0:
+            return 1e12
+        nll += 0.5 * (np.log(2.0 * np.pi * S) + (innov * innov) / S)
+        K = (P_pred @ H) / S
+        state = state + K * innov
+        P = P_pred - np.outer(K, H) @ P_pred
+    return float(nll)
+
+
+def fit_kalman_mle(
+    y_train: np.ndarray,
+    x_train: np.ndarray,
+    *,
+    p0: float = 1.0,
+    bounds: tuple = ((-20.0, 0.0), (-20.0, 0.0), (-20.0, 5.0)),
+) -> dict:
+    """
+    MLE-fit (Q_alpha, Q_beta, R) on a training slice. Returns a dict with
+    fitted parameters and the final filtered state, ready to forward-project
+    onto a held-out test slice.
+    """
+    from scipy.optimize import minimize  # local import to avoid a hard dep at module load
+
+    y = np.asarray(y_train, dtype=float).ravel()
+    x = np.asarray(x_train, dtype=float).ravel()
+    if len(y) < 30 or len(x) != len(y):
+        raise ValueError("Training slice too short or shape mismatch")
+
+    ols = OLS(y, add_constant(x)).fit()
+    alpha0 = float(ols.params[0])
+    beta0 = float(ols.params[1])
+    r0 = max(float(np.var(ols.resid, ddof=1)), 1e-8)
+    init = np.array([np.log(1e-7), np.log(1e-5), np.log(r0)], dtype=float)
+
+    def obj(theta):
+        return kalman_log_likelihood(y, x, theta[0], theta[1], theta[2], alpha0, beta0, p0)
+
+    res = minimize(obj, init, method="L-BFGS-B", bounds=list(bounds))
+    log_q_alpha, log_q_beta, log_r = res.x.tolist()
+    q_alpha = float(np.exp(log_q_alpha))
+    q_beta = float(np.exp(log_q_beta))
+    r = float(np.exp(log_r))
+
+    # Run the filter forward once with the fitted params to record the final state.
+    Q = np.diag([q_alpha, q_beta])
+    state = np.array([alpha0, beta0], dtype=float)
+    P = np.diag([p0, p0])
+    for t in range(len(y)):
+        P_pred = P + Q
+        H = np.array([1.0, x[t]], dtype=float)
+        S = float(H @ P_pred @ H + r)
+        innov = y[t] - float(H @ state)
+        K = (P_pred @ H) / S
+        state = state + K * innov
+        P = P_pred - np.outer(K, H) @ P_pred
+
+    return {
+        "q_alpha": q_alpha,
+        "q_beta": q_beta,
+        "r": r,
+        "final_state": state.copy(),
+        "final_cov": P.copy(),
+        "alpha0": alpha0,
+        "beta0": beta0,
+        "nll": float(res.fun),
+        "converged": bool(res.success),
+        "alpha_train_final": float(state[0]),
+        "beta_train_final": float(state[1]),
+    }
+
+
+def kalman_forward_residuals(
+    y_test: np.ndarray,
+    x_test: np.ndarray,
+    fitted: dict,
+) -> tuple:
+    """
+    Run the filter forward on a test slice using parameters and initial state
+    fitted on a separate training slice. Returns (alphas, betas, residuals).
+    No re-fitting happens here; this is the honest out-of-sample run.
+    """
+    y = np.asarray(y_test, dtype=float).ravel()
+    x = np.asarray(x_test, dtype=float).ravel()
+    T = len(y)
+    if T == 0 or len(x) != T:
+        return np.empty(0), np.empty(0), np.empty(0)
+
+    state = np.asarray(fitted["final_state"], dtype=float).copy()
+    P = np.asarray(fitted["final_cov"], dtype=float).copy()
+    Q = np.diag([fitted["q_alpha"], fitted["q_beta"]])
+    r = float(fitted["r"])
+
+    alphas = np.empty(T, dtype=float)
+    betas = np.empty(T, dtype=float)
+    resids = np.empty(T, dtype=float)
+    for t in range(T):
+        P_pred = P + Q
+        H = np.array([1.0, x[t]], dtype=float)
+        y_hat = float(H @ state)
+        innov = y[t] - y_hat
+        S = float(H @ P_pred @ H + r)
+        if not np.isfinite(S) or S <= 0:
+            alphas[t] = state[0]
+            betas[t] = state[1]
+            resids[t] = innov
+            continue
+        K = (P_pred @ H) / S
+        state = state + K * innov
+        P = P_pred - np.outer(K, H) @ P_pred
+        alphas[t] = state[0]
+        betas[t] = state[1]
+        resids[t] = innov
+    return alphas, betas, resids
+
+
 def adf_comparison(static_resid: np.ndarray, dyn_resid: np.ndarray, burn_in: int = 50) -> dict:
     """
     Compare ADF p-values on static vs dynamic spreads. burn_in drops the warm-up
