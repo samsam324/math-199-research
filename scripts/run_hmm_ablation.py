@@ -52,6 +52,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--n-states", type=int, default=2)
     p.add_argument("--n-iter", type=int, default=50)
     p.add_argument("--seed", type=int, default=7)
+    p.add_argument("--n-init", type=int, default=1, help="Multiple random starts per HMM fit (keep best converged LL)")
+    p.add_argument("--no-require-converged", action="store_true", help="Accept non-converged fits (default: prefer converged)")
     return p.parse_args()
 
 
@@ -89,7 +91,13 @@ def main() -> None:
     samples, _ = load_dataset(Path(args.dataset_dir))
     samples["timestamp"] = pd.to_datetime(samples["timestamp"], utc=True)
 
-    cfg = HMMConfig(n_states=args.n_states, n_iter=args.n_iter, seed=args.seed)
+    cfg = HMMConfig(
+        n_states=args.n_states,
+        n_iter=args.n_iter,
+        seed=args.seed,
+        n_init=args.n_init,
+        require_converged=not args.no_require_converged,
+    )
 
     metric_rows: List[Dict[str, float]] = []
     filtered_pred_frames: List[pd.DataFrame] = []

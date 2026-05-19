@@ -31,6 +31,13 @@ class HMMConfig:
     # Walk-forward refit: refit at the start of each test window. None means
     # one fit on the whole training period.
     refit_per_split: bool = True
+    # Multiple random starts. Each start is fit independently from a fresh
+    # random init; the model with the highest converged log-likelihood is
+    # kept. Helps escape local optima from EM.
+    n_init: int = 1
+    # If True, only the model with `model.monitor_.converged == True` after
+    # fitting is kept. If no starts converge, fall back to highest LL.
+    require_converged: bool = True
 
 
 def _require_hmmlearn():
@@ -56,18 +63,54 @@ def fit_hmm(
 ):
     """
     Fit a Gaussian HMM on a per-pair training slice of the features table.
-    Returns the fitted model.
+
+    If cfg.n_init > 1, fit independently from cfg.n_init random seeds and
+    keep the model with the highest log-likelihood. If cfg.require_converged
+    is True, prefer converged starts (`model.monitor_.converged == True`)
+    and fall back to the best-LL non-converged start only if no converged
+    start exists.
     """
     GaussianHMM = _require_hmmlearn()
     X = _feature_matrix(train_features, columns)
-    model = GaussianHMM(
-        n_components=cfg.n_states,
-        covariance_type=cfg.covariance_type,
-        n_iter=cfg.n_iter,
-        random_state=cfg.seed,
-    )
-    model.fit(X)
-    return model
+
+    best_model = None
+    best_ll = -np.inf
+    best_converged = False
+    for k in range(max(1, cfg.n_init)):
+        model = GaussianHMM(
+            n_components=cfg.n_states,
+            covariance_type=cfg.covariance_type,
+            n_iter=cfg.n_iter,
+            random_state=cfg.seed + k,
+        )
+        try:
+            model.fit(X)
+            ll = float(model.score(X))
+            converged = bool(getattr(model.monitor_, "converged", False))
+        except Exception:
+            continue
+        # Convergence-preferred selection: a converged start always beats a
+        # non-converged one; among same convergence, higher LL wins.
+        accept = False
+        if cfg.require_converged:
+            if converged and not best_converged:
+                accept = True
+            elif converged == best_converged and ll > best_ll:
+                accept = True
+        else:
+            if ll > best_ll:
+                accept = True
+        if accept:
+            best_model = model
+            best_ll = ll
+            best_converged = converged
+
+    if best_model is None:
+        raise RuntimeError("All HMM fits failed")
+    # Stash for diagnostics
+    setattr(best_model, "_best_ll", best_ll)
+    setattr(best_model, "_best_converged", best_converged)
+    return best_model
 
 
 def identify_mean_reverting_state(model, train_features: pd.DataFrame, columns: List[str] = HMM_FEATURE_COLUMNS) -> int:
