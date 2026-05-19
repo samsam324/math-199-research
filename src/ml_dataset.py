@@ -19,6 +19,13 @@ class DatasetConfig:
     train_days: int = 90
     test_days: int = 30
     step_days: int = 30
+    # If True, replace the fixed classification_threshold with a per-pair
+    # threshold = label_scale_factor * std(|future_abs - current_abs|) computed
+    # on the first label_train_fraction of that pair's data. This normalises the
+    # 3-class label distribution across pairs of different spread vol.
+    per_pair_label: bool = False
+    label_scale_factor: float = 0.5
+    label_train_fraction: float = 0.5
 
 
 TABULAR_COLUMNS = [
@@ -79,6 +86,22 @@ def build_samples_from_features(
     for pair, g in features.groupby("pair", sort=False):
         g = g.reset_index(drop=True)
         arr = g[FEATURE_COLUMNS].to_numpy(dtype=np.float32)
+
+        if cfg.per_pair_label:
+            n_train_for_label = max(cfg.window, int(len(g) * cfg.label_train_fraction))
+            label_train = g.iloc[:n_train_for_label]
+            label_change = (
+                (label_train["spread"] + label_train["target_spread_change_24h"]).abs()
+                - label_train["spread"].abs()
+            ).to_numpy(dtype=float)
+            label_change = label_change[np.isfinite(label_change)]
+            if len(label_change) > 1:
+                pair_threshold = float(cfg.label_scale_factor * np.std(label_change, ddof=1))
+            else:
+                pair_threshold = cfg.classification_threshold
+        else:
+            pair_threshold = cfg.classification_threshold
+
         for end_pos in range(cfg.window - 1, len(g)):
             window_df = g.iloc[end_pos - cfg.window + 1 : end_pos + 1]
             latest = window_df.iloc[-1]
@@ -100,7 +123,7 @@ def build_samples_from_features(
                 "sym_b": latest["sym_b"],
                 "y_regression": float(latest["target_spread_change_24h"]),
                 "y_reversion": int(float(latest["target_reversion_24h"])),
-                "y_class": _class_label(current_abs, future_abs, cfg.classification_threshold),
+                "y_class": _class_label(current_abs, future_abs, pair_threshold),
                 "latest_spread_z": float(spread_z[-1]),
                 "mean_spread_z": float(np.mean(spread_z)),
                 "min_spread_z": float(np.min(spread_z)),

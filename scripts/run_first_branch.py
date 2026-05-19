@@ -47,6 +47,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--use-kalman", action="store_true", help="Use Kalman dynamic-beta spreads (MLE-fit on training data) as the spread input to features.")
     p.add_argument("--test-days", type=int, default=60, help="OOS test window length in days. Capped by the available data tail.")
     p.add_argument("--min-history-days", type=float, default=0.0, help="Minimum days of history before t0 for a symbol to enter the as-of universe.")
+    p.add_argument("--per-pair-label", action="store_true", help="Use per-pair-z-scored 3-class label threshold instead of fixed 0.001.")
+    p.add_argument("--label-scale-factor", type=float, default=0.5, help="Scale factor on per-pair std(|d(|spread|)|) for the label threshold.")
     return p.parse_args()
 
 
@@ -118,7 +120,12 @@ def main() -> None:
         raise RuntimeError("Feature store is empty.")
     print(f"Feature rows: {len(features)}; pairs: {features['pair'].nunique()}", flush=True)
 
-    dcfg = DatasetConfig(window=args.window, horizon=args.horizon)
+    dcfg = DatasetConfig(
+        window=args.window,
+        horizon=args.horizon,
+        per_pair_label=args.per_pair_label,
+        label_scale_factor=args.label_scale_factor,
+    )
     samples, sequences, _ = build_samples_from_features(features, dcfg)
     samples = add_walk_forward_splits(samples, dcfg)
     dataset_dir = out_dir / "dataset"
