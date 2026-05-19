@@ -1,14 +1,13 @@
 # Results
 
 Long Kalman pipeline. 27 walk-forward splits. 424k samples. 20 top-liquidity
-USDT pairs. t0 = 2024-01-01. 180-day train, 750-day test, 90/30/30
-walk-forward.
+USDT pairs. t0 = 2024-01-01. 180d train, 750d test. Walk-forward 90/30/30.
 
-## 1. Kalman dynamic hedge recovers cointegration that static OLS misses
+## 1. Kalman vs static OLS out-of-sample
 
-Setup: 90d train, 30d held-out test. Static OLS hedge ratio fit on train,
-residuals evaluated on test. Kalman MLE-fits Q on train, forward-rolls on
-test using trained final state. No re-fitting on test.
+Per pair: 90d train, 30d held-out test. Static OLS on train, residuals on
+test. Kalman MLE-fits Q on train, forward-rolls on test using trained final
+state. No re-fitting on test.
 
 | Pair | static OOS p | Kalman OOS p | Kalman q_beta |
 | --- | ---: | ---: | ---: |
@@ -23,186 +22,138 @@ test using trained final state. No re-fitting on test.
 | XRPUSDT_ETHUSDT | 0.029 | 2.1e-4 | 2.8e-5 |
 | ETHUSDT_SOLUSDT | 0.013 | 8.0e-4 | 2.0e-5 |
 
-- Static OLS holds cointegration at p<0.05 on 2 of 10 pairs OOS
-- Kalman holds it on 10 of 10 at p<0.001 OOS, worst p = 8e-4
-- MLE q_beta lands in 1e-8 to 3e-5 (slow drift, not trivially whitening)
-- The relationships are real but non-stationary; fixed hedge ratio is the wrong model
+- Static OLS: 2/10 at p<0.05 OOS
+- Kalman: 10/10 at p<0.001 OOS, worst 8e-4
+- MLE q_beta in 1e-8 to 3e-5 (slow drift, not whitening)
+- Relationships real but non-stationary
 - Source: `artifacts/kalman_oos/kalman_oos_comparison.csv`
 
-## 2. Booster beats z-score on signal quality; z-score wins on per-trade win rate
+## 2. Walk-forward, post-audit Kalman pipeline
 
-Walk-forward across 27 splits on the post-audit Kalman pipeline. Block-bootstrap
-5/95% CIs (block_size=3 for the 90d/30d step overlap).
+27 splits, block-bootstrap 5/95% CIs (block_size=3):
 
 | Model | pnl_mean_to_std | 5/95% CI | win rate | win rate CI | trades/split |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| sklearn_hist_gradient_boosting | **0.356** | [0.342, 0.368] | 0.74 | [0.72, 0.76] | 2,355 |
-| zscore_rule | 0.282 | [0.274, 0.291] | **0.96** | [0.959, 0.967] | 588 |
-| majority_class | 0.021 | [0.000, 0.063] | 0.03 | [0.00, 0.083] | 185 |
-| random_stratified | 0.001 | [-0.003, 0.005] | 0.50 | [0.500, 0.505] | 2,689 |
-| persist_class | 0.000 | [0.000, 0.000] | 0.00 | [0.00, 0.00] | 0 |
+| booster | 0.356 | [0.342, 0.368] | 0.74 | [0.72, 0.76] | 2,355 |
+| zscore | 0.282 | [0.274, 0.291] | 0.96 | [0.959, 0.967] | 588 |
+| majority | 0.021 | [0.000, 0.063] | 0.03 | [0.00, 0.083] | 185 |
+| random | 0.001 | [-0.003, 0.005] | 0.50 | [0.500, 0.505] | 2,689 |
+| persist | 0.000 | [0.000, 0.000] | 0.00 | [0.00, 0.00] | 0 |
 
-- Booster pnl_mean_to_std CI [0.342, 0.368] is strictly above z-score CI
-  [0.274, 0.291]; the gap is statistically real on 27 splits
-- Z-score per-trade win rate 0.96 vs booster 0.74; classical wins on
-  selectivity, ML wins on edge per bar
-- Booster trades 4x more often than z-score
-- Same signal, different operating point on the precision-recall curve
-- LSTM and transformer numbers pending the deep-model walk-forward on
-  the fixed dataset
+- Booster CI strictly above zscore CI
+- Zscore: 4x fewer trades, 96% per-trade win rate
+- LSTM and transformer pending (deep walk-forward running on fixed dataset)
 
-### HAC-corrected version
-
-Newey-West, bandwidth=24 to match the 24h target horizon overlap.
+HAC (Newey-West lag=24):
 
 | Model | iid | HAC | inflation |
 | --- | ---: | ---: | ---: |
-| sklearn_hist_gradient_boosting | 0.356 | 0.188 | 1.91 |
-| zscore_rule | 0.282 | 0.138 | 2.07 |
-| majority_class | 0.021 | 0.012 | 1.70 |
-| random_stratified | 0.001 | 0.001 | 0.99 |
+| booster | 0.356 | 0.188 | 1.91 |
+| zscore | 0.282 | 0.138 | 2.07 |
+| majority | 0.021 | 0.012 | 1.70 |
+| random | 0.001 | 0.001 | 0.99 |
 
-- iid overstates by ~1.9x because of 23/24h overlap
-- random's ~1.00 inflation is the sanity check
-- Ordering unchanged after correction
-- Source: `docs/hac_sharpe_fixed.csv`
+- iid overstates by ~1.9x (23/24h target overlap)
+- Random inflation 1.00 (sanity)
+- Ordering unchanged
 
-### HAC-corrected version
+## 3. ML signal is one feature
 
-Newey-West, bandwidth=24 to match the 24h target horizon overlap.
+Single-split feature ablation:
 
-| Model | iid | HAC | inflation |
+| Dropped | dAcc | dF1 | dPnL |
 | --- | ---: | ---: | ---: |
-| sklearn_hist_gradient_boosting | 0.307 | 0.178 | 1.72 |
-| lstm | 0.279 | 0.166 | 1.69 |
-| zscore_rule | 0.282 | 0.139 | 2.05 |
-| majority_class | 0.148 | 0.091 | 1.77 |
-| transformer | 0.047 | 0.024 | 1.69 |
-| random_stratified | 0.008 | 0.008 | 1.00 |
-
-- iid version overstated by ~1.7x because of 23/24h overlap
-- random's 1.00 inflation is the sanity check (random preds produce uncorrelated PnL)
-- Ordering unchanged after correction
-- Source: `docs/hac_sharpe_per_split.csv`
-
-## 3. ML signal reduces to one feature
-
-Single-split feature ablation: drop one tabular feature at a time, retrain
-booster, report delta.
-
-| Dropped | delta accuracy | delta F1 | delta total_pnl |
-| --- | ---: | ---: | ---: |
-| baseline (all 14) | 0.597 | 0.512 | 26.19 |
-| **latest_spread_z** | **-0.183** | **-0.151** | **-23.07** |
+| baseline | 0.597 | 0.512 | 26.19 |
+| latest_spread_z | -0.183 | -0.151 | -23.07 |
 | time_since_zero_crossing | +0.002 | +0.006 | -0.21 |
-| (every other feature) | <= +/-0.006 | <= +/-0.013 | <= +/-0.5 |
+| every other | <=+/-0.006 | <=+/-0.013 | <=+/-0.5 |
 
-- latest_spread_z carries essentially all of the signal
-- ML is a fancy z-score rule
-- time_since_zero_crossing trajectory across pipelines:
-  - Static OLS (short): +0.026 importance, rank 1
-  - Kalman (short): +0.001 importance, rank 8
-  - Kalman (long): -0.000 importance, dead
-- Confirms the leak suspicion from the adversarial review
+- `latest_spread_z` carries the signal
+- ML = fancy z-score
+- `time_since_zero_crossing` trajectory: +0.026 (static) -> +0.001 (Kalman short) -> 0 (Kalman long)
+- Confirms adversarial-review leak suspicion
 - Source: `docs/feature_ablation_kalman_long.csv`
 
-## 4. Cost ceiling on hourly USDT pair-spread alpha is ~5 bps round-trip per leg
+## 4. Cost ceiling
 
-Cost-aware backtester with entry/exit state machine. Open when flat AND
-pred_class=0 AND |spread_z|>=2; close when |spread_z|<=0.5 OR pred_class=2
-OR spread sign flips. $10k per leg per pair, 20 pairs, hourly bars across
-27-split test horizon.
+Entry/exit state machine. Open: flat AND pred=0 AND |z|>=2. Close:
+|z|<=0.5 OR pred=2 OR sign flip. 27 splits, $10k/leg/pair, 20 pairs.
 
-| Round-trip cost per leg | LSTM Sharpe | LSTM total $ | zscore Sharpe | zscore total $ |
+| Round-trip cost per leg | LSTM Sharpe | LSTM $ | zscore Sharpe | zscore $ |
 | --- | ---: | ---: | ---: | ---: |
 | 0 bps | 8.06 | +125,340 | 7.83 | +125,116 |
 | 5 bps (maker) | 0.69 | +10,604 | 0.74 | +11,654 |
 | 15 bps (Binance.US taker) | -14.25 | -218,870 | -13.73 | -215,270 |
 
-- Pre-cost Sharpe ~8 with 61% per-trade win rate
-- Break-even round-trip cost is ~5 bps per leg
-- Binance.US taker (~15 bps round-trip per leg) destroys it
-- Binance.US maker (~5 bps round-trip per leg) sits at the boundary
-- Backtester independently sanity-checked (6 hand-computable tests, all pass)
+- Pre-cost Sharpe ~8, 61% per-trade win rate
+- Break-even ~5 bps round-trip per leg
+- Binance.US taker: destroyed
+- Binance.US maker: at the boundary
+- Backtester sanity-checked (6 hand-computable tests, all pass)
 - Source: `artifacts/backtest_sm_{0,5,15}bps/portfolio_metrics.csv`
 
-## Negative results (robust across spread definition and walk-forward)
+## Negative results
 
-### 2-state Gaussian HMM regime filter does not help
+### HMM filter
 
-| Model | total_pnl raw | total_pnl HMM-filtered |
+| Model | raw total_pnl | HMM-filtered |
 | --- | ---: | ---: |
-| sklearn_hist_gradient_boosting | 352.67 | 149.12 |
-| lstm | 332.93 | 135.78 |
-| zscore_rule | 206.07 | 69.16 |
+| booster | 352.67 | 149.12 |
+| LSTM | 332.93 | 135.78 |
+| zscore | 206.07 | 69.16 |
 | transformer | 104.25 | 6.03 |
 
-- 30% of bars suppressed, 30-60% of PnL gone on every model
-- Generalizes to 3 states + 3 random starts (still negative)
+- 30% bars suppressed, 30-60% PnL gone
+- Same negative result with 3 states + 3 random starts
 - Source: `artifacts/hmm_kalman_long/`, `artifacts/hmm_kalman_long_3state/`
 
-### Single chronological train/test splits over-state ML
+### Single-split ML over-states
 
-- An earlier single-split run had transformer at #1 with pnl_mean_to_std=0.25
-- 27 walk-forward splits drop it to #4 with CI [-0.057, 0.148]
-- Walk-forward + bootstrap CIs is the minimum standard
+- Earlier single-split run had transformer at #1 (pnl_mean_to_std=0.25)
+- 27 splits drop it to #4 with CI [-0.057, 0.148]
+- Walk-forward + bootstrap CIs = minimum standard
 
 ## Big transformer caveat
 
-The headline transformer result used a small architecture matched in
-parameter count to LSTM (2 layers, 2 heads, d_model=32, 4 epochs). A
-larger transformer (4 layers, 4 heads, d_model=128, 20 epochs with cosine
-LR and validation early stopping) recovers strongly on the per-pair-label
-dataset at a single split:
+Headline transformer was small (2 layers, 2 heads, d_model=32, 4 epochs)
+matched to LSTM param count. Larger transformer (4 layers, 4 heads,
+d_model=128, 20 epochs, cosine LR, val early stopping) on per-pair-label
+single split:
 
-| Model | accuracy | win rate | pnl_mean_to_std |
+| Model | acc | win rate | pnl_mean_to_std |
 | --- | ---: | ---: | ---: |
-| small transformer | 0.584 | 0.156 | -0.009 |
-| big transformer | 0.715 | 0.913 | 0.380 |
+| small | 0.584 | 0.156 | -0.009 |
+| big | 0.715 | 0.913 | 0.380 |
 
-- Big transformer walk-forward across 27 splits is running
-- If confirmed, revise "transformer no better than random" to "small transformer
-  matched to LSTM capacity is no better than random"
-- If not confirmed, the original finding stands
+- Walk-forward 27-split rerun in progress
+- If confirmed: small transformer is undertrained, big version competitive
+- If not: original finding stands
 
-## Limitations (explicit)
+## Limitations
 
-- Single exchange (Binance.US only)
-- Single quote currency (USDT only)
+- Single exchange (Binance.US)
+- Single quote currency (USDT)
 - Single interval (hourly)
-- Survivorship: 14 tokens delisted in window, 6.7% upper bound, ~5% realistic
-  after liquidity filter (see `docs/binance_us_delistings.md`)
-- Funding cost on synthetic short leg not modeled
-- Flat slippage, no market impact (pending L2 data)
-- All results at t0=2024-01-01 only (t0 sensitivity pending)
-- 3-class label is a heuristic (regression head pending)
-- Walk-forward bootstrap is iid over overlapping splits (block bootstrap
-  result essentially identical)
+- Survivorship: 6.7% upper, ~5% realistic (see `binance_us_delistings.md`)
+- No funding cost on synthetic shorts
+- Flat slippage, no market impact
+- t0 only at 2024-01-01 (sensitivity pending)
+- 3-class label only (regression head pending)
+- Walk-forward bootstrap iid over overlapping splits (block ~identical)
 
-## Phase 2 (pending L2 access)
+## Phase 2 (L2)
 
-- L2 microstructure features (microprice, quoted spread, OBI)
-- Market impact model in backtester
-- Cross-exchange validation (Coinbase, Kraken)
-- 3-state HMM with multiple random starts on different feature combos
-- Block-bootstrap CIs (already done as robustness check)
+- Microprice, quoted spread, OBI
+- Market impact in backtester
+- Cross-exchange validation
+- 3-state HMM on different feature combos
 - Multi-seed deep model runs
 
-## Audit notes
+## Audit
 
-Two real leakage bugs were found mid-project and fixed:
-
-- Kalman parameter discontinuity: training spread used default
-  KalmanConfig, test spread used MLE-fitted params. Fixed by returning
-  train_residuals from fit_kalman_mle. Boundary std jump on synthetic
-  data went from 6.2x to 1.4x.
-- Per-pair label threshold leak: threshold was fit on first 50% of pair
-  data, extending past test windows. Fixed via label_train_end parameter
-  anchored to t0.
-
-10 leakage tests in `tests/test_leakage_audit.py`, all pass. 6 backtester
-sanity tests in `tests/test_backtest_sanity.py`, all pass. Full audit in
-`docs/leakage_audit.md`. Headline finding 1 (Kalman OOS) verified
-unchanged on the fixed pipeline (OOS column never used the buggy code
-path). Findings 2-4 re-running on the fixed pipeline; numbers will be
-folded back in.
+- 2 leakage bugs found and fixed (Kalman boundary, per-pair label)
+- 10 leakage tests pass (`tests/test_leakage_audit.py`)
+- 6 backtester sanity tests pass (`tests/test_backtest_sanity.py`)
+- Finding 1 verified unchanged on fixed pipeline
+- Findings 2-4 re-running, booster numbers already improved (0.307 -> 0.356)
+- See `docs/leakage_audit.md`

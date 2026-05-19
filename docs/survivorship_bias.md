@@ -1,114 +1,46 @@
-# Survivorship Bias
+# Survivorship
 
-The Binance.US spot store used in this project was downloaded as a single
-snapshot. Every symbol in the local data ends at the same wall-clock timestamp
-(2026-01-22 04:00 UTC), so within the panel there is no observable delisting:
-a coin is either present with data through the snapshot, or it is absent
-entirely. This shapes the bias in a specific way.
+Store was downloaded as a single snapshot. Every symbol ends at the same
+wall-clock timestamp (2026-01-22 04:00 UTC). Within the panel, no
+observable delisting. Bias is structural.
 
-## What is in the panel
+## Panel composition
 
-- 195 USDT spot pairs, hourly bars.
-- All symbols share the same final bar: 2026-01-22 04:00 UTC.
-- First-observation dates range from 2019-09-23 (BTC/ETH/BNB/XRP/BCH, the
-  oldest cohort) to 2025-12-18 (TWT, the newest).
-- 14% of symbols (28 of 195) have less than 180 days of history before the
-  primary as-of cutoff 2026-01-01. These are filtered out of any pair-selection
-  pass that requires the full training window.
+- 195 USDT spot pairs, hourly bars
+- All share final bar 2026-01-22 04:00 UTC
+- First-obs range: 2019-09-23 (BTC/ETH/BNB/XRP/BCH) to 2025-12-18 (TWT)
+- 28 of 195 (14%) have <180d history before 2026-01-01; filtered out by
+  any pair selection requiring full training window
 
-## Walk-forward delisting accounting
+## Within-window delisting (literally zero)
 
-For the walk-forward windows actually used (90-day train / 30-day test):
+| Window | available at train_end | dropped during test |
+| --- | ---: | ---: |
+| 2025-08-01..2025-10-30..2025-11-29 | 195 | 0 |
+| 2025-08-31..2025-11-29..2025-12-29 | 195 | 0 |
 
-| Window train_start | train_end | test_end | Symbols available at train_end | Dropped during test |
-| --- | --- | --- | ---: | ---: |
-| 2025-08-01 | 2025-10-30 | 2025-11-29 | 195 | 0 |
-| 2025-08-31 | 2025-11-29 | 2025-12-29 | 195 | 0 |
+Snapshot ends after every walk window. See
+`docs/survivorship_walk_counts.csv`.
 
-No symbol drops out mid-window within our data, because the snapshot ends
-after all walk windows close. Counts are reproducible via the analysis cell at
-the bottom of `docs/survivorship_walk_counts.csv`.
+## Direction of bias (all upward)
 
-## Why this still biases results upward
+- Pre-snapshot delistings are invisible: tokens tradable historically but
+  delisted before 2026-01-22 are gone from the panel
+- Pair selection only finds relationships that survived to snapshot date
+- Half-life and ADF significance over-estimated
+- Backtest Sharpe over-estimated (missing tail from delisted positions)
 
-The bias is structural, not observable in the panel:
+## External bound from Binance.US delisting log
 
-1. **Pre-snapshot delistings are invisible.** Any USDT pair that was tradable
-   during the historical training window but was delisted from Binance.US
-   before the 2026-01-22 download is missing from the panel entirely. Pair
-   selection therefore searches only over coins that survived to the
-   download date. Survivors tend to be the more liquid, longer-lived, lower-
-   blow-up assets. A walk-forward window evaluated in 2024 should logically
-   include those failed coins, but cannot.
-
-2. **Cointegration that broke and stayed broken is excluded.** Two coins that
-   were cointegrated in 2022 but then diverged because one was delisted in 2024
-   would never enter the candidate set. The strict pair-selection screen will
-   only find relationships that held together through to the snapshot. This
-   inflates apparent half-life and apparent ADF significance.
-
-3. **New listings are right-truncated.** Symbols listed in late 2025 enter the
-   panel mid-window with limited history; the liquidity and coverage filters
-   typically drop them, which is fine, but it means the universe in early
-   walk-forward windows skews toward the older cohort.
-
-## Direction of the bias
-
-All three points push reported strategy performance up:
-
-- Selected pairs are over-represented by survivors.
-- Estimated mean-reversion strength is over-estimated because pairs whose
-  spread blew apart and stayed apart are filtered out.
-- Backtest Sharpe is over-estimated because the loss tail from delisted coin
-  positions is missing.
-
-## What we cannot fix from this snapshot
-
-Reproducing the true historical universe would require backfilled price
-data for every symbol that was tradable at any past t0, including ones
-since delisted. The store does not contain this. A correct fix is to
-repull data with a delisting registry and rebuild `compute_universe_at_time`
-to include "tradable then, gone now" symbols up to the timestamp at which
-they were actually removed.
-
-## External bound from the public delisting log
-
-The Binance.US Help Center announcements page lists 14 tokens delisted
-between 2024-01-01 (our as-of cutoff) and 2026-01-22 (snapshot date):
+14 tokens delisted from Binance.US in window 2024-01-01 to 2026-01-22:
 BOND, ANT, WAVES, TUSD, CUDOS, MXC, REN, VITE, BAL, CLV, STMX, LOOM, KDA,
-OXT, JAM. Full table and sources in `docs/binance_us_delistings.md`.
+OXT, JAM. See `docs/binance_us_delistings.md`.
 
-Adding these to the 195-symbol panel gives an estimated 209 USDT pairs
-that existed at t0; the local snapshot retains 195. Headline survivorship
-rate: **14 / 209 ≈ 6.7%** of pairs that existed at t0 had been delisted
-by the snapshot.
-
-This 6.7% is a loose upper bound on the bias in our reported metrics
-because:
-
-1. Most delistees were small-cap tokens that would have failed the liquidity
-   top-50 filter regardless. An estimated 3-6 of the 14 (ANT, WAVES, BAL,
-   possibly CLV/TUSD) would have been candidates in the liquidity-filtered
-   universe.
-2. The cointegration / correlation pair-selection screen further filters
-   tokens with erratic late-stage price behavior.
-
-The honest characterization: survivorship bias on the headline metrics is
-bounded above by roughly 6-12% of the pre-filter candidate set and is
-probably much smaller after the liquidity and cointegration filters that
-the pipeline already applies.
-
-## Reproduce
-
-```bash
-python3 - <<'PY'
-import sys; sys.path.insert(0, '.')
-import pandas as pd
-from src.data_store import StoreConfig, load_symbol, list_local_symbols
-
-cfg = StoreConfig(interval="1h", data_dir="data")
-last_obs = {s: load_symbol(cfg, s, columns=["close"]).index.max() for s in list_local_symbols(cfg)}
-ser = pd.Series(last_obs).sort_values()
-print(ser.describe())
-PY
-```
+- Adding these to 195: hypothetical t0 universe ~209
+- 14/209 = 6.7% upper bound
+- After liquidity top-50 filter: 3-6 candidates missing (ANT, WAVES, BAL,
+  maybe CLV/TUSD)
+- Realistic bias: ~5% of pre-filter candidate set
+- 6.7% is loose upper, ~5% is realistic upper
+- Both apply only to the headline metrics; absolute values may shift but
+  rankings unlikely to flip
