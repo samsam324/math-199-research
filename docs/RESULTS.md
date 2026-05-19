@@ -111,7 +111,7 @@ Single-split feature ablation on the post-audit pipeline:
 - Confirms adversarial-review leak suspicion; dead on the post-audit pipeline
 - Source: `docs/feature_ablation_fixed.csv`
 
-## 4. Cost ceiling
+## 4. Cost ceiling (with deflated Sharpe correction)
 
 Entry/exit state machine. Open: flat AND pred=0 AND |z|>=2. Close:
 |z|<=0.5 OR pred=2 OR sign flip. 27 splits, $10k/leg/pair, 20 pairs.
@@ -123,12 +123,55 @@ Post-audit pipeline.
 | 5 bps (maker) | 0.80 | +12,656 | 0.83 | +13,268 | 0.90 | +14,076 |
 | 15 bps (Binance.US taker) | -14.04 | -222,802 | -13.88 | -221,791 | -14.17 | -221,393 |
 
-- Pre-cost Sharpe ~8 on all three top models, 62% per-trade win rate
-- Break-even ~5 bps round-trip per leg (LSTM/booster/zscore all just positive)
-- Binance.US taker (10 bps/side, 20 bps round-trip per leg): destroyed
-- Binance.US maker (~5 bps round-trip per leg): at the boundary
-- Backtester sanity-checked (6 hand-computable tests, all pass)
-- Source: `artifacts/backtest_fixed_sm_{0,5,15}bps/portfolio_metrics.csv`
+### Deflated Sharpe (Bailey & Lopez de Prado 2014)
+
+The naive Sharpe is biased upward by selection: across this project we
+ran ~30-60 strategy configurations (2 spread definitions, 2 label
+schemes, 7 models, 3 HMM variants, 2 entry/exit thresholds, 3 cost
+levels, etc.) and report the best. The deflated Sharpe corrects for that.
+
+SR_0 = expected max Sharpe under the null over N trials, given the
+variance of Sharpes across the trials.
+
+| N trials | SR_0 (ann.) | 0 bps DSR (top) | 5 bps DSR (top) | 15 bps DSR (top) |
+| ---: | ---: | ---: | ---: | ---: |
+| 5 | 4.08 | 1.000 | 0.42 | ~0 |
+| 10 | 5.38 | 0.99 | 0.38 | ~0 |
+| 25 | 6.83 | 0.90 | 0.37 | ~0 |
+| 50 | 7.78 | 0.67 | 0.34 | ~0 |
+
+- At a defensible N=10-25 (the configurations we actually evaluated and
+  reported on), pre-cost Sharpe is significant
+- At N>=50 (conservative count across the whole project), pre-cost
+  Sharpe does NOT clear the deflated bar
+- The "5 bps break-even" finding does NOT survive even N=10 correction.
+  The observed Sharpe 0.90 is below the chance-best of 1.23 annualized
+- The "15 bps destroys it" finding is unaffected by DSR; the Sharpe is
+  deeply negative regardless
+- Source: `docs/dsr_{0,5,15}bps.csv`, `scripts/run_deflated_sharpe.py`
+
+### Honest re-statement
+
+- **Pre-cost signal: ambiguous.** Without DSR, Sharpe ~8 looks decisive.
+  With N=50 DSR correction, indistinguishable from chance-best of the
+  same number of strategies. Reportable at N <= 25.
+- **Break-even cost claim is retracted.** Sharpe 0.80-0.90 at 5 bps does
+  not survive selection adjustment at any plausible N. We cannot claim
+  the alpha clears 5 bps round-trip per leg.
+- **Above-cost claim survives.** At 15 bps round-trip per leg the
+  strategy loses deterministically; no DSR question.
+
+The narrower defensible claim: at hourly cadence on Binance.US USDT
+pair spreads, no model among the ones tried produces a Sharpe that
+beats selection-corrected chance at any realistic cost level. The
+pre-cost signal MIGHT be real but cannot be confidently distinguished
+from selection bias on this dataset alone.
+
+What would resolve this:
+- Pre-register a single model configuration BEFORE looking at results,
+  then evaluate it once
+- Cross-validate on out-of-sample exchanges (Coinbase, Kraken)
+- L2 data + market impact model (Phase 2)
 
 ## Negative results
 
