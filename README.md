@@ -39,10 +39,17 @@ pending the data sample.
    z-score 96.3% [95.9%, 96.6%], LSTM 79.5% [76.8%, 82.4%], booster
    74.1% [72.0%, 76.0%]. Z-score makes 4× fewer trades and wins on
    selectivity; LSTM wins on edge per bar.
-4. **Hourly USDT pair-spread alpha on Binance.US has a cost ceiling of
-   roughly 5 bps round-trip per leg.** Pre-cost Sharpe ≈ 8 with proper
-   entry/exit state machine; maker fees (~5 bps round-trip) leave it
-   barely positive; taker fees (~15 bps round-trip) eliminate it.
+4. **Cost ceiling: weaker than naive Sharpe suggests.** Pre-cost Sharpe
+   ≈ 8 with proper entry/exit state machine, but Bailey & López de
+   Prado's deflated Sharpe (N≈25-50 trials across the project)
+   indicates this is at most marginally above the chance-best of N
+   random strategies. At 5 bps round-trip per leg the Sharpe falls to
+   ~0.9 and does NOT survive DSR correction at any plausible N. At
+   15 bps everything is deeply negative. **Defensible claim**: at
+   hourly cadence on Binance.US USDT pairs, no tried model produces a
+   selection-corrected Sharpe that beats chance at realistic cost
+   levels. The pre-cost signal may be real but cannot be confidently
+   distinguished from selection bias on this dataset alone.
 
 Two negative results, both robust across pipelines:
 

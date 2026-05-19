@@ -15,8 +15,13 @@ Read README first.
   pnl_mean_to_std 0.376 [0.362, 0.388] > booster 0.356 [0.342, 0.368]
   > zscore 0.282 [0.274, 0.291] > transformer 0.018 [-0.025, 0.064].
   Per-trade win rate: zscore 0.96, LSTM 0.80, booster 0.74.
-- Pre-cost Sharpe ~8 with proper entry/exit state machine. Break-even
-  ~5 bps round-trip per leg. Binance.US taker (15 bps) destroys it.
+- Pre-cost Sharpe ~8 with state machine, but deflated Sharpe (Bailey
+  & Lopez de Prado 2014) at N=50 trials gives SR_0 = 7.78 annualized.
+  DSR ~0.6, no rejection of null. At 5 bps the Sharpe ~0.9 sits BELOW
+  the chance-best of 1.23 at N=10. We retract the "5 bps break-even"
+  claim. At 15 bps everything loses deterministically. Honest claim:
+  no model among those tried produces a selection-corrected Sharpe
+  that beats chance at realistic costs.
 - 2-state Gaussian HMM filter doesn't help. Generalizes to 3-state.
 - Single chronological train/test splits over-state ML. Transformer's
   earlier #1 finish was a sampling fluke.
