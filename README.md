@@ -2,8 +2,8 @@
 
 UCLA Math 199 research project: do crypto pair-spreads exhibit measurable
 mean reversion, and can it be characterized rigorously enough to draw
-inferences about market efficiency? Authors: Jack Lutz, Sammy Salameh,
-with collaborator Frank Kronewitter on the initial ML pipeline.
+inferences about market efficiency? Authors: Jack Lutz, Sammy Adham,
+Frank Kronewitter.
 
 The proposal (`proposal.md`) follows Gatev, Goetzmann, and Rouwenhorst
 (2006) on equity pairs trading, adapted to crypto. This README is the
@@ -64,11 +64,17 @@ Quantified limitations:
 ## Reproducibility
 
 All numbers in `docs/RESULTS.md` are produced by scripts in this repo.
-Outputs land under `artifacts/` (gitignored). To reproduce end-to-end:
+Outputs land under `artifacts/` (gitignored). The local Binance.US
+parquet store under `data/spot_1h/` is also gitignored (≈200 MB of
+hourly candles for 195 symbols). To reproduce end-to-end:
 
 ```bash
 # 0. Install deps
 pip install -r requirements.txt   # numpy pandas statsmodels sklearn torch hmmlearn xgboost
+
+# 0a. Build the local OHLCV store from Binance.US (one-time, ~30 min for full history).
+#     Incremental on re-run; safe to interrupt and resume.
+python3 store_data.py             # populates data/spot_1h/{SYMBOL}.parquet for all listed USDT pairs
 
 # 1. Build the long Kalman dataset (uses local data store from store_data.py)
 python3 scripts/run_first_branch.py --use-kalman --skip-deep \

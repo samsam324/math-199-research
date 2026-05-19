@@ -1,9 +1,8 @@
 # Note to Advisor
 
 This is a snapshot of the MATH 199 statistical-arbitrage project (Jack
-Lutz + Sammy Salameh + collaborator Frank Kronewitter) representing
-**Phase 1: methodology and first-pass results on hourly Binance.US spot
-data**.
+Lutz, Sammy Adham, Frank Kronewitter) representing **Phase 1: methodology
+and first-pass results on hourly Binance.US spot data**.
 
 Phase 2 will deepen the analysis with L2 order-book data once UCLA
 access comes through. Until then, the L2 storage schema and feature
