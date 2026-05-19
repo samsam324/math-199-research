@@ -106,7 +106,16 @@ def compute_pair_features(
     pair_row: pd.Series,
     fcfg: FeatureConfig = FeatureConfig(),
     btc_symbol: str = "BTCUSDT",
+    spread_override: Optional[pd.Series] = None,
 ) -> pd.DataFrame:
+    """
+    Build per-bar features for a pair.
+
+    If spread_override is provided (e.g. Kalman dynamic residuals indexed by
+    timestamp), it is used as the spread series directly. Otherwise the
+    static OLS spread = log_a - (alpha + beta * log_b) is computed from
+    pair_row's alpha and beta.
+    """
     sym_a = str(pair_row["sym_a"])
     sym_b = str(pair_row["sym_b"])
     alpha = float(pair_row.get("alpha", 0.0))
@@ -118,7 +127,10 @@ def compute_pair_features(
 
     log_a = np.log(close[sym_a].astype(float))
     log_b = np.log(close[sym_b].astype(float))
-    spread = log_a - (alpha + beta * log_b)
+    if spread_override is not None:
+        spread = spread_override.reindex(close.index)
+    else:
+        spread = log_a - (alpha + beta * log_b)
     spread_mean = spread.rolling(fcfg.z_window, min_periods=max(24, fcfg.z_window // 4)).mean()
     spread_std = spread.rolling(fcfg.z_window, min_periods=max(24, fcfg.z_window // 4)).std()
 
@@ -176,12 +188,16 @@ def build_feature_store(
     out_dir: Path,
     fcfg: FeatureConfig = FeatureConfig(),
     top_pairs: Optional[int] = None,
+    spread_overrides: Optional[Dict[str, pd.Series]] = None,
 ) -> pd.DataFrame:
     out_dir.mkdir(parents=True, exist_ok=True)
     selected = pairs.head(top_pairs) if top_pairs else pairs
+    overrides = spread_overrides or {}
     frames: List[pd.DataFrame] = []
     for _, pair_row in selected.iterrows():
-        features = compute_pair_features(close, volume_usdt, pair_row, fcfg=fcfg)
+        pair_name = f"{pair_row['sym_a']}_{pair_row['sym_b']}"
+        override = overrides.get(pair_name)
+        features = compute_pair_features(close, volume_usdt, pair_row, fcfg=fcfg, spread_override=override)
         if features.empty:
             continue
         pair_name = str(features["pair"].iloc[0])
@@ -192,3 +208,60 @@ def build_feature_store(
     all_features = pd.concat(frames, axis=0, ignore_index=True)
     all_features.to_parquet(out_dir / "all_pair_features.parquet", engine="pyarrow", index=False)
     return all_features
+
+
+def build_kalman_spread_overrides(
+    close: pd.DataFrame,
+    pairs: pd.DataFrame,
+    train_end: pd.Timestamp,
+    top_pairs: Optional[int] = None,
+) -> Dict[str, pd.Series]:
+    """
+    For each pair: fit Kalman MLE on close history strictly before train_end,
+    then forward-roll the filter across the full available history to produce
+    a dynamic-beta residual series indexed on close.index. The MLE fit uses
+    only training data; the forward pass uses fitted parameters held fixed
+    and the trained final state, so the resulting spread series carries no
+    in-sample whitening past train_end.
+    """
+    from src.kalman_hedge import fit_kalman_mle, kalman_forward_residuals  # local import
+
+    train_end = _to_utc(train_end)
+    selected = pairs.head(top_pairs) if top_pairs else pairs
+    out: Dict[str, pd.Series] = {}
+
+    for _, pair_row in selected.iterrows():
+        sym_a, sym_b = pair_row["sym_a"], pair_row["sym_b"]
+        if sym_a not in close.columns or sym_b not in close.columns:
+            continue
+        sub = np.log(close[[sym_a, sym_b]].astype(float)).dropna()
+        if sub.empty:
+            continue
+        train = sub[sub.index < train_end]
+        test = sub[sub.index >= train_end]
+        if len(train) < 200:
+            continue
+        try:
+            fitted = fit_kalman_mle(train[sym_a].to_numpy(), train[sym_b].to_numpy())
+        except Exception:
+            continue
+        # In-sample residuals from the fitted-state forward run on training.
+        from src.kalman_hedge import kalman_dynamic_hedge
+
+        _, _, train_resid, _ = kalman_dynamic_hedge(
+            train[sym_a].to_numpy(),
+            train[sym_b].to_numpy(),
+        )
+        # OOS residuals from the held-out test forward run.
+        if not test.empty:
+            _, _, test_resid = kalman_forward_residuals(
+                test[sym_a].to_numpy(),
+                test[sym_b].to_numpy(),
+                fitted,
+            )
+        else:
+            test_resid = np.empty(0, dtype=float)
+        combined = np.concatenate([train_resid, test_resid])
+        series = pd.Series(combined, index=sub.index, name="spread")
+        out[f"{sym_a}_{sym_b}"] = series
+    return out

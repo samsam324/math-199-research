@@ -12,7 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.data_store import StoreConfig, build_close_panel, list_local_symbols, load_symbol
-from src.features import FeatureConfig, build_feature_store, load_ohlcv_panel
+from src.features import FeatureConfig, build_feature_store, build_kalman_spread_overrides, load_ohlcv_panel
 from src.ml_dataset import DatasetConfig, add_walk_forward_splits, build_samples_from_features, save_dataset
 from src.modeling import (
     TrainingConfig,
@@ -44,6 +44,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-test-samples", type=int, default=5000)
     p.add_argument("--dl-epochs", type=int, default=5)
     p.add_argument("--skip-deep", action="store_true", help="Run feature, dataset, XGBoost/fallback, and z-score baseline only.")
+    p.add_argument("--use-kalman", action="store_true", help="Use Kalman dynamic-beta spreads (MLE-fit on training data) as the spread input to features.")
     return p.parse_args()
 
 
@@ -95,7 +96,22 @@ def main() -> None:
     panels = load_ohlcv_panel(cfg, sorted(set(liquid + ["BTCUSDT"])), train_start, test_end, min_symbol_coverage=0.75)
     fcfg = FeatureConfig(target_horizon=args.horizon)
     features_dir = out_dir / "features"
-    features = build_feature_store(panels["close"], panels["volume_usdt"], pairs, features_dir, fcfg=fcfg, top_pairs=args.top_pairs)
+
+    spread_overrides = None
+    if args.use_kalman:
+        print(f"Building Kalman dynamic-beta spreads (MLE-fit on data < {train_end})...", flush=True)
+        spread_overrides = build_kalman_spread_overrides(
+            close=panels["close"],
+            pairs=pairs,
+            train_end=train_end,
+            top_pairs=args.top_pairs,
+        )
+        print(f"Kalman spreads built for {len(spread_overrides)} pairs.", flush=True)
+
+    features = build_feature_store(
+        panels["close"], panels["volume_usdt"], pairs, features_dir,
+        fcfg=fcfg, top_pairs=args.top_pairs, spread_overrides=spread_overrides,
+    )
     if features.empty:
         raise RuntimeError("Feature store is empty.")
     print(f"Feature rows: {len(features)}; pairs: {features['pair'].nunique()}", flush=True)
