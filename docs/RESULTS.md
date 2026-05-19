@@ -132,16 +132,20 @@ Post-audit pipeline.
 
 ### HMM filter
 
-| Model | raw total_pnl | HMM-filtered |
-| --- | ---: | ---: |
-| booster | 352.67 | 149.12 |
-| LSTM | 332.93 | 135.78 |
-| zscore | 206.07 | 69.16 |
-| transformer | 104.25 | 6.03 |
+Post-audit pipeline, 27 splits:
 
-- 30% bars suppressed, 30-60% PnL gone
+| Model | raw total_pnl | HMM-filtered total_pnl | bar suppression |
+| --- | ---: | ---: | ---: |
+| lstm | 334.6 | 142.6 | -48% |
+| booster | 321.5 | 132.8 | -44% |
+| zscore | 195.7 | 71.4 | -55% |
+| transformer | 0.7 | -7.0 | -47% |
+| majority | 21.2 | 9.7 | -39% |
+
+- 40-55% of bars suppressed, total_pnl drops 50-65% across the board
 - Same negative result with 3 states + 3 random starts
-- Source: `artifacts/hmm_kalman_long/`, `artifacts/hmm_kalman_long_3state/`
+- Same negative result on the pre-audit pipeline
+- Source: `artifacts/hmm_kalman_long_fixed/`, `artifacts/hmm_kalman_long_3state/`
 
 ### Single-split ML over-states
 
