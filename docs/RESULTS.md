@@ -50,24 +50,33 @@ Source: `artifacts/kalman_oos/kalman_oos_comparison.csv`.
 
 ## Finding 2: Once Kalman spreads are used, classical z-score matches ML on signal quality, dominates on trade selectivity
 
-Walk-forward across 27 splits (135,000 test samples total). Bootstrap
-5/95% CIs on per-split `pnl_mean_to_std`:
+Walk-forward across 27 splits (135,000 test samples total). Block-bootstrap
+5/95% CIs on per-split `pnl_mean_to_std` with block size 3 (the natural
+choice for 90-day training windows stepped by 30 days, which gives roughly
+3-step training overlap):
 
 | Model | mean | 5/95% CI | per-trade win rate | trades/split |
 | --- | ---: | ---: | ---: | ---: |
-| **sklearn_hist_gradient_boosting** | **0.307** | [0.291, 0.323] | 0.62 | 4,466 |
-| zscore_rule  | 0.282 | [0.272, 0.292] | **0.96** | 591 |
-| lstm         | 0.279 | [0.258, 0.297] | 0.60 | 4,621 |
-| majority_class | 0.148 | [-0.023, 0.310] | 0.56 | 5,000 |
-| transformer  | 0.047 | [-0.057, 0.148] | 0.52 | 4,549 |
-| random_stratified | 0.008 | [0.003, 0.014] | 0.51 | 3,828 |
+| **sklearn_hist_gradient_boosting** | **0.307** | [0.292, 0.323] | 0.62 | 4,466 |
+| zscore_rule  | 0.282 | [0.274, 0.291] | **0.96** | 591 |
+| lstm         | 0.279 | [0.253, 0.300] | 0.60 | 4,621 |
+| majority_class | 0.148 | [0.034, 0.264] | 0.56 | 5,000 |
+| transformer  | 0.047 | [-0.060, 0.149] | 0.52 | 4,549 |
+| random_stratified | 0.008 | [0.003, 0.013] | 0.51 | 3,828 |
 | persist_class | 0.000 | [0.000, 0.000] | 0.00 | 0 |
 
 Boost edges LSTM and z-score by a small but real margin (CIs do not
 overlap). LSTM and z-score are statistically tied. **Transformer's CI
 includes zero** — we cannot reject the null that its edge over random is
-sampling noise. Majority class similarly cannot be distinguished from
-noise across splits.
+sampling noise. Majority class CI does not include zero under block
+bootstrap (it did under iid), but its 0.15 mean and wide 0.034-0.264 CI
+make it inferior to all the trading-aware models.
+
+iid bootstrap (block_size=1) was checked as a robustness comparison;
+results are essentially identical for the trading models because models
+retrain from scratch each split, so per-split metric values are not
+strongly autocorrelated despite overlapping training data. The block
+bootstrap is reported here as the more defensible default.
 
 Same signal, different operating point: z-score acts only when
 |spread_z| ≥ 1.5 and is right 96% of the time on the trades it makes; ML
