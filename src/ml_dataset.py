@@ -221,7 +221,12 @@ def save_dataset(
         y_regression=samples["y_regression"].to_numpy(dtype=np.float32) if not samples.empty else np.empty((0,), dtype=np.float32),
         feature_columns=np.asarray(FEATURE_COLUMNS, dtype=object),
     )
-    (out_dir / "dataset_config.json").write_text(json.dumps(asdict(cfg), indent=2), encoding="utf-8")
+    # Stringify Timestamp fields so json.dumps doesn't choke.
+    cfg_dict = asdict(cfg)
+    for k, v in list(cfg_dict.items()):
+        if isinstance(v, pd.Timestamp):
+            cfg_dict[k] = v.isoformat()
+    (out_dir / "dataset_config.json").write_text(json.dumps(cfg_dict, indent=2), encoding="utf-8")
 
 
 def load_dataset(dataset_dir: Path) -> Tuple[pd.DataFrame, np.ndarray]:
