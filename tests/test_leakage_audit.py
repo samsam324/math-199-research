@@ -418,6 +418,112 @@ def test_universe_min_history_strict():
     print("test_universe_min_history_strict: PASS")
 
 
+# ---------------------------------------------------------------------------
+# 9. Walk-forward window ordering: every test sample timestamp > every train
+#    sample timestamp in that split.
+# ---------------------------------------------------------------------------
+def test_walk_forward_temporal_ordering():
+    """
+    Simulate the windowing logic from scripts/run_walk_forward.py and check
+    that no test sample timestamp is <= any training sample timestamp in
+    the same split. This catches off-by-one errors or accidental inclusion
+    of test bars in training.
+    """
+    n = 24 * 200  # 200 days of hourly bars
+    ts = pd.date_range("2024-01-01", periods=n, freq="1h", tz="UTC")
+    samples = pd.DataFrame({"timestamp": ts, "v": np.arange(n)})
+
+    train_days = 30
+    test_days = 10
+    step_days = 10
+    min_ts = samples["timestamp"].min().floor("D")
+    max_ts = samples["timestamp"].max().ceil("D")
+    train_delta = pd.Timedelta(days=train_days)
+    test_delta = pd.Timedelta(days=test_days)
+    step_delta = pd.Timedelta(days=step_days)
+
+    splits = 0
+    ts_cursor = min_ts
+    while ts_cursor + train_delta + test_delta <= max_ts:
+        train_end = ts_cursor + train_delta
+        test_end = train_end + test_delta
+        train = samples[(samples["timestamp"] >= ts_cursor) & (samples["timestamp"] < train_end)]
+        test = samples[(samples["timestamp"] >= train_end) & (samples["timestamp"] < test_end)]
+        if not train.empty and not test.empty:
+            tr_max = train["timestamp"].max()
+            te_min = test["timestamp"].min()
+            assert te_min > tr_max, (
+                f"split at {ts_cursor}: test min {te_min} not strictly > train max {tr_max}"
+            )
+            # And no sample appears in both train and test
+            common = set(train["v"]).intersection(set(test["v"]))
+            assert not common, f"split at {ts_cursor}: {len(common)} samples in both train and test"
+        splits += 1
+        ts_cursor += step_delta
+    assert splits >= 3, f"only {splits} splits generated; expected at least 3"
+    print(f"test_walk_forward_temporal_ordering: PASS ({splits} splits, all strictly ordered)")
+
+
+# ---------------------------------------------------------------------------
+# 10. Cross-pair feature isolation: features for pair A do not depend on
+#     data from any unrelated pair.
+# ---------------------------------------------------------------------------
+def test_cross_pair_feature_isolation():
+    """
+    Build features for pair A. Then mutate price/volume data for pair B
+    (an entirely different pair that shares no symbols with A) and rebuild
+    features for pair A. Pair A features should be byte-identical.
+    BTC is the one symbol shared across all pairs (for btc_return_24h), so
+    we use a non-BTC pair for both A and B and keep BTC fixed.
+    """
+    from src.features import FeatureConfig, compute_pair_features
+
+    rng = np.random.default_rng(7)
+    n = 1500
+    ts = pd.date_range("2024-01-01", periods=n, freq="1h", tz="UTC")
+    p_btc = 100 * np.exp(np.cumsum(rng.normal(0, 0.005, n)))
+    vol = 100.0 + rng.normal(0, 5, n).clip(min=10.0)
+    vol2 = 100.0 + rng.normal(0, 5, n).clip(min=10.0)
+
+    # Pair A: A1 vs A2 (always fixed)
+    p_a1 = 100 * np.exp(np.cumsum(rng.normal(0, 0.005, n)))
+    p_a2 = 100 * np.exp(np.cumsum(rng.normal(0, 0.005, n)))
+
+    # Pair B: B1 vs B2 (varied between two runs)
+    p_b1_clean = 100 * np.exp(np.cumsum(rng.normal(0, 0.005, n)))
+    p_b2_clean = 100 * np.exp(np.cumsum(rng.normal(0, 0.005, n)))
+    p_b1_dirty = p_b1_clean * 100.0  # totally different scale; should not affect A
+    p_b2_dirty = p_b2_clean / 100.0
+
+    def feats_for_pair_a(p_b1, p_b2):
+        close = pd.DataFrame({
+            "A1USDT": p_a1, "A2USDT": p_a2,
+            "B1USDT": p_b1, "B2USDT": p_b2,
+            "BTCUSDT": p_btc,
+        }, index=ts)
+        v = pd.DataFrame({c: vol if i % 2 == 0 else vol2 for i, c in enumerate(close.columns)}, index=ts)
+        pair_row = pd.Series({"sym_a": "A1USDT", "sym_b": "A2USDT", "alpha": 0.0, "beta_a_on_b": 1.0})
+        return compute_pair_features(close, v, pair_row, fcfg=FeatureConfig(target_horizon=24))
+
+    feats_clean = feats_for_pair_a(p_b1_clean, p_b2_clean)
+    feats_dirty = feats_for_pair_a(p_b1_dirty, p_b2_dirty)
+    assert len(feats_clean) == len(feats_dirty) > 0, "Both feature frames should be non-empty and same length"
+    # Pair A features must be identical regardless of pair B data
+    feature_cols = [
+        "spread", "spread_z_168h", "spread_diff_1h", "spread_diff_4h", "spread_diff_24h",
+        "spread_vol_24h", "spread_vol_168h", "volume_ratio", "volume_z_a_168h", "volume_z_b_168h",
+        "pair_volume_sum", "pair_volume_gmean", "btc_return_24h", "rolling_corr_24h",
+        "realized_vol_a_24h", "realized_vol_b_24h",
+    ]
+    for col in feature_cols:
+        max_diff = float((feats_clean[col] - feats_dirty[col]).abs().max())
+        assert max_diff < 1e-12, (
+            f"feature '{col}' for pair A differs after mutating unrelated pair B data; "
+            f"max abs diff = {max_diff}"
+        )
+    print(f"test_cross_pair_feature_isolation: PASS ({len(feature_cols)} features, no cross-pair contamination)")
+
+
 if __name__ == "__main__":
     test_universe_excludes_post_t0_listings()
     test_universe_min_history_strict()
@@ -427,4 +533,6 @@ if __name__ == "__main__":
     test_kalman_no_parameter_discontinuity()
     test_deep_model_standardization_train_only()
     test_backtester_one_bar_execution_lag()
-    print("\nAll 8 leakage audit tests PASSED.")
+    test_walk_forward_temporal_ordering()
+    test_cross_pair_feature_isolation()
+    print("\nAll 10 leakage audit tests PASSED.")
