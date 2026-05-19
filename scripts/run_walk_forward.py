@@ -21,6 +21,8 @@ from src.modeling import (
     _metrics_for_predictions,
     _prediction_frame,
     combine_results,
+    train_lstm_on_split,
+    train_transformer_on_split,
 )
 
 
@@ -34,6 +36,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-train-samples", type=int, default=30000)
     p.add_argument("--max-test-samples", type=int, default=10000)
     p.add_argument("--seed", type=int, default=7)
+    p.add_argument(
+        "--deep",
+        action="store_true",
+        help="Also train LSTM and transformer on each walk-forward split. Loads sequences.npz and is slow.",
+    )
+    p.add_argument("--dl-epochs", type=int, default=4, help="Epochs per deep model per split when --deep is set.")
     return p.parse_args()
 
 
@@ -101,14 +109,18 @@ def main() -> None:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    samples, _ = load_dataset(Path(args.dataset_dir))
+    samples, sequences = load_dataset(Path(args.dataset_dir))
     samples = samples.sort_values("timestamp").copy()
     samples["timestamp"] = pd.to_datetime(samples["timestamp"], utc=True)
     cfg = TrainingConfig(
         max_train_samples=args.max_train_samples,
         max_test_samples=args.max_test_samples,
+        dl_epochs=args.dl_epochs,
         seed=args.seed,
     )
+
+    if args.deep:
+        print(f"Deep models enabled. Sequences shape: {sequences.shape}, epochs/split: {cfg.dl_epochs}")
 
     results: List[Tuple[pd.DataFrame, Dict[str, float]]] = []
     split_rows: List[Dict[str, object]] = []
@@ -122,6 +134,12 @@ def main() -> None:
 
         split_results = _baselines(train, test, cfg)
         split_results.append(_train_tabular(train, test, cfg))
+
+        if args.deep:
+            print(f"  split {split_id}: training LSTM...")
+            split_results.append(train_lstm_on_split(train, test, sequences, cfg))
+            print(f"  split {split_id}: training transformer...")
+            split_results.append(train_transformer_on_split(train, test, sequences, cfg))
 
         for pred_df, metrics in split_results:
             pred_df = pred_df.copy()

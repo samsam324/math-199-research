@@ -187,20 +187,33 @@ def _require_torch():
     return torch, nn, DataLoader, TensorDataset
 
 
-def _train_torch_classifier(
+def _torch_device():
+    torch, _, _, _ = _require_torch()
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    mps = getattr(torch.backends, "mps", None)
+    if mps is not None and mps.is_available():
+        return torch.device("mps")
+    return torch.device("cpu")
+
+
+def _train_torch_on_split(
     model_name: str,
     model_factory,
-    samples: pd.DataFrame,
+    train: pd.DataFrame,
+    test: pd.DataFrame,
     sequences: np.ndarray,
     cfg: TrainingConfig,
 ) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    """
+    Train a torch classifier on a pre-split (train, test) pair of sample frames.
+    Used by both the single-split entry points and the walk-forward driver, so
+    every torch model trains and predicts the same way regardless of caller.
+    """
     torch, nn, DataLoader, TensorDataset = _require_torch()
     torch.manual_seed(cfg.seed)
     np.random.seed(cfg.seed)
 
-    train, test = _split_frame(samples)
-    train = _balanced_tail(train, cfg.max_train_samples)
-    test = _balanced_tail(test, cfg.max_test_samples)
     train_ids = train["sample_id"].to_numpy(dtype=int)
     test_ids = test["sample_id"].to_numpy(dtype=int)
 
@@ -216,7 +229,7 @@ def _train_torch_classifier(
     x_train = (x_train - mu) / sd
     x_test = (x_test - mu) / sd
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = _torch_device()
     model = model_factory(x_train.shape[-1]).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=cfg.learning_rate, weight_decay=1e-5)
     loss_fn = nn.CrossEntropyLoss()
@@ -245,7 +258,20 @@ def _train_torch_classifier(
     return _metrics_for_predictions(model_name, train, test, pred)
 
 
-def train_lstm(samples: pd.DataFrame, sequences: np.ndarray, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+def _train_torch_classifier(
+    model_name: str,
+    model_factory,
+    samples: pd.DataFrame,
+    sequences: np.ndarray,
+    cfg: TrainingConfig,
+) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    train, test = _split_frame(samples)
+    train = _balanced_tail(train, cfg.max_train_samples)
+    test = _balanced_tail(test, cfg.max_test_samples)
+    return _train_torch_on_split(model_name, model_factory, train, test, sequences, cfg)
+
+
+def _lstm_factory():
     torch, nn, _, _ = _require_torch()
 
     class LSTMClassifier(nn.Module):
@@ -258,10 +284,10 @@ def train_lstm(samples: pd.DataFrame, sequences: np.ndarray, cfg: TrainingConfig
             out, _ = self.lstm(x)
             return self.head(out[:, -1, :])
 
-    return _train_torch_classifier("lstm", LSTMClassifier, samples, sequences, cfg)
+    return LSTMClassifier
 
 
-def train_transformer(samples: pd.DataFrame, sequences: np.ndarray, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+def _transformer_factory():
     torch, nn, _, _ = _require_torch()
 
     class TransformerClassifier(nn.Module):
@@ -280,7 +306,23 @@ def train_transformer(samples: pd.DataFrame, sequences: np.ndarray, cfg: Trainin
             z = self.encoder(z)
             return self.head(z[:, 0, :])
 
-    return _train_torch_classifier("transformer", TransformerClassifier, samples, sequences, cfg)
+    return TransformerClassifier
+
+
+def train_lstm(samples: pd.DataFrame, sequences: np.ndarray, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    return _train_torch_classifier("lstm", _lstm_factory(), samples, sequences, cfg)
+
+
+def train_transformer(samples: pd.DataFrame, sequences: np.ndarray, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    return _train_torch_classifier("transformer", _transformer_factory(), samples, sequences, cfg)
+
+
+def train_lstm_on_split(train: pd.DataFrame, test: pd.DataFrame, sequences: np.ndarray, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    return _train_torch_on_split("lstm", _lstm_factory(), train, test, sequences, cfg)
+
+
+def train_transformer_on_split(train: pd.DataFrame, test: pd.DataFrame, sequences: np.ndarray, cfg: TrainingConfig = TrainingConfig()) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    return _train_torch_on_split("transformer", _transformer_factory(), train, test, sequences, cfg)
 
 
 def baseline_zscore_rule(
