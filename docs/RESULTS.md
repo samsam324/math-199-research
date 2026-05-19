@@ -94,20 +94,22 @@ HAC (Newey-West lag=24):
 
 ## 3. ML signal is one feature
 
-Single-split feature ablation:
+Single-split feature ablation on the post-audit pipeline:
 
 | Dropped | dAcc | dF1 | dPnL |
 | --- | ---: | ---: | ---: |
-| baseline | 0.597 | 0.512 | 26.19 |
-| latest_spread_z | -0.183 | -0.151 | -23.07 |
-| time_since_zero_crossing | +0.002 | +0.006 | -0.21 |
-| every other | <=+/-0.006 | <=+/-0.013 | <=+/-0.5 |
+| baseline (all 14) | 0.587 | 0.575 | 26.22 |
+| **latest_spread_z** | **-0.144** | **-0.190** | **-20.72** |
+| mean_volume_ratio | -0.001 | -0.003 | -0.43 |
+| every other | <=+/-0.005 | <=+/-0.005 | <=+/-0.5 |
 
 - `latest_spread_z` carries the signal
+- Drop it and the model loses 14pp accuracy, 19pp F1, 79% PnL
+- Every other feature changes the model by <=+/-0.5 PnL units (noise)
 - ML = fancy z-score
-- `time_since_zero_crossing` trajectory: +0.026 (static) -> +0.001 (Kalman short) -> 0 (Kalman long)
-- Confirms adversarial-review leak suspicion
-- Source: `docs/feature_ablation_kalman_long.csv`
+- `time_since_zero_crossing` trajectory: +0.026 (static) -> +0.001 (Kalman short) -> 0 (post-audit)
+- Confirms adversarial-review leak suspicion; dead on the post-audit pipeline
+- Source: `docs/feature_ablation_fixed.csv`
 
 ## 4. Cost ceiling
 
