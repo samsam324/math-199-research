@@ -49,32 +49,48 @@ Same protocol on all 1219 pairs in the liquidity top-50 universe:
 
 ## 2. Walk-forward, post-audit Kalman pipeline
 
-27 splits, block-bootstrap 5/95% CIs (block_size=3):
+27 splits, deep models included. Block-bootstrap 5/95% CIs (block_size=3):
 
 | Model | pnl_mean_to_std | 5/95% CI | win rate | win rate CI | trades/split |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| booster | 0.356 | [0.342, 0.368] | 0.74 | [0.72, 0.76] | 2,355 |
-| zscore | 0.282 | [0.274, 0.291] | 0.96 | [0.959, 0.967] | 588 |
-| majority | 0.021 | [0.000, 0.063] | 0.03 | [0.00, 0.083] | 185 |
-| random | 0.001 | [-0.003, 0.005] | 0.50 | [0.500, 0.505] | 2,689 |
-| persist | 0.000 | [0.000, 0.000] | 0.00 | [0.00, 0.00] | 0 |
+| **lstm** | **0.376** | [0.362, 0.388] | **0.795** | [0.768, 0.824] | 2,083 |
+| booster | 0.356 | [0.342, 0.368] | 0.741 | [0.720, 0.760] | 2,355 |
+| zscore | 0.282 | [0.274, 0.291] | 0.963 | [0.959, 0.966] | 588 |
+| majority | 0.021 | [0.000, 0.063] | 0.028 | [0.000, 0.083] | 185 |
+| transformer | 0.018 | [-0.025, 0.064] | 0.437 | [0.354, 0.519] | 691 |
+| random | 0.001 | [-0.003, 0.005] | 0.502 | [0.500, 0.505] | 2,689 |
+| persist | 0.000 | [0.000, 0.000] | 0.000 | [0.000, 0.000] | 0 |
 
-- Booster CI strictly above zscore CI
-- Zscore: 4x fewer trades, 96% per-trade win rate
-- LSTM and transformer pending (deep walk-forward running on fixed dataset)
+- LSTM is now the leader. LSTM CI [0.362, 0.388] and booster CI [0.342, 0.368]
+  overlap slightly but LSTM win rate CI [0.768, 0.824] is strictly above
+  booster CI [0.720, 0.760]. LSTM dominates on per-trade quality.
+- Booster CI strictly above zscore CI on pnl_mean_to_std
+- Zscore still wins on per-trade win rate at 4x fewer trades
+- Transformer (small, param-matched to LSTM) CI includes zero
+- Audit fixes monotonically improved ML quality:
+  - LSTM pnl_mean_to_std: 0.279 (pre-audit) -> 0.376 (post-audit)
+  - LSTM win rate: 0.603 -> 0.795
+  - Booster pnl_mean_to_std: 0.307 -> 0.356
+  - Booster win rate: 0.623 -> 0.741
+  - Zscore unchanged (doesn't use Kalman features or per-pair labels)
+- Source: `artifacts/walk_forward_kalman_long_fixed_deep/walk_forward_summary.csv`
 
 HAC (Newey-West lag=24):
 
 | Model | iid | HAC | inflation |
 | --- | ---: | ---: | ---: |
+| lstm | 0.376 | 0.197 | 1.92 |
 | booster | 0.356 | 0.188 | 1.91 |
 | zscore | 0.282 | 0.138 | 2.07 |
 | majority | 0.021 | 0.012 | 1.70 |
+| transformer | 0.018 | 0.012 | 1.29 |
 | random | 0.001 | 0.001 | 0.99 |
 
 - iid overstates by ~1.9x (23/24h target overlap)
-- Random inflation 1.00 (sanity)
-- Ordering unchanged
+- random inflation 1.00 (sanity)
+- transformer inflation 1.29 is close to random; consistent with the
+  transformer mostly producing uncorrelated noise predictions
+- Source: `docs/hac_sharpe_fixed_deep.csv`
 
 ## 3. ML signal is one feature
 
