@@ -45,6 +45,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--dl-epochs", type=int, default=5)
     p.add_argument("--skip-deep", action="store_true", help="Run feature, dataset, XGBoost/fallback, and z-score baseline only.")
     p.add_argument("--use-kalman", action="store_true", help="Use Kalman dynamic-beta spreads (MLE-fit on training data) as the spread input to features.")
+    p.add_argument("--test-days", type=int, default=60, help="OOS test window length in days. Capped by the available data tail.")
+    p.add_argument("--min-history-days", type=float, default=0.0, help="Minimum days of history before t0 for a symbol to enter the as-of universe.")
     return p.parse_args()
 
 
@@ -64,11 +66,11 @@ def main() -> None:
     btc = load_symbol(cfg, "BTCUSDT", columns=["close"])
     if btc is None or btc.empty:
         raise RuntimeError("BTCUSDT is required for market-context features.")
-    test_end = min(btc.index.max() + pd.Timedelta(hours=1), train_end + pd.Timedelta(days=60))
+    test_end = min(btc.index.max() + pd.Timedelta(hours=1), train_end + pd.Timedelta(days=args.test_days))
 
     print(f"Local symbols: {len(local_symbols)}", flush=True)
-    universe = compute_universe_at_time(cfg, local_symbols, t0)
-    print(f"Universe at {t0}: {len(universe)}", flush=True)
+    universe = compute_universe_at_time(cfg, local_symbols, t0, min_history_days=args.min_history_days)
+    print(f"Universe at {t0} (min_history_days={args.min_history_days}): {len(universe)}", flush=True)
 
     liquid = filter_top_n_by_liquidity(cfg, universe, train_start, train_end, top_n=args.liquid_top_n, min_coverage=0.80)
     print(f"Liquidity-filtered universe: {len(liquid)}", flush=True)

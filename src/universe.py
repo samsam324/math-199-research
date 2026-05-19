@@ -11,14 +11,22 @@ def compute_universe_at_time(
     cfg: StoreConfig,
     local_symbols: List[str],
     t0: pd.Timestamp,
+    min_history_days: float = 0.0,
 ) -> List[str]:
     """
     Universe(t0) = symbols that appear to be tradable as of t0 based on local candles only.
 
     Definition used:
       - Let t0_floor be t0 floored to the bar interval.
-      - A symbol is "available at t0" if it has at least one candle with timestamp <= t0_floor - 1 interval,
-        i.e., it has traded recently up to the boundary before t0.
+      - A symbol is "available at t0" if BOTH:
+          1. Its first candle is at or before t0_floor - min_history_days (so it
+             was already listed at t0 with at least min_history_days of history),
+             AND
+          2. Its last candle is at t0_floor - 1 interval or later (so it had
+             still been trading up to t0).
+      - The first-candle check is necessary to avoid look-ahead bias: without it,
+        symbols listed AFTER t0 leak into the as-of universe whenever the local
+        store contains data through some future date.
 
     No liquidity filters, no coverage filters, no ranking.
     """
@@ -30,6 +38,7 @@ def compute_universe_at_time(
     t0_floor = t0.floor(cfg.interval)
     step = pd.tseries.frequencies.to_offset(cfg.interval)
     last_required = t0_floor - step
+    first_required = t0_floor - pd.Timedelta(days=float(min_history_days))
 
     universe: List[str] = []
     for sym in local_symbols:
@@ -37,7 +46,8 @@ def compute_universe_at_time(
         if df is None or df.empty:
             continue
         last_ts = df.index.max()
-        if last_ts >= last_required:
+        first_ts = df.index.min()
+        if last_ts >= last_required and first_ts <= first_required:
             universe.append(sym)
 
     return sorted(universe)
