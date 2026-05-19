@@ -77,6 +77,8 @@ def main() -> None:
 
     preds = pd.read_parquet(predictions_path, engine="pyarrow")
     splits = pd.read_csv(splits_path, parse_dates=["train_start", "train_end", "test_end"])
+    for col in ("train_start", "train_end", "test_end"):
+        splits[col] = pd.to_datetime(splits[col], utc=True)
 
     features_path = Path(args.features_dir) / "all_pair_features.parquet"
     if not features_path.exists():
@@ -94,7 +96,9 @@ def main() -> None:
 
     for split_id in sorted(preds["walk_split"].unique()):
         split_meta = splits[splits["walk_split"] == split_id].iloc[0]
-        train_end = pd.Timestamp(split_meta["train_end"], tz="UTC")
+        train_end = pd.Timestamp(split_meta["train_end"])
+        if train_end.tzinfo is None:
+            train_end = train_end.tz_localize("UTC")
 
         split_preds = preds[preds["walk_split"] == split_id].copy()
         split_preds["timestamp"] = pd.to_datetime(split_preds["timestamp"], utc=True)

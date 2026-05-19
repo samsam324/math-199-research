@@ -130,15 +130,16 @@ def _pair_returns(
     held = np.concatenate([[0.0], signal[:-1]])
     df["held_position"] = held
 
-    # Effective dollar-neutral B leg weight per unit A leg.
-    beta_eff = beta * (df["close_a"] / df["close_b"]).ffill().fillna(beta).to_numpy(dtype=float)
-    # Per-bar pnl in dollars: held * L * (r_a - beta_eff * r_b)
-    df["pnl"] = df["held_position"] * cfg.leg_notional * (df["ret_a"].to_numpy() - beta_eff * df["ret_b"].to_numpy())
+    # Dollar-hedged spread pnl in log space:
+    #   long $L of A, short $L*beta of B  ==>  bar pnl = $L * (r_a - beta * r_b).
+    # The price ratio close_a/close_b is NOT needed here because both legs are
+    # sized in dollars; it would only enter if we were sizing in units of B.
+    df["pnl"] = df["held_position"] * cfg.leg_notional * (df["ret_a"].to_numpy() - beta * df["ret_b"].to_numpy())
 
-    # Turnover and cost: $ traded per bar = L * |signal_t - signal_{t-1}| on leg A,
-    # plus L * beta_eff * |...| on leg B. We charge taker fee + slippage on each $.
+    # Turnover and cost: $ traded per bar = L on A + L*|beta| on B per unit
+    # position change. Charged at taker fee + slippage per side.
     delta = np.abs(signal - held)
-    notional_traded = delta * cfg.leg_notional * (1.0 + beta_eff)
+    notional_traded = delta * cfg.leg_notional * (1.0 + abs(beta))
     cost_bps = cfg.taker_fee_bps + cfg.slippage_bps
     df["turnover"] = notional_traded
     df["pnl"] = df["pnl"] - notional_traded * (cost_bps / 1e4)
