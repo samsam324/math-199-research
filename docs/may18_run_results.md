@@ -1,7 +1,9 @@
 # May 18 Run Results
 
 Full pipeline run with the wired-up deep walk-forward, HMM ablation, Kalman
-comparison, and cost-aware portfolio backtester. Three findings to highlight.
+comparison, and cost-aware portfolio backtester. The four findings below are
+written for the paper's results section: each is a statement about the
+market or the methodology, not about how to make the strategy profitable.
 
 ## 1. Transformer's single-split win does not survive walk-forward
 
@@ -22,6 +24,13 @@ test / 30d step), the ranking is very different.
 LSTM is the best ML model on `pnl_mean_to_std`, but the classical z-score
 rule beats every ML model on both PnL/std and win rate. Transformer drops
 from #1 to #4 once we stop training on a single arbitrary slice.
+
+**What this says.** Single chronological train/test splits over-state ML
+performance on this kind of data. The signal that the transformer appeared
+to capture in Frank's earlier run was idiosyncratic to one test window. A
+methodologically honest evaluation of sequence models on financial spreads
+requires walk-forward, and the bar that ML has to clear is a simple z-score
+threshold rule, not just "random" or "majority."
 
 Source: `artifacts/walk_forward/walk_forward_summary.csv`.
 
@@ -46,8 +55,15 @@ fallback pairs:
 | SOLUSDT_ADAUSDT | 0.280 | 5.8e-05 | 0.081 | 0.033 |
 
 Kalman residual std is 4-15x smaller than static, and ADF p-values drop by
-12+ orders of magnitude on the strongest pairs. The relationships are real;
-the static OLS hedge ratio just cannot track them.
+12+ orders of magnitude on the strongest pairs.
+
+**What this says.** The pair relationships in crypto are real but
+non-stationary: a single OLS hedge ratio over a 180-day window is the wrong
+model. The relationship between two coins drifts continuously, and any
+analysis that holds beta fixed (including most academic pairs-trading
+papers, including Gatev/Goetzmann/Rouwenhorst) will conclude that there is
+no cointegration when there actually is, just under a time-varying hedge.
+This is the central methodological finding of the project so far.
 
 Source: `artifacts/kalman/kalman_comparison.csv`. Per-pair overlay plots in
 `artifacts/kalman/kalman_*.png`.
@@ -66,10 +82,16 @@ totals:
 | transformer | 7.70 | 1.93 | 10000 | 6233 |
 | majority_class | -6.73 | -8.20 | 10000 | 6233 |
 
-Several HMM fits did not converge to a stable likelihood. Probably the 2-state
-Gaussian assumption is too crude on spreads that aren't truly cointegrated
-under a static beta. Two natural next steps: rerun HMM on Kalman-derived
-dynamic spreads (which are stationary, per #2), and try 3 states (revert / drift / blow-out).
+Several HMM fits did not converge to a stable likelihood.
+
+**What this says.** A 2-state Gaussian HMM fit on static-OLS spread features
+does not recover meaningful mean-reverting regimes on this universe. The
+likely reason is consistent with finding #2: the input spread is not
+stationary under a fixed beta, so the HMM is fitting noise rather than
+regime structure. A natural follow-up is to refit the HMM on Kalman-derived
+dynamic spreads, where the input series IS stationary. We report the
+negative result here because it constrains what kind of regime-switching
+story the paper can tell on the current data.
 
 Source: `artifacts/hmm/ablation_summary.csv`.
 
@@ -88,16 +110,21 @@ default taker fee 10 bps + 5 bps slippage:
 | sklearn_hist_gradient_boosting | -44.05 | -72,665 | -72,595 | 1424 | 0.31 |
 | random_stratified | -191.45 | -266,550 | -266,480 | 5491 | 0.03 |
 
-Hourly rebalancing on these pairs cannot pay 15 bps round-trip. The signals
-ARE doing something (LSTM positions are positive PnL pre-cost in the
-spread-PnL table above) but the cost drag dominates. Implications for next
-iteration:
+**What this says.** This is a market-efficiency statement, not a strategy
+critique. The pre-cost spread signal is non-zero (compare to finding #1:
+LSTM, boost, and z-score all generate positive `total_pnl` in log-spread
+units). The transaction cost level at which all signals net out to zero or
+worse is small (10 bps fee + 5 bps slippage). Hourly relative-value
+mispricings on Binance.US USDT pairs are therefore consistent with a market
+that is approximately efficient up to round-trip costs of this magnitude.
+That is the kind of empirical bound a paper can report: not "we found
+alpha", but "the alpha that exists at this frequency is bounded above by
+15 bps per side."
 
-1. Add a real entry/exit state machine (open at |z| ≥ 2, close at |z| ≤ 0.5)
-   to cut turnover by ~10x.
-2. Use Kalman-derived dynamic spreads (much tighter; #2 above) so |z| ≥ 2 is
-   a stronger signal.
-3. Try longer rebalance frequency (4h, daily) to amortize costs.
+This is also why the L2 scope matters (blocked on UCLA access): at hourly
+spot bars we cannot say anything sharper about the bid-ask cost, only that
+exchange-published fees plus modest assumed slippage are enough to eliminate
+the signal.
 
 Source: `artifacts/backtest/portfolio_metrics.csv` + per-model return /
 position / trade CSVs.
