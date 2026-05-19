@@ -49,10 +49,18 @@ class BacktestConfig:
     bars_per_year: int = 24 * 365      # hourly bars, continuous market
     # Cap on max simultaneous active pairs. None means no cap.
     max_active_pairs: Optional[int] = None
-    # Min spread |z| to enter; 0 means always trade on the class signal alone.
+    # Bar-by-bar minimum |z| gate (used when state machine is off).
     entry_z_threshold: float = 0.0
     # Optional regime mask (per-row bool); when set, only allow entries where True.
     apply_regime_mask: bool = False
+    # Entry / exit state machine. When enabled, a position is opened only on
+    # |spread_z| >= entry_z AND a reversion-class prediction; it is held until
+    # |spread_z| <= exit_z OR a divergence-class prediction OR a flat prediction
+    # that crosses the spread sign. This collapses bar-by-bar classifier
+    # flickers into discrete trades.
+    use_state_machine: bool = False
+    entry_z: float = 2.0
+    exit_z: float = 0.5
 
 
 @dataclass
@@ -74,6 +82,56 @@ def _class_to_signal(pred_class: np.ndarray, spread_sign: np.ndarray) -> np.ndar
     # Coerce zero-sign positions (spread exactly at mid) to flat.
     signal[spread_sign == 0] = 0.0
     return signal
+
+
+def _state_machine_signal(
+    pred_class: np.ndarray,
+    spread_z: np.ndarray,
+    spread_sign: np.ndarray,
+    entry_z: float,
+    exit_z: float,
+) -> np.ndarray:
+    """
+    Entry/exit state machine.
+
+    Open when:
+      flat AND |spread_z| >= entry_z AND pred_class == 0 (revert)
+      -> position = -sign(spread_z), i.e. short the spread
+    Close (go flat) when:
+      |spread_z| <= exit_z, OR
+      pred_class == 2 (diverge), OR
+      spread sign flips relative to entry sign (the spread crossed zero).
+
+    Position class 1 (persist) is a hold instruction; we keep the current
+    position. Returns a per-bar signal in {-1, 0, +1}.
+    """
+    pred_class = np.asarray(pred_class, dtype=int)
+    z = np.asarray(spread_z, dtype=float)
+    s = np.asarray(spread_sign, dtype=float)
+    n = len(pred_class)
+
+    position = 0.0
+    entry_sign = 0.0
+    out = np.zeros(n, dtype=float)
+    for t in range(n):
+        z_t = float(z[t]) if np.isfinite(z[t]) else 0.0
+        s_t = float(s[t]) if np.isfinite(s[t]) else 0.0
+        cls = int(pred_class[t])
+
+        if position == 0.0:
+            # Look for entry
+            if cls == 0 and abs(z_t) >= entry_z and s_t != 0.0:
+                position = -s_t  # short the spread relative to its current sign
+                entry_sign = s_t
+        else:
+            # Look for exit
+            flip = (s_t != 0.0 and np.sign(s_t) != np.sign(entry_sign))
+            if abs(z_t) <= exit_z or cls == 2 or flip:
+                position = 0.0
+                entry_sign = 0.0
+
+        out[t] = position
+    return out
 
 
 def _pair_returns(
@@ -115,11 +173,22 @@ def _pair_returns(
     df["ret_b"] = df["close_b"].pct_change().fillna(0.0)
     df["spread_sign"] = np.sign(df["current_spread"].to_numpy(dtype=float))
 
-    signal = _class_to_signal(df["pred_class"].to_numpy(dtype=int), df["spread_sign"].to_numpy(dtype=float))
+    pred = df["pred_class"].to_numpy(dtype=int)
+    spread_sign = df["spread_sign"].to_numpy(dtype=float)
 
-    if cfg.entry_z_threshold > 0 and "latest_spread_z" in df.columns:
-        gate = np.abs(df["latest_spread_z"].to_numpy(dtype=float)) >= cfg.entry_z_threshold
-        signal = np.where(gate, signal, 0.0)
+    if cfg.use_state_machine:
+        if "latest_spread_z" not in df.columns:
+            raise ValueError(
+                "use_state_machine=True requires 'latest_spread_z' in the predictions frame; "
+                "join it from samples.parquet before calling run_backtest."
+            )
+        spread_z = df["latest_spread_z"].to_numpy(dtype=float)
+        signal = _state_machine_signal(pred, spread_z, spread_sign, cfg.entry_z, cfg.exit_z)
+    else:
+        signal = _class_to_signal(pred, spread_sign)
+        if cfg.entry_z_threshold > 0 and "latest_spread_z" in df.columns:
+            gate = np.abs(df["latest_spread_z"].to_numpy(dtype=float)) >= cfg.entry_z_threshold
+            signal = np.where(gate, signal, 0.0)
 
     if cfg.apply_regime_mask and "mean_reverting_state" in df.columns:
         signal = np.where(df["mean_reverting_state"].to_numpy(dtype=bool), signal, 0.0)
@@ -251,10 +320,14 @@ def _portfolio_metrics(
     peak = np.maximum.accumulate(equity)
     drawdown = equity - peak
 
-    # Return per bar over deployed capital. Deployed = active pair count * leg_notional * 2 (both legs).
+    # Return per bar on a FIXED capital base = N_pairs * leg_notional * 2.
+    # Using a variable deployed denominator (active_pairs at time t) breaks the
+    # Sharpe estimator because the resulting bar_ret series is no longer a
+    # well-defined return on a single capital base.
+    n_pairs = positions.shape[1]
+    capital_base = max(1.0, n_pairs * cfg.leg_notional * 2.0)
+    bar_ret = pnl / capital_base
     active_pairs = (positions != 0).sum(axis=1).to_numpy(dtype=float)
-    deployed = np.maximum(active_pairs, 1.0) * cfg.leg_notional * 2.0
-    bar_ret = pnl / deployed
 
     mean_ret = float(np.mean(bar_ret))
     std_ret = float(np.std(bar_ret, ddof=1)) if len(bar_ret) > 1 else 0.0

@@ -27,13 +27,17 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Cost-aware portfolio backtest on walk-forward predictions.")
     p.add_argument("--predictions-path", required=True, help="walk_forward_predictions.parquet or predictions.parquet")
     p.add_argument("--pairs-path", required=True, help="selected_pairs.parquet from run_first_branch")
+    p.add_argument("--dataset-dir", default=None, help="Dataset dir containing samples.parquet; required when --state-machine is set.")
     p.add_argument("--data-dir", default="data")
     p.add_argument("--out-dir", required=True)
     p.add_argument("--taker-fee-bps", type=float, default=10.0)
     p.add_argument("--slippage-bps", type=float, default=5.0)
     p.add_argument("--leg-notional", type=float, default=10_000.0)
     p.add_argument("--max-active-pairs", type=int, default=None)
-    p.add_argument("--entry-z", type=float, default=0.0)
+    p.add_argument("--entry-z", type=float, default=0.0, help="Bar-by-bar |z| gate (used when --state-machine is OFF).")
+    p.add_argument("--state-machine", action="store_true", help="Use entry/exit state machine instead of bar-by-bar signal-to-position.")
+    p.add_argument("--sm-entry-z", type=float, default=2.0, help="State-machine entry |z| threshold.")
+    p.add_argument("--sm-exit-z", type=float, default=0.5, help="State-machine exit |z| threshold.")
     return p.parse_args()
 
 
@@ -45,6 +49,18 @@ def main() -> None:
     predictions = pd.read_parquet(args.predictions_path, engine="pyarrow")
     predictions["timestamp"] = pd.to_datetime(predictions["timestamp"], utc=True)
     pairs = pd.read_parquet(args.pairs_path, engine="pyarrow")
+
+    if args.state_machine:
+        if not args.dataset_dir:
+            raise SystemExit("--state-machine requires --dataset-dir to load latest_spread_z from samples.parquet")
+        samples_path = Path(args.dataset_dir) / "samples.parquet"
+        samples = pd.read_parquet(samples_path, engine="pyarrow")
+        if "latest_spread_z" not in samples.columns:
+            raise SystemExit(f"samples.parquet at {samples_path} has no latest_spread_z column")
+        predictions = predictions.merge(samples[["sample_id", "latest_spread_z"]], on="sample_id", how="left")
+        missing = predictions["latest_spread_z"].isna().sum()
+        if missing:
+            print(f"warning: {missing} predictions missing latest_spread_z after merge; they will be treated as |z|=0")
 
     if "pair" not in pairs.columns:
         pairs["pair"] = pairs["sym_a"] + "_" + pairs["sym_b"]
@@ -63,6 +79,9 @@ def main() -> None:
         leg_notional=args.leg_notional,
         max_active_pairs=args.max_active_pairs,
         entry_z_threshold=args.entry_z,
+        use_state_machine=args.state_machine,
+        entry_z=args.sm_entry_z,
+        exit_z=args.sm_exit_z,
     )
 
     rows: List[Dict[str, float]] = []
