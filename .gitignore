@@ -1,6 +1,7 @@
 minitron*
 engine*
 .claude
+.DS_Store
 __pycache__/
 *.pyc
 figures/

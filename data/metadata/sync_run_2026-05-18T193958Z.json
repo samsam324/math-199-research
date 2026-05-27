@@ -1,0 +1,12 @@
+{
+  "run_time_utc": "2026-05-18T193958Z",
+  "base_url": "https://api.binance.us",
+  "interval": "1h",
+  "quote_asset": "USDT",
+  "symbols_attempted": 201,
+  "symbols_synced": 201,
+  "failures_count": 0,
+  "failures_sample": [],
+  "end_utc_floored": "2026-05-18 19:00:00+00:00",
+  "note": "Sync uses current listings. New symbols are backfilled epoch->now; existing symbols are appended last_ts->now."
+}

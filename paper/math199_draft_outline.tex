@@ -1,0 +1,344 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{array}
+
+\title{Statistical Arbitrage in Crypto Pair Spreads\\
+\large Working Draft and Paper Outline, Not a Final Manuscript}
+\author{Jack Lutz, Sammy Adham, and Frank Kronewitter}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\fbox{\parbox{0.92\linewidth}{
+\textbf{Draft status.} This document is a working paper outline prepared from
+the current project results. It is not a final paper, not a polished
+submission, and not a claim that all analyses are complete. Several claims
+below are intentionally phrased as provisional because the project still needs
+advisor review, cross-exchange validation, microstructure-aware costs, and
+pre-registered out-of-sample evaluation.
+}}
+\end{center}
+
+\begin{abstract}
+This draft summarizes a Math 199 research project on statistical arbitrage in
+hourly Binance.US USDT crypto pair spreads. The central methodological result
+is that static ordinary least squares hedge ratios fail to produce stable
+out-of-sample spreads for most pairs, while a train-only maximum-likelihood
+Kalman dynamic hedge ratio produces out-of-sample stationary residuals for
+nearly the entire screened liquidity universe. Downstream trading results are
+more cautious: machine learning models and z-score rules identify pre-cost
+mean-reversion signals, but realistic transaction costs and selection-bias
+corrections sharply weaken the profitability claim. At this draft stage, the
+defensible conclusion is not that the strategy is tradable, but that dynamic
+hedge estimation reveals strong non-stationary relative-price structure whose
+economic value remains unresolved.
+\end{abstract}
+
+\section*{How to Read This Draft}
+
+This file is an outline-style manuscript. It is meant to collect the current
+results in paper form and to make the argument easy to revise. Sections marked
+as provisional should be checked before any final submission. Numerical values
+come from the repository results documents and scripts as of the current
+project state, especially \texttt{docs/RESULTS.md} and
+\texttt{docs/METHODS.md}.
+
+\section{Research Question and Motivation}
+
+This project asks whether cryptocurrency prices exhibit stable, quantifiable
+relative-value relationships, and whether deviations from those relationships
+tend to mean-revert. The research follows the broad pairs-trading framework of
+Gatev, Goetzmann, and Rouwenhorst (2006), adapted to a continuously traded
+crypto market with a changing universe of listed assets.
+
+The project has two distinct goals. The first is statistical: determine whether
+coin-like relationships exist among liquid crypto assets after avoiding obvious
+look-ahead bias. The second is economic: test whether any detected
+mean-reversion signal remains useful after walk-forward validation,
+transaction costs, and selection-bias correction. The current evidence supports
+the statistical goal much more strongly than the economic one.
+
+\section{Data and Universe Construction}
+
+The data set contains hourly OHLCV observations from the Binance.US REST API
+for USDT spot pairs. Each symbol is stored locally as a parquet file. The
+current snapshot ends on 2026-01-22. The primary analysis starts at
+\(t_0=\) 2024-01-01, uses a liquidity-filtered universe, and evaluates pairs
+with walk-forward train/test splits.
+
+The investible universe is constructed as of each analysis time. A symbol is
+eligible only if its first observation is at least the required minimum-history
+window before \(t_0\), and its last observation reaches the start of the
+analysis period. This first-observation rule was added after an audit found
+that post-\(t_0\) listings could otherwise leak into the historical universe.
+
+Survivorship remains a limitation. The local store contains currently listed
+symbols, and public Binance.US delisting information implies that roughly
+3--6 liquidity-filtered candidates may be missing during the analysis window.
+The estimated survivorship-bias bound is about 6.7\% as an upper bound and
+about 5\% as a realistic estimate. This does not invalidate the current
+results, but it should be treated as a material caveat in the final paper.
+
+\section{Methods}
+
+\subsection{Static and Dynamic Spreads}
+
+The baseline spread uses a static OLS hedge ratio:
+\[
+s_t = \log(P_{a,t}) - \alpha - \beta \log(P_{b,t}),
+\]
+where \(\alpha\) and \(\beta\) are fit on the training window.
+
+The main methodological alternative is a two-state Kalman random-walk hedge
+model:
+\[
+\begin{bmatrix}\alpha_t\\ \beta_t\end{bmatrix}
+=
+\begin{bmatrix}\alpha_{t-1}\\ \beta_{t-1}\end{bmatrix}
++ w_t,
+\qquad
+\log(P_{a,t}) =
+\begin{bmatrix}1 & \log(P_{b,t})\end{bmatrix}
+\begin{bmatrix}\alpha_t\\ \beta_t\end{bmatrix}
++ v_t.
+\]
+The process and observation noise parameters are fit by maximum likelihood on
+training data only. For test data, parameters are held fixed and the filter is
+rolled forward from the final training state. This distinction is important:
+the reported Kalman result is not an in-sample whitening artifact.
+
+\subsection{Prediction Models}
+
+The project compares simple baselines, a z-score rule, gradient boosting, an
+LSTM, and transformer variants. Models use backward-looking spread, volume,
+correlation, volatility, and market-context features. Labels are three-class:
+revert, persist, or diverge over a 24-hour horizon. The headline walk-forward
+run uses 27 splits with 90 days of training, 30 days of testing, and a 30-day
+step.
+
+\subsection{Backtesting and Statistical Corrections}
+
+Trading evaluation uses a state-machine entry/exit rule: open when the model
+predicts reversion and \(|z|\geq 2\), close when \(|z|\leq 0.5\), the model
+predicts divergence, or the spread changes sign. Transaction-cost experiments
+include zero cost, 5 basis points round-trip per leg, and 15 basis points
+round-trip per leg.
+
+The project also reports Newey-West HAC corrections because hourly labels have
+overlapping 24-hour targets, and deflated Sharpe ratios because many model and
+strategy configurations were tried. These corrections are central to the
+current cautious interpretation.
+
+\section{Current Results}
+
+\subsection{Result 1: Static OLS Fails Out-of-Sample}
+
+Static hedge ratios do not produce robust out-of-sample stationary residuals.
+Among the top 10 selected pairs, only 2 maintain out-of-sample ADF
+\(p<0.05\). Across the full 1,219-pair liquidity-screened universe, static OLS
+passes \(p<0.05\) for only 66 pairs, or 5.4\%.
+
+\begin{table}[h]
+\centering
+\caption{Out-of-sample stationarity screen, static OLS versus Kalman dynamic hedge.}
+\begin{tabular}{lrr}
+\toprule
+ADF threshold & Static OLS passes & Kalman passes \\
+\midrule
+\(p<0.001\) & 0 (0.0\%) & 1,174 (96.3\%) \\
+\(p<0.005\) & 1 (0.1\%) & 1,188 (97.5\%) \\
+\(p<0.010\) & 10 (0.8\%) & 1,198 (98.3\%) \\
+\(p<0.050\) & 66 (5.4\%) & 1,215 (99.7\%) \\
+\(p<0.100\) & 142 (11.6\%) & 1,217 (99.8\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Result 2: Kalman Dynamic Hedge Ratios Recover Stationarity}
+
+The strongest current finding is that dynamic hedge ratios recover
+stationary-looking residuals for nearly all liquid pairs under an honest
+train/test protocol. On the full 1,219-pair screen, 99.7\% of pairs pass
+\(p<0.05\), and 96.3\% pass \(p<0.001\). The selected top-10 pairs all pass
+\(p<0.001\) under the Kalman model.
+
+This should be the leading result in the final paper unless advisor review
+identifies a flaw in the protocol. The interpretation is that crypto pair
+relationships are real but non-stationary: a fixed hedge ratio is usually too
+rigid, while a slowly drifting hedge ratio captures the relative-price
+structure.
+
+\subsection{Result 3: ML Helps, but the Main Signal Is Still Spread Z-Score}
+
+In the post-audit 27-split walk-forward run, the LSTM has the strongest
+\texttt{pnl\_mean\_to\_std}, followed by the booster and z-score rule. The
+small parameter-matched transformer is not competitive in this run, although a
+larger transformer later performs much better on a related pre-audit data set.
+
+\begin{table}[h]
+\centering
+\caption{Post-audit walk-forward model comparison. Values are current draft results.}
+\begin{tabular}{lrrr}
+\toprule
+Model & \texttt{pnl\_mean\_to\_std} & Win rate & Trades/split \\
+\midrule
+LSTM & 0.376 & 0.795 & 2,083 \\
+Booster & 0.356 & 0.741 & 2,355 \\
+Z-score & 0.282 & 0.963 & 588 \\
+Majority & 0.021 & 0.028 & 185 \\
+Small transformer & 0.018 & 0.437 & 691 \\
+Random & 0.001 & 0.502 & 2,689 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A feature ablation suggests that the learned models are mostly refining a
+classical z-score signal. Dropping \texttt{latest\_spread\_z} reduces accuracy
+by 14 percentage points, macro F1 by 19 percentage points, and PnL by roughly
+79\%. Other features have much smaller effects in the current single-split
+ablation. This is an important draft conclusion: the ML models do not yet
+demonstrate a qualitatively new source of alpha beyond the spread deviation
+itself.
+
+\subsection{Result 4: Cost and Selection Bias Substantially Weaken Trading Claims}
+
+The strategy looks strong before costs, with annualized Sharpe ratios around
+8 under the state-machine backtest. That headline does not survive careful
+interpretation. At 5 bps round-trip per leg, Sharpe falls to roughly 0.8--0.9.
+At 15 bps round-trip per leg, the strategy is deeply negative.
+
+\begin{table}[h]
+\centering
+\caption{Cost sensitivity under the state-machine backtest.}
+\begin{tabular}{lrrr}
+\toprule
+Cost per leg & LSTM Sharpe & Z-score Sharpe & Booster Sharpe \\
+\midrule
+0 bps & 8.08 & 8.03 & 8.27 \\
+5 bps & 0.80 & 0.83 & 0.90 \\
+15 bps & -14.04 & -13.88 & -14.17 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Deflated Sharpe correction further weakens the profitability claim because the
+project tried many strategy configurations. At a modest trial count, the
+pre-cost result may remain reportable. At a conservative count around 50
+trials, even the pre-cost result is not clearly distinguishable from the
+chance-best result. The 5 bps result does not survive deflated-Sharpe
+correction at any plausible trial count. The current paper should therefore
+retract any break-even cost claim.
+
+\section{Negative Results}
+
+The HMM regime filter is a robust negative result. In post-audit runs, the
+filter suppresses 40--55\% of bars and reduces total PnL across models rather
+than isolating productive mean-reversion regimes. This remains true under
+2-state and 3-state variants and across static and Kalman pipelines.
+
+Single-split evaluation is also unreliable. An earlier single chronological
+split overstated the transformer result; the 27-split walk-forward evaluation
+reduced the small transformer's apparent performance until its confidence
+interval included zero. This supports treating walk-forward evaluation with
+uncertainty intervals as the minimum reporting standard for this project.
+
+\section{Audit Findings}
+
+The project found and fixed several methodological issues during review:
+\begin{itemize}
+\item post-\(t_0\) listings could enter the historical universe;
+\item an in-sample Kalman ADF check was circular and was replaced by a
+train/test protocol;
+\item per-pair label thresholds could use information beyond the relevant
+training boundary;
+\item the Kalman spread construction had a train/test parameter discontinuity;
+\item the backtest Sharpe denominator could be distorted by changing active
+capital;
+\item \texttt{time\_since\_zero\_crossing} was confirmed as a soft leakage
+feature and removed from the post-audit interpretation.
+\end{itemize}
+
+The repository currently includes leakage and backtester sanity tests. The
+draft should report these as evidence of methodological cleanup, not as proof
+that all remaining bias has been eliminated.
+
+\section{Limitations}
+
+This draft should retain the following limitations prominently:
+\begin{itemize}
+\item Results use one exchange, Binance.US.
+\item Results use one quote currency, USDT.
+\item Results use one bar interval, hourly.
+\item Survivorship bias remains because delisted assets are missing from the
+local store.
+\item The backtester uses flat slippage and does not model market impact.
+\item Spot shorting and funding constraints are not fully modeled.
+\item All main results use \(t_0=\) 2024-01-01; start-date sensitivity remains
+pending.
+\item Deep-learning results are mostly single-seed.
+\item No pre-registered final strategy has been evaluated exactly once.
+\end{itemize}
+
+\section{Provisional Discussion}
+
+The current results suggest a distinction between statistical structure and
+tradable alpha. Dynamically hedged crypto pair spreads appear highly
+mean-reverting in a statistical sense, especially compared with static OLS
+spreads. However, converting that structure into a realistic trading strategy
+is much harder. Transaction costs, selection bias, and market microstructure
+could plausibly absorb the apparent edge.
+
+This is still a useful result. A final paper can argue that the appropriate
+model for crypto pair relationships is time-varying rather than static, while
+also showing that statistical mean reversion is not sufficient evidence of
+profitable arbitrage. That framing is more defensible than claiming a finished
+profitable strategy.
+
+\section{Work Needed Before Final Submission}
+
+Before this becomes a final manuscript, the project should ideally complete:
+\begin{enumerate}
+\item advisor review of the Kalman OOS protocol;
+\item a rerun of downstream pair selection using Kalman-screened pairs rather
+than correlation fallback;
+\item cross-exchange validation on Coinbase or Kraken;
+\item L2-data ingestion and market-impact modeling;
+\item multi-seed deep-learning runs;
+\item start-date sensitivity tests;
+\item one pre-registered model configuration evaluated once.
+\end{enumerate}
+
+\section{Draft Conclusion}
+
+At this stage, the project supports a cautious conclusion. Static OLS hedge
+ratios are inadequate for hourly Binance.US crypto pair spreads, while Kalman
+dynamic hedge ratios recover strong out-of-sample stationary residuals across
+nearly the entire liquid universe. Predictive models can exploit this signal
+before costs, but the resulting trading performance does not yet survive
+realistic cost assumptions and selection-bias correction strongly enough to
+claim deployable arbitrage. The final paper should emphasize the dynamic
+hedging result and present the trading results as preliminary, conditional,
+and limited by current data and execution assumptions.
+
+\begin{thebibliography}{9}
+
+\bibitem{gatev2006}
+Gatev, E., Goetzmann, W. N., and Rouwenhorst, K. G. (2006).
+\textit{Pairs Trading: Performance of a Relative-Value Arbitrage Rule}.
+Review of Financial Studies, 19(3), 797--827.
+
+\bibitem{bailey2014}
+Bailey, D. H., and Lopez de Prado, M. (2014).
+\textit{The Deflated Sharpe Ratio: Correcting for Selection Bias,
+Backtest Overfitting, and Non-Normality}.
+
+\end{thebibliography}
+
+\end{document}
