@@ -168,6 +168,14 @@ def build_samples_from_features(
             }
             if not np.isfinite([row[c] for c in TABULAR_COLUMNS + ["y_regression", "current_spread"]]).all():
                 continue
+            # Carry volume-as-information features if the feature store was
+            # enriched (features.merge_into_pair_features). These are NOT in the
+            # finite-check above: they are NaN wherever L2 coverage is absent, so
+            # including them in the gate would drop every pre-L2 row. Downstream
+            # training (run_walk_forward --with-micro) median-imputes them.
+            for c in g.columns:
+                if c.startswith("micro_"):
+                    row[c] = float(latest[c]) if pd.notna(latest[c]) else np.nan
             rows.append(row)
             sequences.append(seq)
 

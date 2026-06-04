@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import warnings
 import argparse
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -42,7 +43,17 @@ def parse_args() -> argparse.Namespace:
         help="Also train LSTM and transformer on each walk-forward split. Loads sequences.npz and is slow.",
     )
     p.add_argument("--dl-epochs", type=int, default=4, help="Epochs per deep model per split when --deep is set.")
+    p.add_argument(
+        "--with-micro",
+        action="store_true",
+        help="Include volume-as-information features (micro_* columns) in the XGBoost tabular model. "
+        "Missing values are median-imputed per training window. No effect if the dataset has no micro_* columns.",
+    )
     return p.parse_args()
+
+
+def _micro_columns(df: pd.DataFrame) -> List[str]:
+    return [c for c in df.columns if c.startswith("micro_")]
 
 
 def _tail_by_time(df: pd.DataFrame, max_rows: int) -> pd.DataFrame:
@@ -68,10 +79,26 @@ def _windows(samples: pd.DataFrame, train_days: int, test_days: int, step_days: 
         train_start += step_delta
 
 
-def _train_tabular(train: pd.DataFrame, test: pd.DataFrame, cfg: TrainingConfig) -> Tuple[pd.DataFrame, Dict[str, float]]:
-    x_train = train[TABULAR_COLUMNS].to_numpy(dtype=float)
+def _train_tabular(
+    train: pd.DataFrame,
+    test: pd.DataFrame,
+    cfg: TrainingConfig,
+    feature_cols: Optional[List[str]] = None,
+) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    cols = feature_cols or TABULAR_COLUMNS
+    x_train = train[cols].to_numpy(dtype=float)
     y_train = train["y_class"].to_numpy(dtype=int)
-    x_test = test[TABULAR_COLUMNS].to_numpy(dtype=float)
+    x_test = test[cols].to_numpy(dtype=float)
+
+    # Median-impute (fit on train only -> no leakage). Columns that are entirely
+    # NaN in the training window (e.g. micro features in a pre-L2 split) get 0,
+    # which StandardScaler maps to a constant 0 column harmlessly.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)  # all-NaN micro col -> handled below
+        medians = np.nanmedian(x_train, axis=0)
+    medians = np.where(np.isfinite(medians), medians, 0.0)
+    x_train = np.where(np.isfinite(x_train), x_train, medians)
+    x_test = np.where(np.isfinite(x_test), x_test, medians)
 
     scaler = StandardScaler()
     x_train = scaler.fit_transform(x_train)
@@ -112,6 +139,15 @@ def main() -> None:
     samples, sequences = load_dataset(Path(args.dataset_dir))
     samples = samples.sort_values("timestamp").copy()
     samples["timestamp"] = pd.to_datetime(samples["timestamp"], utc=True)
+
+    tabular_cols = list(TABULAR_COLUMNS)
+    if args.with_micro:
+        micro = _micro_columns(samples)
+        if micro:
+            tabular_cols += micro
+            print(f"Volume-information features ON: +{len(micro)} micro columns -> {len(tabular_cols)} tabular features")
+        else:
+            print("--with-micro set but dataset has no micro_* columns; running base features only.")
     cfg = TrainingConfig(
         max_train_samples=args.max_train_samples,
         max_test_samples=args.max_test_samples,
@@ -133,7 +169,7 @@ def main() -> None:
             continue
 
         split_results = _baselines(train, test, cfg)
-        split_results.append(_train_tabular(train, test, cfg))
+        split_results.append(_train_tabular(train, test, cfg, feature_cols=tabular_cols))
 
         if args.deep:
             print(f"  split {split_id}: training LSTM...")

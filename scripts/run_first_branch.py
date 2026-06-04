@@ -50,6 +50,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--per-pair-label", action="store_true", help="Use per-pair-z-scored 3-class label threshold instead of fixed 0.001.")
     p.add_argument("--label-scale-factor", type=float, default=0.5, help="Scale factor on per-pair std(|d(|spread|)|) for the label threshold.")
     p.add_argument("--pairs-path", default=None, help="Optional pre-selected pairs parquet (e.g. from run_kalman_pair_screen). Bypasses score_pairs / correlation fallback.")
+    p.add_argument("--with-micro", action="store_true", help="Enrich the feature store with volume-as-information features (data/microstructure panels) so the saved dataset carries micro_* columns for run_walk_forward --with-micro.")
     return p.parse_args()
 
 
@@ -130,6 +131,13 @@ def main() -> None:
     if features.empty:
         raise RuntimeError("Feature store is empty.")
     print(f"Feature rows: {len(features)}; pairs: {features['pair'].nunique()}", flush=True)
+
+    if args.with_micro:
+        from src.microstructure_features import merge_into_pair_features
+        features = merge_into_pair_features(features)
+        micro_cols = [c for c in features.columns if c.startswith("micro_")]
+        cov = float(features[micro_cols].notna().any(axis=1).mean()) if micro_cols else 0.0
+        print(f"Microstructure features merged: {len(micro_cols)} cols, {cov:.1%} of rows have L2 coverage.", flush=True)
 
     dcfg = DatasetConfig(
         window=args.window,
