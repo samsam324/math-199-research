@@ -36,8 +36,21 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
+from pathlib import Path
+
 from src.l2_store import L2Config, load_symbol_range as load_book
 from src.trades_store import TradesConfig, load_symbol_range as load_trades
+
+# The per-leg signals merged into the pair feature store. Kept small and
+# information-focused so the ML models get signal, not redundancy.
+MICRO_FEATURE_COLUMNS = [
+    "order_flow_imbalance",
+    "vpin",
+    "kyle_lambda",
+    "quoted_spread_bps",
+    "trade_intensity",
+]
+MICRO_PANEL_DIR = "data/microstructure"
 
 
 def _vpin(buy: np.ndarray, sell: np.ndarray, n_buckets: int = 50) -> float:
@@ -134,6 +147,68 @@ def hourly_information_features(
         feat["quoted_spread_bps"] = np.nan
 
     return feat.dropna(how="all")
+
+
+def load_symbol_panel(
+    symbol: str,
+    start: pd.Timestamp,
+    end_exclusive: pd.Timestamp,
+    levels: int = 10,
+) -> pd.DataFrame:
+    """
+    Hourly info features for one symbol, preferring the precomputed panel at
+    data/microstructure/{SYMBOL}.parquet (built by build_microstructure_panel.py)
+    and falling back to computing on the fly. Index is the hourly timestamp.
+    Empty frame if no trade data exists for the symbol.
+    """
+    panel = Path(MICRO_PANEL_DIR) / f"{symbol.upper()}.parquet"
+    if panel.exists():
+        df = pd.read_parquet(panel, engine="pyarrow")
+        df["timestamp"] = pd.to_datetime(df["timestamp"], utc=True)
+        df = df.set_index("timestamp").sort_index()
+        return df.loc[(df.index >= start) & (df.index < end_exclusive)]
+    return hourly_information_features(symbol, start, end_exclusive, levels=levels)
+
+
+def merge_into_pair_features(
+    features: pd.DataFrame,
+    levels: int = 10,
+    columns: Optional[list] = None,
+) -> pd.DataFrame:
+    """
+    Join each pair's two legs' hourly info features onto a pair feature store
+    (the output of `features.build_feature_store`) by timestamp. Adds
+    `micro_{col}_a` / `micro_{col}_b` columns; rows/symbols without L2 coverage
+    get NaN, so this is safe to run over a full-history feature store where L2
+    only covers part of the span.
+    """
+    if features.empty:
+        return features
+    cols = columns or MICRO_FEATURE_COLUMNS
+    ts = pd.to_datetime(features["timestamp"], utc=True)
+    start, end = ts.min(), ts.max() + pd.Timedelta(hours=1)
+
+    panels: dict = {}
+
+    def _panel(sym: str) -> pd.DataFrame:
+        if sym not in panels:
+            panels[sym] = load_symbol_panel(sym, start, end, levels=levels)
+        return panels[sym]
+
+    out_parts = []
+    for _, g in features.groupby("pair", sort=False):
+        g = g.copy()
+        g_ts = pd.to_datetime(g["timestamp"], utc=True)
+        for leg, sym in (("a", g["sym_a"].iloc[0]), ("b", g["sym_b"].iloc[0])):
+            panel = _panel(str(sym))
+            for c in cols:
+                colname = f"micro_{c}_{leg}"
+                if panel.empty or c not in panel.columns:
+                    g[colname] = np.nan
+                else:
+                    g[colname] = panel[c].reindex(g_ts).to_numpy()
+        out_parts.append(g)
+    return pd.concat(out_parts, axis=0, ignore_index=True)
 
 
 def pair_information_features(

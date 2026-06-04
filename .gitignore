@@ -14,8 +14,13 @@ paper/
 # Secrets
 .env
 
-# L2 / tick-trade data (large; downloaded via scripts/download_tardis_l2.py)
-data/l2/
-data/l2_raw/
-data/l2_samples/
-data/trades/
+# All data stays local. Keep only the already-tracked spot store, metadata,
+# and the small universe list; ignore everything else under data/ (L2, trades,
+# raw caches, generated microstructure parquet, etc.)
+data/*
+!data/spot_1h
+!data/metadata
+!data/l2_universe_top50.txt
+
+# local run logs
+*_run.log
