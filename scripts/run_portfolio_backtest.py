@@ -38,6 +38,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--state-machine", action="store_true", help="Use entry/exit state machine instead of bar-by-bar signal-to-position.")
     p.add_argument("--sm-entry-z", type=float, default=2.0, help="State-machine entry |z| threshold.")
     p.add_argument("--sm-exit-z", type=float, default=0.5, help="State-machine exit |z| threshold.")
+    p.add_argument("--with-l2-costs", action="store_true", help="Price slippage off the L2 order book (data/l2) instead of flat --slippage-bps; legs/times without L2 fall back to --slippage-bps.")
+    p.add_argument("--l2-levels", type=int, default=10, help="Top-K book levels to walk for L2 slippage.")
+    p.add_argument("--l2-data-dir", default="data/l2", help="L2 parquet store for the cost model.")
     return p.parse_args()
 
 
@@ -82,7 +85,12 @@ def main() -> None:
         use_state_machine=args.state_machine,
         entry_z=args.sm_entry_z,
         exit_z=args.sm_exit_z,
+        use_l2_costs=args.with_l2_costs,
+        l2_levels=args.l2_levels,
+        l2_data_dir=args.l2_data_dir,
     )
+    if args.with_l2_costs:
+        print(f"L2 execution costs ON (book={args.l2_data_dir}, levels={args.l2_levels}); flat {args.slippage_bps} bps fallback where L2 missing.")
 
     rows: List[Dict[str, float]] = []
     for model_name in predictions["model"].unique():
