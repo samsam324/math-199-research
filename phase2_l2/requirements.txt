@@ -1,0 +1,13 @@
+numpy
+pandas
+pyarrow
+requests
+aiohttp
+tqdm
+statsmodels
+scikit-learn
+xgboost
+torch
+hmmlearn
+scipy
+zstandard
