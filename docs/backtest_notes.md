@@ -28,7 +28,9 @@
 - Non-overlapping discrete trades on top of bar-by-bar state. The state
   machine collapses flicker into open/close events but does not enforce
   position-limit semantics across overlapping signals.
-- Market impact: flat bps slippage, not a function of trade size. Needs L2.
+- Market impact: flat bps slippage by default. Set `BacktestConfig.use_l2_costs=True`
+  to instead walk the L2 book (`src/l2_costs.py`) so slippage scales with trade
+  size; legs/times without L2 coverage fall back to flat `slippage_bps`.
 - Funding for synthetic shorts: spot USDT shorting on Binance.US isn't
   free in practice (margin or perp futures). Model treats shorts as
   costless to hold.

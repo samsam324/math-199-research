@@ -8,3 +8,4 @@ scikit-learn
 xgboost
 torch
 hmmlearn
+tardis-dev

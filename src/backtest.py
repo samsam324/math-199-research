@@ -61,6 +61,12 @@ class BacktestConfig:
     use_state_machine: bool = False
     entry_z: float = 2.0
     exit_z: float = 0.5
+    # When True, slippage comes from the L2 order book (src/l2_costs.L2CostModel)
+    # instead of the flat slippage_bps. Legs/timestamps with no L2 coverage fall
+    # back to slippage_bps. taker_fee_bps still applies on top either way.
+    use_l2_costs: bool = False
+    l2_levels: int = 10
+    l2_data_dir: str = "data/l2"
 
 
 @dataclass
@@ -134,6 +140,32 @@ def _state_machine_signal(
     return out
 
 
+def _l2_leg_cost_bps(
+    cost_model,
+    symbol: str,
+    timestamps: np.ndarray,
+    trade_mask: np.ndarray,
+    leg_notional: np.ndarray,
+    held_dir: np.ndarray,
+    fallback_bps: float,
+) -> np.ndarray:
+    """
+    Per-bar slippage in bps for one leg. At each bar where the leg trades, query
+    the L2 book for the cost of executing `leg_notional[t]` dollars; the trade
+    side follows the direction the leg moves toward. Bars without a trade cost
+    nothing. Falls back to `fallback_bps` whenever L2 has no data at that point.
+    """
+    out = np.zeros(len(timestamps), dtype=float)
+    if cost_model is None or not cost_model.has_symbol(symbol):
+        out[trade_mask] = fallback_bps
+        return out
+    for t in np.nonzero(trade_mask)[0]:
+        side = "buy" if held_dir[t] >= 0 else "sell"
+        bps = cost_model.slippage_bps(symbol, pd.Timestamp(timestamps[t]), float(leg_notional[t]), side)
+        out[t] = fallback_bps if bps is None else bps
+    return out
+
+
 def _pair_returns(
     pair_id: str,
     pair_df: pd.DataFrame,
@@ -141,6 +173,9 @@ def _pair_returns(
     close_b: pd.Series,
     beta: float,
     cfg: BacktestConfig,
+    sym_a: Optional[str] = None,
+    sym_b: Optional[str] = None,
+    cost_model=None,
 ) -> pd.DataFrame:
     """
     Build a per-bar pnl series for a single pair.
@@ -206,12 +241,28 @@ def _pair_returns(
     df["pnl"] = df["held_position"] * cfg.leg_notional * (df["ret_a"].to_numpy() - beta * df["ret_b"].to_numpy())
 
     # Turnover and cost: $ traded per bar = L on A + L*|beta| on B per unit
-    # position change. Charged at taker fee + slippage per side.
-    delta = np.abs(signal - held)
-    notional_traded = delta * cfg.leg_notional * (1.0 + abs(beta))
-    cost_bps = cfg.taker_fee_bps + cfg.slippage_bps
-    df["turnover"] = notional_traded
-    df["pnl"] = df["pnl"] - notional_traded * (cost_bps / 1e4)
+    # position change. Taker fee is flat per side; slippage is either the flat
+    # cfg.slippage_bps or, when a cost_model is supplied, the L2 book-walk cost
+    # of filling each leg's notional (with per-leg flat fallback if L2 is missing).
+    signed_delta = signal - held
+    delta = np.abs(signed_delta)
+    trade_mask = delta > 0
+    ts_arr = df.index.to_numpy()
+
+    leg_a_notional = delta * cfg.leg_notional
+    leg_b_notional = delta * cfg.leg_notional * abs(beta)
+    # signal=+1 is long A / short B, so the B leg trades opposite to A.
+    a_dir = np.sign(signed_delta)
+    b_dir = -a_dir
+
+    slip_a = _l2_leg_cost_bps(cost_model, sym_a, ts_arr, trade_mask, leg_a_notional, a_dir, cfg.slippage_bps)
+    slip_b = _l2_leg_cost_bps(cost_model, sym_b, ts_arr, trade_mask, leg_b_notional, b_dir, cfg.slippage_bps)
+
+    cost_a = leg_a_notional * ((cfg.taker_fee_bps + slip_a) / 1e4)
+    cost_b = leg_b_notional * ((cfg.taker_fee_bps + slip_b) / 1e4)
+
+    df["turnover"] = leg_a_notional + leg_b_notional
+    df["pnl"] = df["pnl"] - (cost_a + cost_b)
 
     out = df.reset_index()[["timestamp", "signal", "held_position", "pnl", "turnover"]]
     out.insert(1, "pair", pair_id)
@@ -242,6 +293,18 @@ def run_backtest(
         pairs = pairs.assign(pair=pairs["sym_a"] + "_" + pairs["sym_b"])
     pair_lookup = pairs.set_index("pair")[["sym_a", "sym_b", "beta_a_on_b"]].to_dict("index")
 
+    cost_model = None
+    if cfg.use_l2_costs:
+        from src.l2_costs import L2CostModel
+        from src.l2_store import L2Config
+
+        ts = pd.to_datetime(predictions["timestamp"], utc=True)
+        cost_model = L2CostModel(
+            start=ts.min(),
+            end=ts.max() + pd.Timedelta(hours=1),
+            cfg=L2Config(levels=cfg.l2_levels, data_dir=cfg.l2_data_dir),
+        )
+
     per_pair_frames: List[pd.DataFrame] = []
     trade_rows: List[Dict[str, object]] = []
     for pair_id, pair_df in predictions.groupby("pair", sort=False):
@@ -252,7 +315,10 @@ def run_backtest(
         if sym_a not in close_panel.columns or sym_b not in close_panel.columns:
             continue
         beta = float(meta["beta_a_on_b"])
-        rows = _pair_returns(pair_id, pair_df, close_panel[sym_a], close_panel[sym_b], beta, cfg)
+        rows = _pair_returns(
+            pair_id, pair_df, close_panel[sym_a], close_panel[sym_b], beta, cfg,
+            sym_a=sym_a, sym_b=sym_b, cost_model=cost_model,
+        )
         if rows.empty:
             continue
         per_pair_frames.append(rows)

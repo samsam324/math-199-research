@@ -1,11 +1,11 @@
 """
 L2 order-book storage layout and ingestion stub.
 
-STATUS: blocked on UCLA data access. This module locks in the schema and the
+STATUS: live for Tardis ``book_snapshot_N`` CSV dumps (see `_parse_raw_csv_dump`
+and `scripts/download_tardis_l2.py`). This module locks in the schema and the
 read/write interface so downstream code (feature engineering, microstructure
-backtests) can be built against it now, and so the only thing that has to
-change when the data arrives is the ingestion function body in `_parse_raw_*`
-helpers.
+backtests) builds against a single canonical layout regardless of source. The
+websocket-capture path remains a stub.
 
 Layout
 ------
@@ -29,13 +29,12 @@ without parsing variable-length lists.
 Sub-second timestamps are required: spread/mid-quote features depend on
 millisecond ordering against the trade feed.
 
-Source plan
------------
-UCLA is expected to provide either a Binance-style WebSocket capture (per-
-symbol depth update stream, replayed against an initial REST snapshot) or a
-flat CSV/parquet dump from a market-data vendor. Both can land in the same
-schema; only `_parse_raw_websocket_dump` and `_parse_raw_csv_dump` need to be
-filled in.
+Source
+------
+Tardis.dev historical CSV datasets (`book_snapshot_5` / `book_snapshot_25` for
+Binance spot). One gzipped CSV per symbol-day; `_parse_raw_csv_dump` maps the
+top `cfg.levels` levels into this schema. A Binance-style WebSocket capture can
+land in the same schema via `_parse_raw_websocket_dump` (still a stub).
 """
 from __future__ import annotations
 
@@ -100,7 +99,9 @@ def write_day(symbol: str, df: pd.DataFrame, day: pd.Timestamp, cfg: L2Config = 
     out_dir = Path(cfg.data_dir) / symbol.upper()
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"{day.strftime('%Y-%m-%d')}.parquet"
-    df[expected_columns(cfg)].to_parquet(path, engine="pyarrow", index=False)
+    out = df[expected_columns(cfg)].copy()
+    out.attrs = {}  # drop transport metadata (symbol/day) so parquet write doesn't choke on it
+    out.to_parquet(path, engine="pyarrow", index=False)
     return path
 
 
@@ -195,10 +196,44 @@ def _parse_raw_websocket_dump(path: Path, cfg: L2Config = L2Config()) -> Iterabl
 
 def _parse_raw_csv_dump(path: Path, cfg: L2Config = L2Config()) -> Iterable[pd.DataFrame]:
     """
-    Yield one DataFrame per symbol-day from a vendor CSV dump.
-    BLOCKED: needs format spec from UCLA.
+    Yield one DataFrame per symbol-day from a Tardis ``book_snapshot_N`` CSV
+    (gzipped) dump. Source format (one row per order-book change, top-N levels):
+
+        exchange, symbol, timestamp, local_timestamp,
+        asks[0].price, asks[0].amount, bids[0].price, bids[0].amount, ... ×N
+
+    ``timestamp`` and ``local_timestamp`` are microseconds since the UNIX epoch
+    (UTC). Each row is a full top-N book state, so every row is mapped with
+    is_snapshot=False / is_delta=False (the snapshot/delta flags only carry
+    meaning for the incremental_book_L2 feed). We keep the exchange sequence
+    slot populated with ``local_timestamp`` since Tardis snapshots expose no
+    native sequence number; it is monotone and sufficient for dedupe/ordering.
     """
-    raise NotImplementedError("Awaiting UCLA data sample; see docs/l2_data.md when written.")
+    raw = pd.read_csv(path)
+    if raw.empty:
+        return
+
+    symbol = str(raw["symbol"].iloc[0]).upper()
+    ts = pd.to_datetime(raw["timestamp"].to_numpy(), unit="us", utc=True)
+
+    out = pd.DataFrame({"timestamp": ts})
+    out["seq"] = raw["local_timestamp"].astype("uint64")
+    for i in range(1, cfg.levels + 1):
+        src = i - 1  # Tardis levels are 0-indexed; canonical is 1-indexed
+        out[f"bid_px_{i}"] = raw[f"bids[{src}].price"].astype("float64")
+        out[f"bid_sz_{i}"] = raw[f"bids[{src}].amount"].astype("float64")
+        out[f"ask_px_{i}"] = raw[f"asks[{src}].price"].astype("float64")
+        out[f"ask_sz_{i}"] = raw[f"asks[{src}].amount"].astype("float64")
+    out["is_snapshot"] = False
+    out["is_delta"] = False
+
+    out = out.sort_values(["timestamp", "seq"]).reset_index(drop=True)
+
+    for day, frame in out.groupby(out["timestamp"].dt.floor("D")):
+        frame = frame.reset_index(drop=True)
+        frame.attrs["symbol"] = symbol
+        frame.attrs["day"] = pd.Timestamp(day)
+        yield frame
 
 
 def ingest_directory(raw_root: Path, cfg: L2Config = L2Config(), *, fmt: str = "websocket") -> Optional[int]:

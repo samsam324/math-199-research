@@ -10,3 +10,12 @@ artifacts/
 
 # Paper kept local only
 paper/
+
+# Secrets
+.env
+
+# L2 / tick-trade data (large; downloaded via scripts/download_tardis_l2.py)
+data/l2/
+data/l2_raw/
+data/l2_samples/
+data/trades/
