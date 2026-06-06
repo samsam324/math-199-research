@@ -6,6 +6,45 @@ the next iteration.
 
 ---
 
+## Iteration 14 — consolidation: advisor one-pager + the honest Sharpe is a range (~1.7–2.5)
+
+The science has converged; this iteration is communication, the highest-value remaining work.
+
+### A. Advisor one-pager (`docs/ADVISOR_SUMMARY.md`)
+Distilled the 13 iterations into a 1-page advisor-facing memo: the bottom line, the 5 results + 2 methodological
+artifacts, each with its key number and the honest caveats, and 3 suggested next steps (retract the cointegration
+headline; build reversion as a wide no-stop book validated on a point-in-time universe; treat microstructure as closed
+for alpha). It leads with the corrected Sharpe ~2 headline and explicitly flags the survivorship caveat. Points to
+`L2_FINDINGS.md` / `CORRECTION_kalman_cointegration.md` for detail.
+
+### B. Sharpe-range refinement (flaw-check on iter 13)
+"What am I missing on iter-13?" — even the monthly Sharpe (~2.5) is mildly optimistic, because some positions are held
+>1 month (p95 hold ≈ 88 days), so monthly returns retain residual autocorrelation. The most conservative unit is the
+quarter/window: iter-9's window-level gave ~1.7 annualized (10 pairs, t=3.65). So the defensible deployable figure is a
+**range ~1.7–2.5, central ≈ 2**, not a point estimate. Noted in both `L2_FINDINGS.md` and the one-pager. (No re-run
+needed — both endpoints already computed.)
+
+### State of the project
+Fourteen iterations. The paper is complete, internally consistent, frequency-honest, and now packaged for the advisor.
+Every one of the advisor's L3-from-L2 / volume-as-information / retail-vs-institutional ideas has been measured (real
+contemporaneous info, no edge — including a from-scratch execution sim and hidden-liquidity detection). The one positive
+result (market-neutral diversified reversion alpha, Sharpe ~2, ~30% DD, never-stop) is fully characterized, bounded, and
+correctly scaled, with two placebo-proven methodological artifacts.
+
+### What am I missing? / honest assessment
+- I have reached the end of productive *new* analysis on this dataset. Continuing to spin the loop would manufacture
+  low-value work or risk over-fitting narratives onto a converged result. The remaining genuine task — a point-in-time
+  (survivorship-free) universe — requires a delisted-coin data pull (LUNA/FTT/etc.), which is a real data-acquisition
+  effort, not a quick script, and the stress test already shows the result is break-robust.
+- The most honest recommendation to the user is to **pause the research loop here** and act on the deliverables
+  (send `ADVISOR_SUMMARY.md`; decide whether to fund the point-in-time data pull).
+
+### Plan for next iteration (only if continued)
+1. Point-in-time / survivorship-free universe — the one material open check; needs delisted-coin historical data.
+2. Otherwise, the loop is at a natural terminus; further iterations have diminishing/negative value.
+
+---
+
 ## Iteration 13 — self-correction: iter-12's "+3.4 Sharpe" was hourly-inflated; honest deployable Sharpe is ~2–2.5
 
 Found a real flaw in my own iter-12 frontier: it reported annualized *hourly* Sharpes (+3.2/+3.4) for a strategy whose

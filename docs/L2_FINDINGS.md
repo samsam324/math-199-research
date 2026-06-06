@@ -278,9 +278,12 @@ inflates the deployable number. Recomputing at lower frequencies (`scratch/wf_sh
 | 10-pair no-stop z-exit | 2.53 | 3.29 | 2.98 | **2.41** | [1.75, 3.18] |
 
 The honest deployable Sharpe is the low-frequency value: **~2.0–2.5 (monthly), not ~3.2–3.4** — but it
-**survives** (monthly CIs strictly positive, lower bounds 1.6–2.0). And the ranking flips: at the honest
-monthly frequency the **best config is 40-pair no-stop z-exit (Sharpe ~2.5)**, not the convergence-exit
-that looked best hourly. So the iteration-12 "+3.4 / conv-exit-is-best" was itself an hourly artifact.
+**survives** (monthly CIs strictly positive, lower bounds 1.6–2.0). (Even monthly is mildly optimistic
+since some holds exceed a month — p95 ≈ 88 days; the most conservative *quarterly/window* unit gives
+**~1.7** for 10 pairs (iter-9, t=3.65). So the defensible deployable figure is a **range ~1.7–2.5,
+central ≈ 2**.) And the ranking flips: at the honest monthly frequency the **best config is 40-pair
+no-stop z-exit (Sharpe ~2.5)**, not the convergence-exit that looked best hourly. So the iteration-12
+"+3.4 / conv-exit-is-best" was itself an hourly artifact.
 
 So the alpha is capturable — but only for a **patient, well-capitalized, market-neutral book** that
 diversifies wide, never stops, and can sit through a ~30% drawdown and multi-month holds, at a
