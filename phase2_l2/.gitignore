@@ -1,0 +1,13 @@
+data/l2/
+data/trades/
+data/derivative_ticker/
+data/cache/
+artifacts/
+figures/
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+*.csv.gz
+*.gz
