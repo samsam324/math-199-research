@@ -6,6 +6,47 @@ the next iteration.
 
 ---
 
+## Iteration 10 — the no-stop edge is genuine MARKET-NEUTRAL alpha, not disguised crypto beta
+
+Characterized the central iter-8 result by chasing its biggest untested confound: over a 2021–2026 net-up crypto regime,
+is the no-stop +2.51 Sharpe really reversion alpha, or just net long-market beta wearing a "market-neutral" label? The PnL
+is `pos*(r_A−r_B)` — dollar-neutral but not automatically beta-neutral.
+
+### Test (`scratch/wf_nostop_factor.py`) — beta explanation REJECTED
+Regressed the no-stop portfolio's hourly returns on (i) an equal-weight crypto index and (ii) BTC, with block-bootstrap CIs:
+- **beta ≈ −0.06** (equal-wt) / −0.07 (BTC) — tiny and *slightly negative* (the correct contrarian sign for buying
+  underperformers / shorting outperformers). corr ≈ −0.06.
+- **market-neutralized Sharpe = +2.62 (eq) / +2.67 (BTC) — essentially unchanged from the raw +2.65.** Removing the market
+  factor does nothing.
+- **Daily frequency confirms** (beta −0.04, n=1727 days): no slow-beta accumulation hiding in the multi-week holds.
+- % bars same-sign as market = 45% (≈ independent / mildly contrarian).
+- The stopped strategy is also ~market-neutral (beta −0.02) and still loses (−1.15) — so beta isn't the difference either.
+
+### What this settles
+The no-stop edge is **genuine market-neutral mean-reversion alpha**, not a bull-market artifact. Combined with iters 8–9 it
+is now fully vetted: market-neutral (iter 10), window-level significant (iter 9: t=3.65, 18/19 windows), and
+survivorship/structural-break robust (iter 8) — but realized only as a slow, multi-month hold (median ~35d, 78% never
+converge in-window), with a −41% drawdown and ~⅓ generic survivor-co-movement. **The project's mean-reversion premise is
+vindicated as a real, market-neutral statistical effect; the failure was the risk rule + horizon (an hourly |z|=4 stop
+realizes losses on spreads that then revert), not the absence of reversion.** Updated `L2_FINDINGS.md` Result 3 accordingly.
+
+### What am I missing? / next iteration
+- The no-stop result is now characterized about as far as the survivor universe allows. The one remaining clean check is
+  still the **point-in-time / survivorship-free universe** (delisted coins) — but it needs a data pull and the stress test
+  already shows break-robustness, so it's lower marginal value than it was.
+- A tighter **factor decomposition** (PCA/Johansen: is the +2.5 a single slow mean-reverting basket factor, or many
+  independent pair bets?) would precisely name the exposure — cleaner than the market regression. Reasonable next step.
+- Microstructure chapter remains closed. `L2_FINDINGS.md` is the canonical paper draft and is now internally consistent
+  across all 10 iterations.
+
+### Plan for next iteration (prioritized)
+1. **PCA/eigenportfolio characterization** of the no-stop returns: how many independent factors, and is PC1 a slow
+   mean-reverting basket? Names the +2.5 precisely with existing data.
+2. Point-in-time universe (delisted coins) — only if a cheap data pull is feasible.
+3. Keep `L2_FINDINGS.md` as the single source of truth; consider drafting the advisor-facing summary.
+
+---
+
 ## Iteration 9 — the advisor's "execution value" finally MEASURED — and it's a clean null (another self-correction)
 
 This iteration chased the advisor's L3-from-L2 idea to the one place I'd repeatedly *claimed* it pays off but never tested:

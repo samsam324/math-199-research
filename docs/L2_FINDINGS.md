@@ -223,11 +223,25 @@ hourly series the bootstrap used), the no-stop mean window return is +41.6% with
 −23% — a direct picture of the stop converting reverting positions into realized losses.
 Script: `scratch/wf_nostop_winlevel.py`.
 
+### It IS genuine market-neutral alpha, not disguised crypto beta *(iteration 10)*
+
+The classic confound for a "market-neutral" stat-arb backtest over a 2021–2026 net-up crypto
+regime: is the +2.51 really reversion alpha, or just net long-market beta? Regressing the
+no-stop portfolio's returns on the market (`scratch/wf_nostop_factor.py`) rejects the beta
+explanation cleanly: beta to an equal-weight crypto index = **−0.06** (slightly *contrarian*,
+the correct sign for buying underperformers), beta to BTC = −0.07, and the **market-neutralized
+Sharpe is +2.62 — essentially unchanged from the raw +2.65.** It holds at daily frequency too
+(daily beta −0.04), so there is no slow-beta accumulation hiding in the multi-week holds. So
+the no-stop edge is *genuine market-neutral mean-reversion alpha* — the project's core premise
+is vindicated as a real statistical effect; the failure was the risk rule and horizon, not the
+absence of reversion.
+
 ### Honest bottom line on tradeability
 
-Mean reversion is real and selectable (Result 2), and it *is* monetizable — but only in a
-form far from the project's stated design: a slow, multi-month, deep-drawdown hold-the-spread
-exposure on a survivorship-filtered universe, partly generic beta. As the **hourly,
+Mean reversion is real, selectable (Result 2), and **market-neutral** (iteration 10), and it
+*is* monetizable — but only in a form far from the project's stated design: a slow, multi-month,
+deep-drawdown hold-the-spread exposure on a survivorship-filtered universe, ~⅓ of it a generic
+survivor-co-movement floor. As the **hourly,
 stop-managed stat-arb** originally specified it **loses** (−2.25), because the stop required
 to bound risk at hourly cadence is precisely what destroys the thin, slow reversion. The
 defensible claim is the *sensitivity itself*: report the stop/exit-rule dependence (and the
@@ -366,7 +380,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 |---|---|
 | 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
-| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_sanity.py`, `wf_diag.py` |
+| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 5. L2 costs | `src/l2_costs.py`, `scripts/run_portfolio_backtest.py --with-l2-costs` |

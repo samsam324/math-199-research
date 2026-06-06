@@ -1,0 +1,19 @@
+================================================================================================
+ITER-10: is the no-stop edge market-neutral reversion, or disguised crypto beta?
+================================================================================================
+
+##### NO-STOP (gross)  (n=41635 hrs) #####
+  raw annualized Sharpe (gross) = +2.65
+  vs equal-wt market : beta=-0.0632 (95% CI [-0.0848,-0.0419]) corr=-0.070  ann_alpha=+173.1%  market-neutralized Sharpe=+2.62
+  vs BTC             : beta=-0.0694 (95% CI [-0.0943,-0.0478]) corr=-0.055  ann_alpha=+176.7%  market-neutralized Sharpe=+2.67
+
+##### |z|=4 STOP (gross)  (n=41635 hrs) #####
+  raw annualized Sharpe (gross) = -1.15
+  vs equal-wt market : beta=-0.0212 (95% CI [-0.0358,-0.0039]) corr=-0.037  ann_alpha=-49.8%  market-neutralized Sharpe=-1.17
+  vs BTC             : beta=-0.0265 (95% CI [-0.0399,-0.0129]) corr=-0.033  ann_alpha=-48.6%  market-neutralized Sharpe=-1.14
+
+  no-stop: % bars same-sign as market = 45.1% (50% = independent)
+
+  --- DAILY-frequency check (slow-beta accumulation) ---
+  no-stop DAILY: beta_to_eqmkt=-0.0408  corr=-0.062  (n_days=1727)
+================================================================================================
