@@ -6,6 +6,55 @@ the next iteration.
 
 ---
 
+## Iteration 11 — hidden/iceberg liquidity (novel L3-from-L2) + the no-stop edge is diversified, not a factor bet
+
+Two parallel deliverables: a genuinely novel microstructure *measurement* (the advisor's "infer L3 from L2", taken as
+literally as the data allow) and the final characterization of the no-stop reversion result.
+
+### A. Hidden / iceberg liquidity from L2 + tape (`scratch/hidden_liquidity.py`) — clean measurement, null edge
+Detected hidden liquidity as `max(0, executed-vol-at-price − max-displayed-size-at-price)` per best-price episode (~2.3M
+traded episodes, BTC/ETH/SOL/AVAX, 8 days; conservative lower bound since post-update snapshots under-detect; side
+convention validated — 76% of buys print at the tracked ask).
+- **Descriptive (novel, publishable):** hidden liquidity is **2–3.5% of at-best executed volume** in crypto majors, with a
+  clean depth/institutionalization gradient — **BTC highest** (9.80% of traded-through price levels show a hidden component),
+  **thin AVAX lowest** (2.34%). Median hidden chunk ≈13% of the level's volume. So ~1-in-10 (BTC) to 1-in-40 (AVAX) traded
+  price levels reveal hidden supply.
+- **Predictive (HAC):** **null.** Next-hour realized vol: incremental R² +0.0025, hidden terms insignificant
+  (hidden_fraction t=−1.55, iceberg_rate t=+1.02). Next-hour direction: signed-hidden subsumed by OFI (contemporaneous
+  t=−1.85, marginal & sensibly negative — hidden ask supply caps buying — but not significant; next-hour incremental R²
+  +0.0005). Real, measurable, contemporaneous-only → **reinforces near-efficiency** once more. This was the last untested
+  literal "L3 from L2" angle; it closes the microstructure chapter for good.
+
+### B. PCA: the no-stop edge is DIVERSIFIED idiosyncratic reversion, not a factor bet (`scratch/wf_nostop_pca.py`)
+Iter-10 showed market-neutrality (beta≈0 to PC1). This asks: is the +2.5 a concentrated bet on one slow eigenportfolio?
+- Universe PCA: PC1 (market) = 49.3% of variance, then a flat tail (PC2–10 ≈3–5% each; top-10 = 84%).
+- **The no-stop return is explained only 1.7% by the top-10 statistical factors** (PC1 alone 0.35%, max single-PC 0.49% at
+  PC2). So it is **diversified idiosyncratic** mean-reversion across many ~independent pair bets — not one crowded basket.
+  (Mild caveat: long-short pair strategies are inherently low-factor-R²; but 1.7% rules out a concentrated-factor explanation.)
+- **Net characterization (iters 8–11), the no-stop +2.51:** market-neutral (β≈−0.06), not a factor bet (factor R²=1.7%),
+  window-level significant (t=3.65, 18/19 windows), survivorship/break-robust — a *genuine, diversified, market-neutral
+  mean-reversion alpha*. Caveats unchanged: slow (median ~35d holds, 78% non-converging), −41% drawdown, ~⅓ generic
+  survivor-co-movement floor; an hourly |z|=4 stop destroys it.
+
+### What am I missing? / next iteration
+- The no-stop result is now characterized as far as the current (survivor) universe allows, and the microstructure chapter
+  is definitively closed (alpha, vol, regime, lead-lag, institutional flow, deep book, execution, hidden liquidity — all
+  measured, all near-efficient). I'm reaching genuine diminishing returns on *new* analysis.
+- The two remaining items are both about *robustness of the one positive result*, not new signal hunting: (1) the
+  **point-in-time / survivorship-free universe** (needs a delisted-coin data pull) — the cleanest unaddressed check; (2) an
+  **OU-half-life / reversion-speed selection vs cost** sweep to find the *best-case* tradeable variant (slow no-stop, vol-
+  targeted, wider universe) — does *any* honest implementation clear cost at a *bearable* drawdown? Expected no, but it
+  would bound the positive result cleanly.
+- Increasingly the highest-value work is **consolidation / advisor packaging**, not more tests.
+
+### Plan for next iteration (prioritized)
+1. Point-in-time universe (delisted coins) if a cheap pull is feasible — else the best-case tradeable-variant sweep.
+2. Draft the **advisor-facing one-page summary** from `L2_FINDINGS.md` (the 5 results + 2 artifacts + the vindicated-but-
+   slow reversion alpha), since the research has converged.
+3. Keep `L2_FINDINGS.md` as the single source of truth.
+
+---
+
 ## Iteration 10 — the no-stop edge is genuine MARKET-NEUTRAL alpha, not disguised crypto beta
 
 Characterized the central iter-8 result by chasing its biggest untested confound: over a 2021–2026 net-up crypto regime,

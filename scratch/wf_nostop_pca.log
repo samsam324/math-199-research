@@ -1,0 +1,29 @@
+================================================================================================
+ITER-11 PCA: is the no-stop edge a concentrated factor bet or diversified reversion?
+  core symbols=18  clean hourly rows=47120  span=2021-01-01..2026-05-18
+================================================================================================
+
+Eigenvalue spectrum (variance share):
+  PC1=49.3%  PC2= 5.2%  PC3= 4.6%  PC4= 4.3%  PC5= 4.0%  PC6= 3.6%  PC7= 3.4%  PC8= 3.3%  PC9= 3.1%  PC10= 3.0%
+  PC1 (market) share = 49.3%   top-10 cumulative = 83.8%
+
+No-stop return regressed on PC1..PC10 (n=41635):
+  TOTAL R2 (all 10 PCs) = 1.7%
+  per-PC univariate R2 (variance of no-stop return explained by each factor alone):
+    PC1  R2= 0.35%   (factor var share 49.3%)
+    PC2  R2= 0.49%   (factor var share  5.2%)
+    PC3  R2= 0.09%   (factor var share  4.6%)
+    PC4  R2= 0.01%   (factor var share  4.3%)
+    PC5  R2= 0.00%   (factor var share  4.0%)
+    PC6  R2= 0.35%   (factor var share  3.6%)
+    PC7  R2= 0.18%   (factor var share  3.4%)
+    PC8  R2= 0.09%   (factor var share  3.3%)
+    PC9  R2= 0.12%   (factor var share  3.1%)
+    PC10 R2= 0.12%   (factor var share  3.0%)
+  max single-PC R2 = 0.49%  (PC2)
+
+INTERPRETATION:
+  Total factor R2 2% is LOW => the no-stop alpha is largely IDIOSYNCRATIC /
+  diversified pair reversion (many ~independent bets), not a single slow-factor bet.
+  This is the robust outcome: the edge is not one crowded basket.
+================================================================================================

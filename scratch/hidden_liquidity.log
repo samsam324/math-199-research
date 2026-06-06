@@ -1,0 +1,106 @@
+==============================================================================
+HIDDEN / ICEBERG LIQUIDITY — inferring an L3 quantity from L2 + tape
+Symbols: ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'AVAXUSDT']
+Dates  : 2024-01-02 .. 2024-01-09 (8 days)
+==============================================================================
+  BTCUSDT 2024-01-02: book=764351 trades=2247508 episodes(traded)=97782
+  BTCUSDT 2024-01-03: book=755851 trades=2658063 episodes(traded)=96555
+  BTCUSDT 2024-01-04: book=761105 trades=1819938 episodes(traded)=82367
+  BTCUSDT 2024-01-05: book=732692 trades=2064848 episodes(traded)=83908
+  BTCUSDT 2024-01-06: book=675249 trades=956640 episodes(traded)=38474
+  BTCUSDT 2024-01-07: book=665556 trades=1109262 episodes(traded)=42678
+  BTCUSDT 2024-01-08: book=758655 trades=2364460 episodes(traded)=97379
+  BTCUSDT 2024-01-09: book=743491 trades=2637730 episodes(traded)=90863
+  ETHUSDT 2024-01-02: book=788932 trades=1028326 episodes(traded)=77590
+  ETHUSDT 2024-01-03: book=785503 trades=1351073 episodes(traded)=90633
+  ETHUSDT 2024-01-04: book=796330 trades=780772 episodes(traded)=67129
+  ETHUSDT 2024-01-05: book=797539 trades=758963 episodes(traded)=60148
+  ETHUSDT 2024-01-06: book=726516 trades=450442 episodes(traded)=31444
+  ETHUSDT 2024-01-07: book=752235 trades=516566 episodes(traded)=36985
+  ETHUSDT 2024-01-08: book=799956 trades=1069025 episodes(traded)=84221
+  ETHUSDT 2024-01-09: book=791462 trades=1196420 episodes(traded)=88262
+  SOLUSDT 2024-01-02: book=815318 trades=1029366 episodes(traded)=103207
+  SOLUSDT 2024-01-03: book=813093 trades=1428502 episodes(traded)=130095
+  SOLUSDT 2024-01-04: book=814486 trades=828176 episodes(traded)=94958
+  SOLUSDT 2024-01-05: book=799217 trades=792668 episodes(traded)=89161
+  SOLUSDT 2024-01-06: book=783373 trades=613981 episodes(traded)=73007
+  SOLUSDT 2024-01-07: book=790102 trades=610411 episodes(traded)=71946
+  SOLUSDT 2024-01-08: book=819181 trades=1011344 episodes(traded)=117407
+  SOLUSDT 2024-01-09: book=827201 trades=1264291 episodes(traded)=123658
+  AVAXUSDT 2024-01-02: book=649410 trades=231180 episodes(traded)=35708
+  AVAXUSDT 2024-01-03: book=684353 trades=419264 episodes(traded)=57242
+  AVAXUSDT 2024-01-04: book=701896 trades=205791 episodes(traded)=36872
+  AVAXUSDT 2024-01-05: book=673715 trades=205391 episodes(traded)=36768
+  AVAXUSDT 2024-01-06: book=629660 trades=140623 episodes(traded)=28919
+  AVAXUSDT 2024-01-07: book=643420 trades=152259 episodes(traded)=29200
+  AVAXUSDT 2024-01-08: book=729512 trades=301153 episodes(traded)=51041
+  AVAXUSDT 2024-01-09: book=699745 trades=279585 episodes(traded)=47678
+
+##############################################################################
+# (1) DESCRIPTIVE — hidden fraction & iceberg-episode rate per symbol
+#     (LOWER BOUND: post-update snapshots under-detect hidden fills)
+##############################################################################
+     sym  traded_episodes  iceberg_episodes  iceberg_rate_pct   exec_vol_base  hidden_vol_base  hidden_frac_pct  hidden_frac_notional_pct
+ BTCUSDT           630006             61745            9.8007    221,384.5039       7,730.2423           3.4918                    3.4990
+ ETHUSDT           536412             30084            5.6084  1,826,460.0622      47,347.3887           2.5923                    2.5917
+ SOLUSDT           803439             37422            4.6577 27,562,764.0900     971,622.6300           3.5251                    3.5122
+AVAXUSDT           323428              7573            2.3415 20,101,465.4300     375,019.6600           1.8656                    1.8524
+
+[saved] C:\Users\jackw\Desktop\math-199-research\scratch\hidden_liquidity_persym.csv
+
+##############################################################################
+# (2) PREDICTIVE — hourly panel + Newey-West (HAC) tests
+##############################################################################
+[saved] C:\Users\jackw\Desktop\math-199-research\scratch\hidden_liquidity_panel.csv  (rows=782)
+
+Panel for regressions: N=750 sym-hours across 4 symbols
+Feature means (per symbol):
+          hidden_fraction  iceberg_rate  signed_hidden      rv  ofi_norm  spread
+sym                                                                             
+AVAXUSDT          0.01170       0.01541       -0.00001 0.01255  -0.00394 0.00028
+BTCUSDT           0.03118       0.08868       -0.00183 0.00604   0.00080 0.00000
+ETHUSDT           0.02126       0.04726        0.00245 0.00576   0.01827 0.00001
+SOLUSDT           0.02901       0.03708        0.00082 0.01415  -0.01049 0.00010
+
+----------------------------------------------------------------------
+(a) Predict NEXT-hour realized vol. Incremental over rv + trade intensity.
+----------------------------------------------------------------------
+Baseline  R^2 = 0.12017  (rv, trade_count)
+Full      R^2 = 0.12262  (+ hidden_fraction, iceberg_rate)
+Incremental R^2 = 0.00245
+
+HAC (Newey-West, L=3) coefficients on the FULL model:
+term                          coef     HAC_t         p
+const                      0.00000     0.000    1.0000
+rv_z                      -0.17975    -0.919    0.3583
+trade_count_z              0.50631     2.703    0.0069
+hidden_fraction_z         -0.07253    -1.555    0.1200
+iceberg_rate_z             0.05942     1.017    0.3092
+
+----------------------------------------------------------------------
+(b) Signed hidden activity vs price direction.
+    ASK-hidden = absorbed buying; BID-hidden = absorbed selling.
+----------------------------------------------------------------------
+
+CONTEMPORANEOUS: ret ~ signed_hidden + ofi_norm   R^2=0.29066
+term                          coef     HAC_t         p
+const                      0.00000     0.000    1.0000
+signed_hidden_z           -0.09104    -1.847    0.0648
+ofi_norm_z                 0.56244    15.091    0.0000
+
+NEXT-HOUR: ret_next ~ signed_hidden + ofi_norm    R^2=0.00128
+term                          coef     HAC_t         p
+const                     -0.00000    -0.000    1.0000
+signed_hidden_z            0.02256     0.696    0.4862
+ofi_norm_z                 0.02132     0.458    0.6469
+
+Next-hour return incremental R^2 from adding signed_hidden to OFI: 0.00045
+
+======================================================================
+INTERPRETATION GUIDE:
+ - |HAC t| < ~2.0  => not significant; treat as null.
+ - Incremental R^2 near 0 + small t on hidden terms => near-efficiency:
+   hidden liquidity is REAL & measurable but adds no predictive edge.
+======================================================================
+
+DONE.

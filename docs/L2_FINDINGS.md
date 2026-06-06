@@ -231,10 +231,16 @@ no-stop portfolio's returns on the market (`scratch/wf_nostop_factor.py`) reject
 explanation cleanly: beta to an equal-weight crypto index = **−0.06** (slightly *contrarian*,
 the correct sign for buying underperformers), beta to BTC = −0.07, and the **market-neutralized
 Sharpe is +2.62 — essentially unchanged from the raw +2.65.** It holds at daily frequency too
-(daily beta −0.04), so there is no slow-beta accumulation hiding in the multi-week holds. So
-the no-stop edge is *genuine market-neutral mean-reversion alpha* — the project's core premise
-is vindicated as a real statistical effect; the failure was the risk rule and horizon, not the
-absence of reversion.
+(daily beta −0.04), so there is no slow-beta accumulation hiding in the multi-week holds.
+
+And it is **not a concentrated statistical-factor bet either** (iteration 11, PCA on the
+universe's returns, `scratch/wf_nostop_pca.py`): the market factor PC1 explains 49% of universe
+variance but only **0.35%** of the no-stop return, and the **top 10 eigenportfolios together
+(84% of universe variance) explain just 1.7%** of it (max single-factor R² 0.49%). So the
+no-stop return is **diversified idiosyncratic** mean-reversion across many ~independent pair
+bets — not one crowded basket. So the no-stop edge is *genuine, market-neutral, diversified
+mean-reversion alpha* — the project's core premise is vindicated as a real statistical effect;
+the failure was the risk rule and horizon, not the absence of reversion.
 
 ### Honest bottom line on tradeability
 
@@ -274,6 +280,15 @@ not signal.
 - **The cancellation channel is genuinely new information:** **81–85% of best-level size
   reductions are cancels, not trades** — invisible to trade-flow analysis — and trailing
   cancel-imbalance carries directional info with the right sign (t up to −38).
+- **Hidden / iceberg liquidity** (iteration 11, the most literal "L3 from L2": detect where
+  *executed* volume exceeds *displayed* depth = hidden orders; `scratch/hidden_liquidity.py`,
+  ~2.3M traded episodes). A clean novel *measurement*: hidden liquidity is **2–3.5% of at-best
+  executed volume** in crypto majors, scaling with book depth/institutionalization — **BTC
+  highest (9.8% of traded-through price levels have a hidden component), thin AVAX lowest
+  (2.3%)** — a conservative lower bound (post-update snapshots under-detect). But it carries
+  **no edge**: it does not predict next-hour vol (incremental R² +0.002, HAC-insignificant) or
+  next-hour direction (+0.0005), and is subsumed by OFI even contemporaneously. Real,
+  measurable, contemporaneous-only — the near-efficiency pattern once more.
 - But all of it is **contemporaneous** (predictive increment decays to ~0 by 30s); R² ≤ 2–3%.
   This describes price formation — and the natural hope was that it has **execution** value
   even if not forecast value. Iteration 9 measured that hope directly (below) and rejects it.
@@ -383,6 +398,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 | 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
+| 4c. Hidden/iceberg liquidity | `scratch/hidden_liquidity.py` |
 | 5. L2 costs | `src/l2_costs.py`, `scripts/run_portfolio_backtest.py --with-l2-costs` |
 | 6. Rolling-z artifact | `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py` |
 
