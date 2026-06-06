@@ -1,0 +1,19 @@
+panel 50 syms, nt=2160 ne=720, pairs=1225
+  rw 30/120 (85s)
+  rw 60/120 (165s)
+  rw 90/120 (252s)
+  rw 120/120 (338s)
+(a) independent random walks:      p<0.05 100.0%  p<0.001 98.3%  n=120
+  phase 30/120 (454s)
+  phase 60/120 (559s)
+  phase 90/120 (660s)
+  phase 120/120 (775s)
+(b) coin vs phase-randomized coin: p<0.05 100.0%  p<0.001 95.0%  n=120
+  blockshuf 30/120 (874s)
+  blockshuf 60/120 (973s)
+  blockshuf 90/120 (1074s)
+  blockshuf 120/120 (1176s)
+(c) real pair x block-shuffled:    p<0.05 100.0%  p<0.001 95.0%  n=120
+CLEAN Engle-Granger OOS (test logp): coint p<0.05 2.1%  p<0.01 0.2%  n=1225
+clean-coint pairs p<0.05: 26  saved scratch/clean_coint_pairs.csv
+EXIT=0

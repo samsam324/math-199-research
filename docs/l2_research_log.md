@@ -6,6 +6,62 @@ the next iteration.
 
 ---
 
+## Iteration 8 — consolidation + a MAJOR self-correction: iter-7's "loses even gross" was stop-specific
+
+Two deliverables: (1) the paper-ready synthesis **`docs/L2_FINDINGS.md`** (all 8 iterations, with the two artifact
+demonstrations front-and-center); (2) the robustness work I flagged as the last loophole — and it overturned my own
+iter-7 headline. This is exactly the "find a major flaw in the last analysis" the loop is for; the flaw was mine.
+
+### A. The robustness matrix (`scratch/wf_robustness.py`) — the stop rule is the entire story
+Re-ran the §3 backtest varying stop / exit / hedge / sizing, each vs a random-pair placebo:
+- **Removing the |z|=4 stop flips net Sharpe −2.25 → +2.51 (gross −1.15 → +2.65)**, beating the random-pair placebo
+  (+0.89) by ~2× across-seed SD. Time-exit (+1.87) and hold-to-convergence (+2.68) confirm it; all artifact-free static-z.
+- **So iter-7's "loses even gross, worse than random" was specific to the asymmetric |z|=4 stop, not a property of the
+  strategy.** A tight stop is *actively harmful* to mean reversion — it realizes losses exactly when the spread is most
+  stretched and most likely to revert. I overstated the negativity in iter-7; **corrected in the log and L2_FINDINGS.md.**
+- Rolling-hedge cells score +3–4 but their placebos run +2.1–2.6 (the §6 rolling-z artifact) — do not lead with them.
+
+### B. Is the no-stop "win" real or a survivorship artifact? Stress-tested it myself (`scratch/wf_nostop_stress.py`)
+My first instinct was "no-stop only works because the universe is survivorship-filtered (current top-50, every coin
+survived to 2026) so hold-to-convergence never meets a permanent decoupling." **I tested that instead of asserting it,
+and I was mostly wrong about the mechanism:**
+- Injected delisting-scale permanent breaks (a fraction p of selected pairs diverge ~86% in one leg, never revert;
+  selection on the unbroken train). The no-stop Sharpe is **robust** — only collapses to ≈0 (+0.12) at an *extreme*
+  20%-of-pairs-per-quarter near-delisting rate; at plausible ≤5%/qtr it stays +1.9–2.4. Diversification across 10 pairs
+  absorbs breaks. The stopped strategy stays ≈−2.3 throughout. **The no-stop edge is NOT primarily a delisting-tail artifact.**
+- **The real caveats, from the diagnostics:** the no-stop run is a *multi-month hold* — **median holding ≈848 bars (~35
+  days); 78% of positions never converge within the 3-month window;** **portfolio max drawdown −41%** (worst pair-window
+  −77.5%); and **~⅓ of the return is generic survivor co-movement** (random-pair placebo +0.89; OU adds the +1.62 edge).
+  Its hourly Sharpe is also flattered by long-hold autocorrelation (168h-block bootstrap understates SE since holds ≫ block).
+
+### Reconciliation & the corrected bottom line
+Reversion is real and selectable (iter-7 A, ρ=0.46) **and monetizable — but only in a form far from the project's stated
+design:** a slow, multi-month, −41%-drawdown hold-the-spread exposure on a survivorship-filtered universe, partly generic
+beta. As the **hourly, stop-managed stat-arb** originally specified it **loses** (−2.25), because the stop that bounds
+hourly risk is exactly what destroys the thin, slow reversion. So the honest headline is the **sensitivity itself**: P&L
+is entirely a function of the stop/exit rule (and window regime), not a single Sharpe. This is more nuanced, more correct,
+and more interesting than iter-7's flat "untradeable." The four other results (cointegration artifact, microstructure
+near-efficiency, L2 costs, rolling-z artifact) are unchanged.
+
+### What am I missing? / next iteration
+- **The single most valuable remaining data work is a point-in-time universe** (include delisted coins: LUNA, FTT, etc.).
+  Every reversion/backtest number here is on the current top-50 = survivors. The no-stop result is stress-robust, but a
+  true survivorship-free re-run would close the last honest gap and is worth doing now that ~175GB is cached.
+- Could test whether the no-stop edge is just long-horizon basket co-integration (PCA/Johansen on the survivor majors) —
+  i.e. is "hold bounded survivor spreads" the same as a slow market-neutral mean-reversion factor? If so, frame it as such.
+- The microstructure chapter is closed (near-efficient, exhausted). L2_FINDINGS.md is now the canonical paper draft.
+- Make sure the advisor sees both `CORRECTION_kalman_cointegration.md` and the §3 stop-sensitivity (it changes the verdict
+  from "untradeable" to "depends entirely on the risk rule; the specified hourly version loses").
+
+### Plan for next iteration (prioritized)
+1. **Point-in-time / survivorship-free universe** (delisted coins included) → re-run the §3 stop/no-stop matrix; does the
+   no-stop result survive a genuinely point-in-time universe? This is the cleanest remaining check.
+2. **Characterize the no-stop exposure**: is it a slow market-neutral reversion factor (basket cointegration) rather than
+   pairwise alpha? PCA/Johansen on the survivor majors; report honestly.
+3. Polish `L2_FINDINGS.md` into the actual paper section; ensure the stop-sensitivity table and both artifacts are central.
+
+---
+
 ## Iteration 7 — the bottom line: reversion is genuine & selectable OOS, but economically untradeable
 
 Two complementary tests answer the project's central question. They look opposed but reconcile cleanly: the effect is **statistically real**

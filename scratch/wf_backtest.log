@@ -1,0 +1,44 @@
+====================================================================================================
+HONEST WALK-FORWARD PAIR MEAN-REVERSION BACKTEST
+universe=49 tradable syms | hours=47131 | span=2021-01-01..2026-05-18
+walk-forward: 6mo TRAIN -> 3mo TEST, step 3mo => 19 splits | N_PAIRS=10 | OU band 12-336h | z enter/exit/stop = 2.0/0.5/4.0
+====================================================================================================
+
+########## COST LEVEL: realistic_30bps_rt  (fee 10.0bps + slip 5.0bps per leg) ##########
+
+[OU-SELECTED | static TRAIN z]
+  net Sharpe=-2.25 (SE 0.39, 95%CI [-3.21,-1.34])  gross Sharpe=-1.15 (SE 0.38)  netPnL=-456.73%  grossPnL=-232.66%  MDD=-493.34%  trades=7469  turn=7469  WR=36.7%
+
+[OU-SELECTED | rolling 336h in-TEST z]
+  net Sharpe=+4.75 (SE 0.42, 95%CI [+3.87,+5.67])  gross Sharpe=+5.55 (SE 0.42)  netPnL=+1166.89%  grossPnL=+1365.88%  MDD=-29.98%  trades=6633  turn=6633  WR=64.7%
+
+[RANDOM-PAIR PLACEBO | static TRAIN z]  (avg over 5 seeds)
+  net Sharpe=-0.67 (across-seed SD 0.73)  gross Sharpe=-0.18  netPnL=-96.54%  per-seed net=[-1.56, +0.35, -1.14, -1.01, +0.01]
+
+[RANDOM-PAIR PLACEBO | rolling 336h z]  (avg over 5 seeds)
+  net Sharpe=+2.18 (across-seed SD 0.85)  gross Sharpe=+3.15  netPnL=+335.78%  per-seed net=[+0.66, +3.22, +2.65, +2.05, +2.31]
+
+########## COST LEVEL: low_2bps_rt  (fee 1.0bps + slip 1.0bps per leg) ##########
+
+[OU-SELECTED | static TRAIN z]
+  net Sharpe=-1.30 (SE 0.38, 95%CI [-2.20,-0.45])  gross Sharpe=-1.15 (SE 0.38)  netPnL=-262.53%  grossPnL=-232.66%  MDD=-337.04%  trades=7469  turn=7469  WR=41.3%
+
+[OU-SELECTED | rolling 336h in-TEST z]
+  net Sharpe=+5.45 (SE 0.42, 95%CI [+4.56,+6.35])  gross Sharpe=+5.55 (SE 0.42)  netPnL=+1339.35%  grossPnL=+1365.88%  MDD=-27.64%  trades=6633  turn=6633  WR=67.2%
+
+[RANDOM-PAIR PLACEBO | static TRAIN z]  (avg over 5 seeds)
+  net Sharpe=-0.24 (across-seed SD 0.71)  gross Sharpe=-0.18  netPnL=-33.42%  per-seed net=[-1.19, +0.74, -0.58, -0.61, +0.41]
+
+[RANDOM-PAIR PLACEBO | rolling 336h z]  (avg over 5 seeds)
+  net Sharpe=+3.02 (across-seed SD 0.91)  gross Sharpe=+3.15  netPnL=+467.21%  per-seed net=[+1.42, +4.14, +3.56, +2.87, +3.11]
+
+########## PHASE-RANDOMIZED SURROGATE PLACEBO (realistic costs) ##########
+
+  [static TRAIN z] OU-selection on phase-randomized prices (should be ~0 if edge is real):
+  net Sharpe=-0.92  gross Sharpe=-0.49  per-seed net=[-0.96, -0.70, -1.10]
+
+  [rolling 336h z] OU-selection on phase-randomized prices (should be ~0 if edge is real):
+  net Sharpe=+2.42  gross Sharpe=+2.73  per-seed net=[+2.63, +2.14, +2.47]
+
+====================================================================================================
+DONE in 52s

@@ -1,0 +1,17 @@
+Clean-cointegrated pairs (EG OOS p<0.05): 26
+Full panel: 24942 bars x 50 symbols, 2023-07-14 13:00:00+00:00 .. 2026-05-18 18:00:00+00:00
+Correlation-fallback pairs (top corr, non-clean): 26
+
+=== CLEAN COINTEGRATED pairs — reversion premise (powered) ===
+  pairs=26  total events=4268
+  h=24h  meanRev=+1.0452z  pair-cluster95%CI[+0.9063,+1.1801] p=0.000 (Bonf 0.000 SIG)  | block95%CI[+0.9772,+1.1235] p=0.000  n_ev=4268
+  h=48h  meanRev=+1.4223z  pair-cluster95%CI[+1.2969,+1.5440] p=0.000 (Bonf 0.000 SIG)  | block95%CI[+1.3620,+1.4932] p=0.000  n_ev=4268
+  h=72h  meanRev=+1.7148z  pair-cluster95%CI[+1.6150,+1.8065] p=0.000 (Bonf 0.000 SIG)  | block95%CI[+1.6568,+1.7754] p=0.000  n_ev=4268
+
+=== CORRELATION-FALLBACK pairs — reversion premise ===
+  pairs=26  total events=4027
+  h=24h  meanRev=+0.6816z  pair-cluster95%CI[+0.6307,+0.7327] p=0.000 (Bonf 0.000 SIG)  | block95%CI[+0.6421,+0.7211] p=0.000  n_ev=4027
+  h=48h  meanRev=+1.1270z  pair-cluster95%CI[+1.0779,+1.1752] p=0.000 (Bonf 0.000 SIG)  | block95%CI[+1.0863,+1.1698] p=0.000  n_ev=4027
+  h=72h  meanRev=+1.4642z  pair-cluster95%CI[+1.4258,+1.5034] p=0.000 (Bonf 0.000 SIG)  | block95%CI[+1.4220,+1.5045] p=0.000  n_ev=4027
+
+Saved event sets to scratch/part2_*.csv

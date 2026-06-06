@@ -1,0 +1,30 @@
+==========================================================================
+ROBUSTNESS CHECKS ON OOS REVERSION PERSISTENCE
+==========================================================================
+
+R1. SHUFFLE PLACEBO (break train->OOS link; expect rho~0, spread~0)
+  real  : mean rho=+0.460   mean quintile-spread=+0.6931z
+  shuffled: mean rho=-0.002   mean quintile-spread=-0.0155z
+
+R2. Partial Spearman(train_kappa, OOS excess | OOS floor magnitude)
+    (does selection survive after removing OOS spread-vol/floor regime?)
+  raw     mean rho(train_kappa, oos_excess)        = +0.460
+  partial mean rho(... | oos_floor)               = +0.464
+
+R2b. Partial Spearman(train_kappa, OOS excess | TRAIN in-sample excess)
+  partial mean rho(train_kappa, oos_excess | tr_excess) = +0.258
+
+R3. Bottom-quintile (in-sample LEAST reverting) OOS behaviour
+  bottom-quintile mean OOS excess = +0.1854z
+  fraction of bottom-quintile pairs with OOS excess<0 (worse than RW) = 33.61%
+  top-quintile    mean OOS excess = +0.8785z
+
+R4. RAW (NOT floor-subtracted) OOS reversion, top vs bottom quintile by train kappa
+  top   : raw OOS revert=+1.8643z   its floor=+0.9858z
+  bottom: raw OOS revert=+1.1695z   its floor=+0.9841z
+  raw spread (top-bot, NOT floor-subtracted) = +0.6948z
+
+R5. Does train kappa predict OOS kappa (second outcome measure)?
+  mean Spearman(train_kappa, OOS_kappa) = +0.473  per-split=[np.float64(0.25), np.float64(0.2), np.float64(0.49), np.float64(0.42), np.float64(0.62), np.float64(0.45), np.float64(0.53), np.float64(0.63), np.float64(0.65)]
+
+Done.

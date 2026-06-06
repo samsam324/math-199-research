@@ -1,0 +1,49 @@
+Panel: 24942 bars x 50 syms, 2023-07-14 13:00:00+00:00 .. 2026-05-18 18:00:00+00:00
+Pairs: 1225  (C(50,2))
+Walk-forward splits: 9 (train=4368h ~6mo, test=2184h ~3mo, roll=2184h)
+  split 0: train 2023-07-14..2024-01-12  test 2024-01-12..2024-04-12
+  split 1: train 2023-10-13..2024-04-12  test 2024-04-12..2024-07-12
+  split 2: train 2024-01-12..2024-07-12  test 2024-07-12..2024-10-11
+  split 3: train 2024-04-12..2024-10-11  test 2024-10-11..2025-01-10
+  split 4: train 2024-07-12..2025-01-10  test 2025-01-10..2025-04-11
+  split 5: train 2024-10-11..2025-04-11  test 2025-04-11..2025-07-11
+  split 6: train 2025-01-10..2025-07-11  test 2025-07-11..2025-10-10
+  split 7: train 2025-04-11..2025-10-10  test 2025-10-10..2026-01-09
+  split 8: train 2025-07-11..2026-01-09  test 2026-01-09..2026-04-10
+  [split 0] pairs scored OOS (>= 3 events): 1225/1225   (89s)
+  [split 1] pairs scored OOS (>= 3 events): 1225/1225   (177s)
+  [split 2] pairs scored OOS (>= 3 events): 1225/1225   (266s)
+  [split 3] pairs scored OOS (>= 3 events): 1225/1225   (354s)
+  [split 4] pairs scored OOS (>= 3 events): 1225/1225   (442s)
+  [split 5] pairs scored OOS (>= 3 events): 1225/1225   (529s)
+  [split 6] pairs scored OOS (>= 3 events): 1225/1225   (618s)
+  [split 7] pairs scored OOS (>= 3 events): 1225/1225   (706s)
+  [split 8] pairs scored OOS (>= 3 events): 1225/1225   (794s)
+
+Saved per-pair-per-split table -> scratch/persistence_pairs.csv (11025 rows)
+
+==============================================================================
+OOS PERSISTENCE OF MEAN-REVERSION (all reversion NET of mechanical floor)
+==============================================================================
+
+Pooled OOS (pairs w/ >= 3 events): n=11025 pair-splits
+  mean observed OOS reversion : +1.4389 z
+  mean mechanical floor       : +0.9852 z
+  mean EXCESS (obs - floor)   : +0.4537 z
+
+--- (a) Spearman rank-corr(train metric, OOS excess reversion), pooled over splits ---
+  tr_kappa  (OU speed, higher=revert)       : rho=+0.460  95%CI[+0.367,+0.543]  p=0.000 SIG  (per-split: +0.22,+0.23,+0.57,+0.45,+0.53,+0.49,+0.61,+0.59,+0.46)
+  tr_halflife (lower=revert)                : rho=-0.460  95%CI[-0.544,-0.366]  p=0.000 SIG  (per-split: -0.22,-0.23,-0.57,-0.45,-0.53,-0.49,-0.61,-0.59,-0.46)
+  tr_vr     (VR<1=revert, lower better)     : rho=-0.458  95%CI[-0.531,-0.377]  p=0.000 SIG  (per-split: -0.34,-0.22,-0.53,-0.51,-0.53,-0.53,-0.58,-0.56,-0.33)
+  tr_excess (in-sample excess revert)       : rho=+0.428  95%CI[+0.332,+0.518]  p=0.000 SIG  (per-split: +0.26,+0.16,+0.44,+0.32,+0.44,+0.51,+0.61,+0.60,+0.51)
+
+--- (b) Top-quintile vs bottom-quintile OOS excess reversion (block-boot over splits) ---
+  tr_kappa  (OU speed, higher=revert)       : top=+0.8785 bot=+0.1854  SPREAD=+0.6931z 95%CI[+0.5756,+0.8097] p=0.000 SIG  (n_splits=9)
+  tr_halflife (lower=revert)                : top=+0.8785 bot=+0.1854  SPREAD=+0.6931z 95%CI[+0.5765,+0.8083] p=0.000 SIG  (n_splits=9)
+  tr_vr     (VR<1=revert, lower better)     : top=+0.8415 bot=+0.1715  SPREAD=+0.6700z 95%CI[+0.5637,+0.7596] p=0.000 SIG  (n_splits=9)
+  tr_excess (in-sample excess revert)       : top=+0.8793 bot=+0.1980  SPREAD=+0.6814z 95%CI[+0.5549,+0.8039] p=0.000 SIG  (n_splits=9)
+
+--- (c) PLACEBO: random quintile assignment (should be ~0) ---
+  random-quintile spread: mean=+0.0001z  sd=0.0155  95%CI[-0.0310,+0.0290]
+
+Done in 797s

@@ -1,0 +1,8 @@
+NULL random-walk spread (mechanical rolling-z reversion baseline):
+  h=24h meanRev=+0.545z  n=6469
+  h=48h meanRev=+0.982z  n=6469
+  h=72h meanRev=+1.280z  n=6469
+AR(1) hl=48h stationary spread (genuine reversion):
+  h=24h meanRev=+0.941z  n=6278
+  h=48h meanRev=+1.478z  n=6278
+  h=72h meanRev=+1.833z  n=6278

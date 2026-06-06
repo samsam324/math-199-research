@@ -1,0 +1,49 @@
+====================================================================================================
+NO-STOP SURVIVORSHIP / STRUCTURAL-BREAK STRESS TEST
+universe=49 syms (CURRENT top-50 == survivorship-filtered) | span=2021-01-01..2026-05-18 | 19 splits
+====================================================================================================
+
+[1] TAIL DIAGNOSTICS  (no-stop, no breaks, realistic 30bps)
+    no-stop  net Sharpe = +2.51   stop     net Sharpe = -2.25
+    per-(pair,window) net PnL: n=190  mean=+41.55%  min=-77.50%  p05=-38.72%  max=+456.46%  skew=+2.62
+    worst single pair-window loss = -77.50%   (# losing pair-windows = 44/190)
+    PORTFOLIO max drawdown (no-stop) = -41.24%
+    holding time (bars): median=848  p95=2102  max=2196  (window len ~2208h)
+    positions STILL OPEN at window end (never converged) = 148/190 (77.9%)
+    >> A benign worst-case tail here is the SURVIVORSHIP signature: the
+       real-universe non-reverting tail (delistings) is absent by construction.
+
+[2] STRUCTURAL-BREAK STRESS TEST  (NET Sharpe vs per-pair break prob p)
+    Each break = a selected pair permanently diverges by BREAK_MAG in log-price
+    in the TEST window and never reverts (selection is on the unbroken TRAIN).
+
+    ----- cost: realistic_30bps_rt -----
+      BREAK_MAG = 50% leg blowup
+        p_break ->       0%       2%       5%      10%      20%
+        no-stop net S:    +2.51    +2.45    +2.37    +2.17    +1.92
+        stop|z|=4   :    -2.25    -2.25    -2.31    -2.39    -2.52
+      BREAK_MAG = 100% leg blowup
+        p_break ->       0%       2%       5%      10%      20%
+        no-stop net S:    +2.51    +2.38    +2.16    +1.85    +1.17
+        stop|z|=4   :    -2.25    -2.27    -2.31    -2.37    -2.38
+      BREAK_MAG = 200% leg blowup
+        p_break ->       0%       2%       5%      10%      20%
+        no-stop net S:    +2.51    +2.20    +1.92    +1.28    +0.12
+        stop|z|=4   :    -2.25    -2.29    -2.32    -2.36    -2.31
+
+    ----- cost: low_2bps_rt -----
+      BREAK_MAG = 50% leg blowup
+        p_break ->       0%       2%       5%      10%      20%
+        no-stop net S:    +2.63    +2.58    +2.50    +2.29    +2.04
+        stop|z|=4   :    -1.30    -1.30    -1.35    -1.44    -1.57
+      BREAK_MAG = 100% leg blowup
+        p_break ->       0%       2%       5%      10%      20%
+        no-stop net S:    +2.63    +2.51    +2.28    +1.97    +1.29
+        stop|z|=4   :    -1.30    -1.32    -1.37    -1.42    -1.46
+      BREAK_MAG = 200% leg blowup
+        p_break ->       0%       2%       5%      10%      20%
+        no-stop net S:    +2.63    +2.33    +2.04    +1.41    +0.24
+        stop|z|=4   :    -1.30    -1.34    -1.38    -1.42    -1.39
+
+====================================================================================================
+DONE in 139s

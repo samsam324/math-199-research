@@ -1,0 +1,82 @@
+============================================================================================================
+ROBUSTNESS MATRIX -- pair mean-reversion (stop / exit / hedge / sizing)
+universe=49 syms | hours=47131 | span=2021-01-01..2026-05-18 | 19 walk-forward splits | N_PAIRS=10 | z enter=2.0 | placebo seeds=[0, 1, 2]
+============================================================================================================
+
+########## COST LEVEL: realistic_30bps_rt (fee 10.0bps + slip 5.0bps/leg) ##########
+  S1_baseline_stop4            net S=-2.25(SE0.39,CI[-3.21,-1.34]) gross S=-1.15 netPnL=-456.7% trades=7469 turn=7469 WR=36.7%
+    placebo(random): net S=-0.79 (SD 0.82) gross S=-0.27 netPnL=-112.3% per-seed=['-1.56', '+0.35', '-1.14']  => edge=-1.47 [<= placebo]
+  S2_nostop                    net S=+2.51(SE0.35,CI[+1.83,+3.22]) gross S=+2.65 netPnL=+789.5% trades=1526 turn=1526 WR=75.7%
+    placebo(random): net S=+0.89 (SD 0.81) gross S=+0.97 netPnL=+152.0% per-seed=['-0.22', '+1.69', '+1.20']  => edge=+1.62 [BEATS placebo]
+  S3_widestop6                 net S=+0.85(SE0.36,CI[+0.16,+1.57]) gross S=+1.34 netPnL=+220.5% trades=4272 turn=4272 WR=47.2%
+    placebo(random): net S=+0.23 (SD 0.73) gross S=+0.46 netPnL=+38.0% per-seed=['-0.71', '+1.08', '+0.31']  => edge=+0.62 [<= placebo]
+  E1_time_2xHL                 net S=+1.87(SE0.34,CI[+1.19,+2.62]) gross S=+3.03 netPnL=+570.7% trades=11809 turn=11809 WR=55.6%
+    placebo(random): net S=-0.39 (SD 0.77) gross S=+0.91 netPnL=-65.0% per-seed=['-1.47', '+0.26', '+0.04']  => edge=+2.26 [BEATS placebo]
+  E2_conv_nostop               net S=+2.68(SE0.36,CI[+1.92,+3.38]) gross S=+2.80 netPnL=+896.1% trades=1436 turn=1436 WR=70.1%
+    placebo(random): net S=+0.88 (SD 0.72) gross S=+0.99 netPnL=+153.4% per-seed=['-0.11', '+1.58', '+1.17']  => edge=+1.80 [BEATS placebo]
+  H_roll720_zexit              net S=+3.65(SE0.40,CI[+2.71,+4.62]) gross S=+4.34 netPnL=+726.4% trades=4662 turn=4662 WR=62.4%
+    placebo(random): net S=+1.45 (SD 0.82) gross S=+2.33 netPnL=+186.7% per-seed=['+0.30', '+2.14', '+1.91']  => edge=+2.19 [BEATS placebo]
+  H_roll1440_zexit             net S=+3.24(SE0.40,CI[+2.43,+4.14]) gross S=+3.83 netPnL=+715.4% trades=4342 turn=4342 WR=61.5%
+    placebo(random): net S=+1.39 (SD 0.67) gross S=+2.18 netPnL=+181.0% per-seed=['+0.46', '+2.02', '+1.67']  => edge=+1.86 [BEATS placebo]
+  H_roll720_nostop             net S=+3.62(SE0.37,CI[+2.77,+4.66]) gross S=+4.07 netPnL=+903.9% trades=3787 turn=3787 WR=68.1%
+    placebo(random): net S=+2.12 (SD 0.85) gross S=+2.73 netPnL=+290.4% per-seed=['+0.93', '+2.87', '+2.54']  => edge=+1.51 [BEATS placebo]
+  H_roll1440_nostop            net S=+3.31(SE0.38,CI[+2.57,+4.15]) gross S=+3.67 netPnL=+885.5% trades=3294 turn=3294 WR=68.8%
+    placebo(random): net S=+2.14 (SD 0.78) gross S=+2.64 netPnL=+303.8% per-seed=['+1.06', '+2.87', '+2.47']  => edge=+1.17 [BEATS placebo]
+  Z_voltarget_static           net S=-2.26(SE0.40,CI[-3.24,-1.37]) gross S=-1.22 netPnL=-493.2% trades=7469 turn=7619 WR=36.6%
+    placebo(random): net S=-0.89 (SD 0.85) gross S=-0.34 netPnL=-127.2% per-seed=['-1.60', '+0.30', '-1.37']  => edge=-1.37 [<= placebo]
+  D_roll720_nostop_conv        net S=+3.76(SE0.41,CI[+2.78,+4.80]) gross S=+4.09 netPnL=+1030.8% trades=3190 turn=3190 WR=68.0%
+    placebo(random): net S=+2.05 (SD 0.93) gross S=+2.52 netPnL=+309.7% per-seed=['+0.74', '+2.81', '+2.61']  => edge=+1.71 [BEATS placebo]
+  D_roll1440_nostop_conv       net S=+3.71(SE0.42,CI[+2.74,+4.69]) gross S=+4.00 netPnL=+1058.1% trades=2775 turn=2775 WR=68.8%
+    placebo(random): net S=+1.89 (SD 0.79) gross S=+2.27 netPnL=+292.4% per-seed=['+0.84', '+2.75', '+2.08']  => edge=+1.83 [BEATS placebo]
+  D_roll1440_nostop_conv_vol   net S=+3.68(SE0.41,CI[+2.69,+4.70]) gross S=+4.01 netPnL=+1001.3% trades=2775 turn=3040 WR=68.2%
+    placebo(random): net S=+1.76 (SD 0.77) gross S=+2.20 netPnL=+274.0% per-seed=['+0.72', '+2.54', '+2.04']  => edge=+1.92 [BEATS placebo]
+
+########## COST LEVEL: low_2bps_rt (fee 1.0bps + slip 1.0bps/leg) ##########
+  S1_baseline_stop4            net S=-1.30(SE0.38,CI[-2.20,-0.45]) gross S=-1.15 netPnL=-262.5% trades=7469 turn=7469 WR=41.3%
+    placebo(random): net S=-0.34 (SD 0.80) gross S=-0.27 netPnL=-46.5% per-seed=['-1.19', '+0.74', '-0.58']  => edge=-0.96 [<= placebo]
+  S2_nostop                    net S=+2.63(SE0.35,CI[+1.94,+3.35]) gross S=+2.65 netPnL=+829.1% trades=1526 turn=1526 WR=76.8%
+    placebo(random): net S=+0.96 (SD 0.83) gross S=+0.97 netPnL=+164.4% per-seed=['-0.18', '+1.77', '+1.29']  => edge=+1.67 [BEATS placebo]
+  S3_widestop6                 net S=+1.27(SE0.36,CI[+0.59,+1.99]) gross S=+1.34 netPnL=+331.6% trades=4272 turn=4272 WR=50.8%
+    placebo(random): net S=+0.43 (SD 0.75) gross S=+0.46 netPnL=+70.8% per-seed=['-0.54', '+1.29', '+0.53']  => edge=+0.84 [BEATS placebo]
+  E1_time_2xHL                 net S=+2.88(SE0.34,CI[+2.20,+3.62]) gross S=+3.03 netPnL=+877.7% trades=11809 turn=11809 WR=57.8%
+    placebo(random): net S=+0.74 (SD 0.80) gross S=+0.91 netPnL=+119.8% per-seed=['-0.39', '+1.31', '+1.29']  => edge=+2.14 [BEATS placebo]
+  E2_conv_nostop               net S=+2.79(SE0.36,CI[+2.03,+3.50]) gross S=+2.80 netPnL=+933.5% trades=1436 turn=1436 WR=70.7%
+    placebo(random): net S=+0.97 (SD 0.73) gross S=+0.99 netPnL=+169.9% per-seed=['-0.03', '+1.67', '+1.28']  => edge=+1.81 [BEATS placebo]
+  H_roll720_zexit              net S=+4.25(SE0.40,CI[+3.32,+5.25]) gross S=+4.34 netPnL=+847.6% trades=4662 turn=4662 WR=64.2%
+    placebo(random): net S=+2.21 (SD 0.85) gross S=+2.33 netPnL=+284.5% per-seed=['+1.02', '+2.90', '+2.73']  => edge=+2.04 [BEATS placebo]
+  H_roll1440_zexit             net S=+3.75(SE0.41,CI[+2.96,+4.65]) gross S=+3.83 netPnL=+828.3% trades=4342 turn=4342 WR=63.5%
+    placebo(random): net S=+2.08 (SD 0.71) gross S=+2.18 netPnL=+272.0% per-seed=['+1.09', '+2.75', '+2.39']  => edge=+1.68 [BEATS placebo]
+  H_roll720_nostop             net S=+4.01(SE0.37,CI[+3.14,+5.12]) gross S=+4.07 netPnL=+1002.4% trades=3787 turn=3787 WR=70.0%
+    placebo(random): net S=+2.65 (SD 0.88) gross S=+2.73 netPnL=+364.2% per-seed=['+1.41', '+3.41', '+3.12']  => edge=+1.36 [BEATS placebo]
+  H_roll1440_nostop            net S=+3.62(SE0.38,CI[+2.87,+4.48]) gross S=+3.67 netPnL=+971.2% trades=3294 turn=3294 WR=70.8%
+    placebo(random): net S=+2.57 (SD 0.82) gross S=+2.64 netPnL=+367.2% per-seed=['+1.44', '+3.33', '+2.95']  => edge=+1.05 [BEATS placebo]
+  Z_voltarget_static           net S=-1.36(SE0.40,CI[-2.28,-0.52]) gross S=-1.22 netPnL=-295.1% trades=7469 turn=7619 WR=41.2%
+    placebo(random): net S=-0.41 (SD 0.82) gross S=-0.34 netPnL=-56.4% per-seed=['-1.20', '+0.72', '-0.76']  => edge=-0.95 [<= placebo]
+  D_roll720_nostop_conv        net S=+4.05(SE0.41,CI[+3.07,+5.09]) gross S=+4.09 netPnL=+1113.8% trades=3190 turn=3190 WR=69.3%
+    placebo(random): net S=+2.46 (SD 0.96) gross S=+2.52 netPnL=+372.3% per-seed=['+1.10', '+3.22', '+3.06']  => edge=+1.59 [BEATS placebo]
+  D_roll1440_nostop_conv       net S=+3.96(SE0.43,CI[+2.98,+4.97]) gross S=+4.00 netPnL=+1130.2% trades=2775 turn=2775 WR=70.4%
+    placebo(random): net S=+2.22 (SD 0.82) gross S=+2.27 netPnL=+344.8% per-seed=['+1.12', '+3.09', '+2.44']  => edge=+1.74 [BEATS placebo]
+  D_roll1440_nostop_conv_vol   net S=+3.97(SE0.42,CI[+2.96,+5.01]) gross S=+4.01 netPnL=+1080.3% trades=2775 turn=3040 WR=70.0%
+    placebo(random): net S=+2.14 (SD 0.80) gross S=+2.20 netPnL=+333.0% per-seed=['+1.05', '+2.92', '+2.44']  => edge=+1.83 [BEATS placebo]
+
+============================================================================================================
+COMPACT SUMMARY  (S=annualized Sharpe; edge=net-placebo; * = net>0 AND edge>placebo_SD)
+============================================================================================================
+variant                       grossS   net30  plac30    net2   plac2   flag
+---------------------------------------------------------------------------
+S1_baseline_stop4              -1.15   -2.25   -0.79   -1.30   -0.34       
+S2_nostop                      +2.65   +2.51   +0.89   +2.63   +0.96 *EDGE*
+S3_widestop6                   +1.34   +0.85   +0.23   +1.27   +0.43 *EDGE*
+E1_time_2xHL                   +3.03   +1.87   -0.39   +2.88   +0.74 *EDGE*
+E2_conv_nostop                 +2.80   +2.68   +0.88   +2.79   +0.97 *EDGE*
+H_roll720_zexit                +4.34   +3.65   +1.45   +4.25   +2.21 *EDGE*
+H_roll1440_zexit               +3.83   +3.24   +1.39   +3.75   +2.08 *EDGE*
+H_roll720_nostop               +4.07   +3.62   +2.12   +4.01   +2.65 *EDGE*
+H_roll1440_nostop              +3.67   +3.31   +2.14   +3.62   +2.57 *EDGE*
+Z_voltarget_static             -1.22   -2.26   -0.89   -1.36   -0.41       
+D_roll720_nostop_conv          +4.09   +3.76   +2.05   +4.05   +2.46 *EDGE*
+D_roll1440_nostop_conv         +4.00   +3.71   +1.89   +3.96   +2.22 *EDGE*
+D_roll1440_nostop_conv_vol     +4.01   +3.68   +1.76   +3.97   +2.14 *EDGE*
+
+============================================================================================================
+DONE in 178s
