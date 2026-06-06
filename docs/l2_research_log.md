@@ -6,6 +6,45 @@ the next iteration.
 
 ---
 
+## Iteration 5 — constructive angles close out; the binding constraint is now statistical POWER
+
+Pivoted from alpha-hunting to two constructive uses (vol forecasting, entry-filter). Both came back honest-negative, but the
+*reason* is the headline: the universe is too small/correlated to confirm even the strategy's own premise.
+
+### A. Microstructure features for next-hour volatility vs HAR-RV (6 symbols, 90 days, OOS walk-forward) — **HAR-RV already wins**
+- HAR-RV (Corsi 2009) is a strong benchmark: pooled **OOS R²≈0.51**, and as a sizing engine cuts realized-risk coefficient-of-variation **−41%** vs flat.
+- 11-feature "kitchen-sink" micro set: IS incremental +1.45% but **OOS −0.95%** (overfits, *degrades* vol-targeting by 4%).
+- A *parsimonious* 4-feature set (trade count, quote-update intensity, mean spread, jump proxy) flips OOS to **+1.38%** — small, positive, but only ~2–3% of HAR's OOS R², concentrated in BTC/ETH, and not worth the extra position churn.
+- Verdict: microstructure does **not** meaningfully beat HAR-RV for next-hour vol OOS; the autoregressive persistence of RV already encodes the intensity signals. Scripts: `scratch/har_vol_build.py`, `scratch/har_vol_regress.py`.
+
+### B. Does flow condition reversion at spread extremes? (8 pairs, ~240 non-overlapping |z|>2 events, cluster-bootstrap) — **sign-consistent but underpowered**
+- The hypothesis ("don't fade when flow still pushes the divergence") points the **right way** at every horizon/threshold and *grows with z* (informed-vs-noise intuition) — oppose-flow extremes revert more than confirm-flow extremes.
+- But **0 of 9 specifications are statistically significant** once SEs cluster by pair; the pooled continuous correlation is ≈0; per-pair signs flip (3 of 8 opposite).
+- **Critical:** even the *unconditional* reversion edge fails pair-clustered significance (mean +0.17z, 95% CI **[−0.026, +0.387]**). The filter lifts gross win-rate 57.7%→61.2% and ~doubles mean PnL, but discards 65% of trades, isn't distinguishable from luck, and the gross gain (~few bps) is < costs. Scripts: `scratch/extreme_flow_*.py`.
+
+### The real lesson of iter 5: POWER is the binding constraint (and it implicates the foundation)
+Only ~240 independent extreme events across **8 correlated pairs**, one quarter → the effective sample is far smaller than it looks. At that
+power, *no* small edge (micro vol gain, flow filter) can be confirmed — and, tellingly, **even the strategy's core mean-reversion premise isn't
+significant once SEs are clustered properly.** This reframes the whole project: the repeated "near-efficient / no edge" results are partly a
+*detection-power* statement, and the long-standing **correlation-fallback (non-cointegrated) pair selection** is the root cause — it gives few,
+correlated, statistically-fragile events. We've been testing fancy signals on a foundation that can't support significance tests.
+
+### What am I missing? / the pivot this forces
+- Stop adding signals; **fix the foundation and the power.** We now have **170 book / 111 trade days** ingested (158 GB) — far more than the
+  one quarter most tests used. The right next move is to (1) run the proper **Kalman/ADF cointegration screen on the full L2 window** (RESULTS.md
+  claims 99.7% OOS cointegration — never used in the L2 analyses), select genuinely cointegrated pairs, and (2) **re-test the base reversion premise
+  with many more events and pair-clustered/block-bootstrap SEs across the full sample.** If the premise survives with power, *then* re-test the flow
+  filter on it; if it doesn't, that is itself the paper's central, honest result.
+- Higher-frequency extremes (5–15 min |z| crossings) would also multiply the event count — a cheaper power boost to validate the filter.
+- The microstructure chapter is essentially complete and **paper-ready**; begin distilling `l2_research_log.md` into a clean findings section.
+
+### Plan for next iteration (prioritized)
+1. **Cointegration + power:** Kalman/ADF screen on the full L2 window → cointegrated pairs; re-test base reversion (and the flow filter) with proper clustered SEs and the full event set. Does the premise hold with power?
+2. Higher-frequency (sub-hourly) extreme events to multiply N for the filter test.
+3. Begin the paper-ready "what L2 taught us" distillation (honest near-efficiency on alpha + positive on price-formation/execution + the power caveat).
+
+---
+
 ## Iteration 4 — the alpha hunt fails twice (cleanly); the near-efficiency thesis is now robust
 
 Took the two remaining shots at tradeable-horizon directional alpha, each designed around its classic trap.
