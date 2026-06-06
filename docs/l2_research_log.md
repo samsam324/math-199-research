@@ -6,6 +6,61 @@ the next iteration.
 
 ---
 
+## Iteration 2 — order flow is real but economically dead on the spread; size *does* proxy information (per order)
+
+This iteration asked the question I was missing in iter 1: **permanent (information) vs transient
+(mechanical/liquidity) impact**, and tested the signal on the actual *pair spread* at the right horizon.
+
+### A. Permanent-vs-transient impact by trade size (BTC, ETH; event-time response functions, bootstrap SEs)
+Resolves the iter-1 confound where a naive 1s-bar correlation suggested "small flow is more informative."
+- Class shares: institutional (>$10k) = **6% of orders but ~75% of volume**; retail (<$1k) = 77% of orders, ~5% of volume.
+- **Per-order permanent impact (R at 300s asymptote): institutional ≈1.58 bps (BTC) / 2.07 (ETH) ≈ 2× retail (~0.76 bps).** Monotone in size, separation many bootstrap-SEs wide.
+- Institutional orders show a **transient hump** (peak ~60s, then 13–20% decay back) — classic temporary
+  liquidity impact; retail/mid are ≈100% permanent (too small to create a dislocation that relaxes).
+- **The iter-1 "small flow more informative" was an artifact:** small trades' moves are fully permanent only
+  because they're too tiny to decay, not because they carry more news. Per-dollar the ranking inverts (retail
+  ~24,000 vs institutional ~74 bps/$1M) but that excess is **mechanical** (tick/bounce on a tiny denominator), not information.
+- **Answer to the advisor's retail-vs-institutional question:** trade size **is** a proxy for information *per order*
+  (large = more permanent impact); per *dollar*, institutions are far cheaper (they split/time to minimize footprint).
+  Script: `scratch/impact_decomp.py`.
+
+### B. Horizon-matched two-leg OFI → pair-spread returns (5 pairs, microprice spread, HAC SEs)
+The strategy-relevant redo of "volume-as-information."
+- **Reverses the prior null:** two-leg signed OFI predicts short-horizon spread returns with the right sign and
+  overwhelming significance at **1–10s** (BTC/ETH 1s HAC-t≈31, alive to 60s; thinner pairs die by 10–30s). Mirrors the single-asset decay.
+- **But economically dead standalone:** peak R²≈**0.001** (BTC/ETH 5s), ~0.0001 elsewhere; a 1-unit OFI shock ⇒ ~0.02 bps spread move at 10s,
+  vs ~20 bps round-trip two-leg taker cost — the signal is **2–3 orders of magnitude smaller than the cost of crossing**.
+  Scattered "significant" 300s coefficients are slow-drift artifacts (vanish in the mid-spread robustness check).
+  Script: `scratch/pair_ofi_spread.py`.
+
+### Synthesized conclusion (advisor-facing)
+1. Order flow **is** genuine microstructure information — at **seconds**, both single-asset and on the spread. The prior
+   "volume-as-information is null" was purely a timescale artifact.
+2. **It is not standalone alpha for the pairs strategy** — the directional spread edge (R²~0.1%) is dwarfed by costs;
+   at best it's an **execution/queue-placement tilt** inside a strategy whose alpha comes from elsewhere.
+3. **Size proxies information per order, not per dollar.** Useful for a retail/institutional split, but "big trade = informed
+   alpha" doesn't hold once you normalize and separate transient from permanent impact.
+
+### What am I missing? (next-iteration ideas)
+- **The directional seconds-edge is dead, but is there a *tradeable-horizon* use of volume-as-information?** VPIN/order-flow
+  *toxicity* is documented to predict short-horizon **volatility/adverse selection**, not return direction. Hypothesis worth
+  testing: does hourly/daily order-flow toxicity predict **spread blow-ups / pair decoupling** — i.e. a **regime/trade-filter**
+  (when *not* to hold the spread) that could actually improve the hourly strategy? This reconnects microstructure to the phase-1 goal.
+- **L3-from-L2 (the advisor's specific idea) still not done.** Next: reconstruct order **add/cancel/trade events** from
+  `incremental_book_L2` deltas, build **book-side** OFI (Cont–Kukanov–Stoikov uses book events, not just trades),
+  cancellation rates, and queue-depletion/fill-probability features — a richer signal than trade flow alone. True queue
+  position & icebergs are unrecoverable (proxy: trade volume > displayed size = hidden execution).
+- Permanent impact via R(300s) has wide SEs; a Hasbrouck (1991) VAR long-run impulse response would be a more robust permanent-impact estimate.
+
+### Plan for next iteration (prioritized)
+1. **VPIN-as-regime-filter:** compute hourly VPIN/toxicity per pair, test if it predicts next-hour spread volatility /
+   |spread change| / decoupling; if yes, add as a *trade filter* to the backtest and measure Sharpe with/without. (Tradeable horizon!)
+2. **Start L3 reconstruction:** download a few days of `incremental_book_L2`, build the event classifier (add/cancel/trade),
+   compute book-OFI + cancellation features, test informativeness at seconds horizon vs trade-OFI.
+3. Robustify permanent-impact with a small Hasbrouck VAR.
+
+---
+
 ## Iteration 1 — the prior "null" was an artifact; order flow is a *seconds*-scale signal
 
 ### The major flaw I found in the last analysis (`docs/l2_analysis.md`)
