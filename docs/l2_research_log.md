@@ -6,6 +6,56 @@ the next iteration.
 
 ---
 
+## Iteration 6 — ⚠️ MAJOR: the "99.7% cointegration" pillar is a Kalman artifact; reversion is real but modest
+
+This is the most consequential iteration: chasing the iter-5 power problem to its root exposed a **false headline result** in the
+existing analysis, exactly the kind of flaw worth finding. Full write-up + recommendations: **`docs/CORRECTION_kalman_cointegration.md`**.
+
+### A. Cointegration foundation audit — **RESULTS.md Finding 1 is an artifact (retract)**
+- The Kalman screen ADF-tests the filter's **one-step innovations**, which are **white by construction** (`q_beta>0` ⇒ the time-varying
+  beta tracks any relationship). Testing stationarity of a filter's own innovations is circular.
+- **Placebo proof:** identical screen on independent random walks / phase-randomized surrogates / block-shuffled legs **all pass at 100%**
+  (p<0.05), the *same* rate as real pairs (100% / 96.4% at p<0.001). The Kalman ADF carries **zero** cointegration information.
+- **Clean tests** (Engle–Granger, static OLS+ADF), OOS: genuine cointegration rate = **2.1–3.2%** — at/below the 5% null floor.
+  Essentially **none** of the top-50 pairs are genuinely cointegrated OOS. (RESULTS.md's own "static 5.4%" was already ≈ the null floor.)
+- **The "1219-pair, 99.7% OOS cointegration" — the project's self-described strongest finding — is false.** Any pipeline step that selected on
+  `kalman_selected_pairs.parquet`'s ADF p-value selected on noise. Scripts: `scratch/audit_part1.py`, `audit_part1b.py`.
+
+### B. Reversion premise WITH power — real but modest, and inflated by a rolling-z artifact
+- Full multi-year history (24,942 bars, ~4,000 |z|>2 events, pair-clustered + block bootstrap): |z|>2 reversion is strongly significant
+  (p<0.001) — this **resolves the iter-5 power complaint** (the L2 log's null was an underpowered single quarter, not a true null).
+- **BUT** a rolling z-score mechanically reverts even for a random walk. Net of that mechanical floor: cleanly-selected pairs retain **+0.45z**
+  genuine excess reversion (≈ a real stationary half-life≈48h spread); correlation-fallback pairs retain only **+0.15z** (barely above the floor).
+  So a genuine, modest effect exists for good pairs — but there's no cointegrated universe to draw from. Script: `scratch/audit_part2.py`.
+
+### C. Deep-book (levels 1–10) probe — another near-efficient null
+- Deep imbalance and book-slope carry **strictly less** R² than top-of-book level-1 imbalance at every horizon; "deep-only" (levels 2–10) is
+  weakest; depth-weighted fair-value tilt is predictively ~noise. Incremental R² of all deep features over top-of-book: +0.31% (1s) → +0.011%
+  (300s), decaying even faster than the base signal. No slower signal hides in the deeper book. Not tradeable. Script: `scratch/deep_book_probe.py`.
+
+### Where this leaves the project (honest, and actually a stronger paper)
+The microstructure null-results were partly a *detection-power* story; with the full history the base reversion effect is genuine but modest, and
+**the cointegration pillar was an artifact.** The honest narrative is now sharper and more defensible than the original optimistic one:
+1. Crypto majors are microstructure-efficient at tradeable horizons; order-flow information has a seconds half-life (iters 1–6).
+2. The one genuine microstructure positive is contemporaneous **price formation / execution** (book-OFI + the cancellation channel), not signal.
+3. **The cointegration claim does not hold** (Kalman whitening artifact); there is a **modest real mean-reversion** effect (~+0.45z excess) for
+   carefully-selected pairs, reported net of the rolling-z mechanical baseline.
+
+### What am I missing? / next iteration
+- If clean cointegration is at chance, **how should pairs actually be selected?** Test OOS selection on **OU half-life / reversion-speed** (not
+  ADF p-value) and on **excess-reversion-over-mechanical-floor**, and check whether *that* selection yields pairs whose reversion survives OOS + costs.
+- **Re-run the real backtest** with cleanly-selected pairs and the artifact-corrected reversion, using the realistic L2 costs (`src/l2_costs.py`),
+  to get the honest net-of-cost edge (if any). This is the bottom-line number the paper needs.
+- The Kalman-artifact correction **must reach the advisor/collaborator** (it changes the paper's headline). Independent reproduction recommended.
+- Begin the paper-ready distillation around the corrected narrative.
+
+### Plan for next iteration (prioritized)
+1. **Pair selection done right:** OU half-life / excess-reversion selection, OOS, vs ADF; does it find pairs with cost-surviving reversion?
+2. **Honest net-of-cost backtest** on cleanly-selected pairs with L2 costs — the bottom line.
+3. Distill the corrected narrative into a paper section; make sure the cointegration correction is front-and-center for the collaborator.
+
+---
+
 ## Iteration 5 — constructive angles close out; the binding constraint is now statistical POWER
 
 Pivoted from alpha-hunting to two constructive uses (vol forecasting, entry-filter). Both came back honest-negative, but the
