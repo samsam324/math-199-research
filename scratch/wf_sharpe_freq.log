@@ -1,0 +1,13 @@
+============================================================================================
+ITER-13: honest deployable Sharpe -- annualized Sharpe by sampling frequency
+  (multi-week holds => HOURLY Sharpe is autocorrelation-inflated; low-freq = honest)
+============================================================================================
+config                 hourly    daily   weekly   monthly        monthly 95% CI
+--------------------------------------------------------------------------------------------
+10p no-stop z            2.53     3.29     2.98      2.41   [+1.75,+3.18] (n_mo=57)
+40p no-stop z            3.18     4.23     3.65      2.54   [+1.97,+3.23] (n_mo=57)
+40p no-stop conv         3.45     4.01     3.24      2.06   [+1.59,+2.61] (n_mo=57)
+--------------------------------------------------------------------------------------------
+READING: the honest deployable Sharpe is the low-frequency (weekly/monthly) value;
+the hourly figure overstates it because month-long holds make hourly returns autocorrelated.
+============================================================================================

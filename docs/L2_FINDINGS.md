@@ -39,8 +39,9 @@ The five results:
    *caused by the stop* (it realizes losses on spreads that later revert), not by costs.
    Remove the stop and hold to convergence and it earns +2.51 net Sharpe — and it is
    **genuine market-neutral, diversified, OOS-significant alpha** (β≈−0.06; factor R²=1.7%;
-   t=3.65 across 19 windows; robust to delistings). Diversifying 10→40 pairs lifts it to
-   Sharpe ~3.2–3.4 at a ~30% (from −41%) drawdown. But it is only capturable as a slow,
+   t=3.65 across 19 windows; robust to delistings). Diversifying 10→40 pairs cuts the drawdown
+   −41%→−29% at a **frequency-honest deployable Sharpe ~2–2.5** (the hourly +3.2 is autocorrelation-
+   inflated by the month-long holds; iteration 13). But it is only capturable as a slow,
    multi-month, never-stop, ~30%-drawdown book (median ~35-day holds; 78% never converge in
    a quarter; ~⅓ generic survivor co-movement) — **not** the hourly, stop-managed stat-arb
    the project specified, which loses (the stop, at any width, is what destroys it).
@@ -264,19 +265,34 @@ terms, so read it for *ranking*):
 - **Stops hurt at every width.** A tight \|z\|=4 stop is catastrophic (churn, −265% leverage-equiv
   DD); even a *wide* \|z\|=6 stop is the worst of both worlds (−78% DD, Sharpe 1.5) — it still cuts
   reverting winners *and* realizes the rare blow-up the no-stop rule holds through and recovers from.
-- Vol-targeting barely moves the frontier. **Best risk-adjusted = 40-pair, no stop, convergence
-  exit: Sharpe +3.4, ~−30% DD, Calmar ~5.**
+- Vol-targeting barely moves the frontier.
+
+**Caution — those Sharpes are hourly-frequency and overstated (iteration 13 self-correction).** With
+~35-day median holds, hourly returns are heavily autocorrelated, so an annualized hourly Sharpe
+inflates the deployable number. Recomputing at lower frequencies (`scratch/wf_sharpe_freq.py`):
+
+| config | hourly | daily | weekly | **monthly (honest)** | monthly 95% CI |
+|---|---:|---:|---:|---:|---:|
+| 40-pair no-stop z-exit | 3.18 | 4.23 | 3.65 | **2.54** | [1.97, 3.23] |
+| 40-pair no-stop conv-exit | 3.45 | 4.01 | 3.24 | **2.06** | [1.59, 2.61] |
+| 10-pair no-stop z-exit | 2.53 | 3.29 | 2.98 | **2.41** | [1.75, 3.18] |
+
+The honest deployable Sharpe is the low-frequency value: **~2.0–2.5 (monthly), not ~3.2–3.4** — but it
+**survives** (monthly CIs strictly positive, lower bounds 1.6–2.0). And the ranking flips: at the honest
+monthly frequency the **best config is 40-pair no-stop z-exit (Sharpe ~2.5)**, not the convergence-exit
+that looked best hourly. So the iteration-12 "+3.4 / conv-exit-is-best" was itself an hourly artifact.
 
 So the alpha is capturable — but only for a **patient, well-capitalized, market-neutral book** that
-diversifies wide, never stops, and can sit through a ~30% drawdown and multi-month holds. That is a
-real strategy profile, just not the tight-risk-managed hourly one the project specified.
+diversifies wide, never stops, and can sit through a ~30% drawdown and multi-month holds, at a
+**realistic Sharpe ~2–2.5** (not 3+). A real strategy profile, just not the tight-risk-managed hourly
+one the project specified.
 
 ### Honest bottom line on tradeability
 
 Mean reversion is real, selectable (Result 2), **market-neutral and diversified** (iterations 10–11),
-and it *is* monetizable at Sharpe ~3 / Calmar ~5 — but only in a form far from the project's stated
-design: a slow, multi-month, ~30%-drawdown, never-stop hold-the-spread book on a survivorship-filtered
-universe, ~⅓ of it a generic survivor-co-movement floor. As the **hourly,
+and it *is* monetizable at a **realistic (frequency-honest) Sharpe ~2–2.5** (iteration 13) — but only in
+a form far from the project's stated design: a slow, multi-month, ~30%-drawdown, never-stop hold-the-
+spread book on a survivorship-filtered universe, ~⅓ of it a generic survivor-co-movement floor. As the **hourly,
 stop-managed stat-arb** originally specified it **loses** (−2.25), because the stop required
 to bound risk at hourly cadence is precisely what destroys the thin, slow reversion. The
 defensible claim is the *sensitivity itself*: report the stop/exit-rule dependence (and the
@@ -424,7 +440,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 |---|---|
 | 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
-| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sanity.py`, `wf_diag.py` |
+| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 4c. Hidden/iceberg liquidity | `scratch/hidden_liquidity.py` |

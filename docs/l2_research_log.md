@@ -6,6 +6,42 @@ the next iteration.
 
 ---
 
+## Iteration 13 — self-correction: iter-12's "+3.4 Sharpe" was hourly-inflated; honest deployable Sharpe is ~2–2.5
+
+Found a real flaw in my own iter-12 frontier: it reported annualized *hourly* Sharpes (+3.2/+3.4) for a strategy whose
+median hold is ~35 days. Hourly returns of a month-long-hold strategy are heavily autocorrelated, so the annualized hourly
+Sharpe overstates the deployable number (HAC only partly corrects it). Recomputed Sharpe across sampling frequencies
+(`scratch/wf_sharpe_freq.py`):
+
+| config | hourly | daily | weekly | monthly (honest) | monthly 95% CI |
+|---|---|---|---|---|---|
+| 40p no-stop z | 3.18 | 4.23 | 3.65 | **2.54** | [1.97, 3.23] |
+| 40p no-stop conv | 3.45 | 4.01 | 3.24 | **2.06** | [1.59, 2.61] |
+| 10p no-stop z | 2.53 | 3.29 | 2.98 | **2.41** | [1.75, 3.18] |
+
+### Findings (and corrections to iter 12)
+- **Honest deployable Sharpe ~2.0–2.5 (monthly), not ~3.2–3.4.** Sharpe rises hourly→daily (microstructure noise averages
+  out) then falls weekly→monthly (hold autocorrelation reduces effective N) toward the true low-freq value. Iter-12's headline
+  was inflated; **corrected in `L2_FINDINGS.md`** (Result 3 + exec summary).
+- **It still survives:** monthly CIs are strictly positive (lower bounds 1.6–2.0). Real alpha, just ~2, not 3+.
+- **The "best config" flips at the honest frequency:** 40p no-stop **z-exit** (monthly 2.54) beats convergence-exit (2.06) —
+  the reverse of the hourly ranking. So iter-12's "conv-exit is best" was also an hourly artifact. Lesson reinforced: for a
+  multi-week-hold strategy, *always* judge Sharpe at a frequency ≥ the holding period.
+
+### What am I missing? / state
+- This is the second time a result needed deflating for the slow-hold autocorrelation (first: iter-9 window-level check).
+  The honest, stable bottom line is now locked: **a market-neutral, diversified mean-reversion alpha at a realistic Sharpe
+  ~2–2.5 and ~30% drawdown, capturable only by a patient never-stop book on a survivorship-filtered universe.**
+- 13 iterations in, the science is complete and now also correctly *scaled*. Genuinely the only remaining work is (1) the
+  survivorship-free universe (data pull; low marginal value given break-robustness) and (2) advisor packaging.
+
+### Plan for next iteration (prioritized)
+1. **Advisor one-pager** from `L2_FINDINGS.md`, now with the corrected Sharpe ~2–2.5 headline.
+2. Point-in-time universe only if a cheap delisted-coin pull is feasible.
+3. `L2_FINDINGS.md` = single source of truth (now frequency-honest throughout).
+
+---
+
 ## Iteration 12 — the risk-rule efficient frontier: the alpha is capturable at ~30% DD by a patient, diversified, never-stop book
 
 The advisor-relevant culmination of iters 8–11: is the no-stop −41% drawdown fatal, or does a practical risk rule capture
