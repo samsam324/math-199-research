@@ -6,6 +6,50 @@ the next iteration.
 
 ---
 
+## Iteration 15 — the survivorship check (no data pull needed!) — the alpha SURVIVES and strengthens
+
+I'd flagged the survivorship-free universe as needing a delisted-coin data pull. "What am I missing?" — I checked what's
+already on disk first, and **`data/spot_1h` has 204 symbols, not the 50 the backtests use.** The extra ~154 are exactly the
+lower-quality / pumped-and-crashed / meme / late-listed names a "current top-50" filter removes (1000REKTUSDT, USELESSUSDT,
+NOBODYUSDT, TROLLUSDT, FARTCOINUSDT, …). So a much-less-survivorship-biased test was possible with zero new data.
+
+### Test (`scratch/wf_survivorship.py`) — identical pipeline, top-50 vs full 204-symbol universe
+Per-window ≥90%-coverage gating so coins enter only once listed (genuine point-in-time *entry*: 11 names start 2021, 73 in
+2022, 24 in 2023, 53 in 2025; 98 vs 39 usable symbols/window). Monthly (frequency-honest) Sharpe / maxDD:
+
+| config | top-50 (survivor) | FULL 204 (incl. meme/crashed) |
+|---|---|---|
+| no-stop z, 10 pairs | 2.41 / −41% | **3.17 / −29%** |
+| no-stop z, 40 pairs | 2.54 / −29% | **3.76 / −23%** |
+| \|z\|=4 stop, 10 pairs | −1.21 | +0.32 |
+
+**The no-stop alpha not only survives a 4× broader, lower-quality, point-in-time-on-entry universe — it strengthens**
+(monthly Sharpe 2.54→3.76, maxDD −29%→−23%). More symbols ⇒ better selection pool + more diversification, dominating any
+harm from junk names. Strong evidence the alpha is **not** a survivor-majors artifact.
+
+### Honest caveats (so this is "much less" not "zero" survivorship)
+- The on-disk set under-represents **exits**: only 3 coins (ICX/LTO/STG) have in-sample truncated history, and
+  fully-delisted coins (LUNA→0, FTT→0) are absent from disk. So the *entry* side of point-in-time is well-tested, the
+  *death* side barely.
+- The backtest's NaN-as-flat handling would understate a sudden-delisting loss (position just goes flat at last mark).
+- The broad-universe Sharpe itself is **not deployable** — illiquid memes can't be traded at $1/leg / 30 bps. The robust
+  finding is the *direction* (survives/strengthens when you drop the filter), not the inflated magnitude.
+- Net: combined with the iter-8 structural-break stress robustness, the survivorship concern is now **substantially
+  addressed**; a truly point-in-time universe with dead coins is the only gold-standard check still open (needs a pull).
+
+### What am I missing? / state
+- This was the highest-value remaining check and it came back reassuring with zero new data. The central positive result
+  (market-neutral, diversified, frequency-honest Sharpe ~2, ~30% DD, never-stop, survivorship-robust) is now about as
+  thoroughly vetted as this dataset allows. Updated `L2_FINDINGS.md` (Result 3 + limitations) and `ADVISOR_SUMMARY.md`.
+- I am now genuinely at the terminus: the only remaining task (delisted-coin pull) is a real data-acquisition project, not a
+  loop iteration. Recommend the user act on the deliverables.
+
+### Plan for next iteration (only if continued)
+1. Delisted-coin data pull (LUNA/FTT/etc.) for the gold-standard point-in-time test — a project decision, not a quick script.
+2. Otherwise the loop is at its terminus; further iterations have negative expected value.
+
+---
+
 ## Iteration 14 — consolidation: advisor one-pager + the honest Sharpe is a range (~1.7–2.5)
 
 The science has converged; this iteration is communication, the highest-value remaining work.

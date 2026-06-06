@@ -217,6 +217,22 @@ quarter near-delisting rate (~80%/yr attrition); at plausible rates (≤5%/quart
 primarily a delisting-tail artifact — the honest caveats are the holding horizon, the −41%
 drawdown, and the survivor-co-movement third, not blow-up risk.
 
+**Direct test on a 4× broader, less-survivorship-biased universe (iteration 15,
+`scratch/wf_survivorship.py`).** `data/spot_1h` holds **204 symbols**, not just the top-50 —
+including ~154 lower-quality / pumped-and-crashed / meme names a "current top-50" filter removes
+(1000REKTUSDT, USELESSUSDT, NOBODYUSDT, TROLLUSDT, …). Re-running the identical pipeline on the
+full universe (98 vs 39 usable symbols/window, with per-window ≥90%-coverage gating so coins
+enter only once listed — genuine point-in-time *entry*: 11 names start in 2021, 73 in 2022, 53
+in 2025), the no-stop alpha **survives and strengthens**: monthly Sharpe **2.54 → 3.76** (40
+pairs), maxDD −29% → −23%. More symbols ⇒ a better selection pool and more diversification,
+which dominates any harm from junk names. So the alpha is **not** a survivor-majors artifact.
+*Caveats (so this is "much less" not "zero" survivorship):* the on-disk set still under-represents
+**exits** (only 3 in-sample truncations; fully-delisted coins like LUNA/FTT are absent), the
+NaN-as-flat handling understates a sudden-delisting loss, and the broad-universe Sharpe itself is
+**not deployable** (illiquid memes can't be traded at $1/leg / 30 bps). The point is the
+*direction* — the effect is robust to dropping the survivorship filter, not the exact magnitude.
+A truly point-in-time universe with dead coins remains the one gold-standard check still open.
+
 And it is not an autocorrelation artifact of the multi-week holds: aggregated to the
 **conservative unit of observation — the 19 disjoint test windows** (not the autocorrelated
 hourly series the bootstrap used), the no-stop mean window return is +41.6% with **t=+3.65**,
@@ -426,9 +442,11 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 - **No genuinely cointegrated universe to draw from** (Result 1) — pair selection falls back
   to reversion-speed ranking, which is selectable (Result 2) and monetizable only in the
   slow, deep-drawdown form of Result 3, not as an hourly stop-managed strategy.
-- **Survivorship-filtered universe** (current top-50). It is stress-robust for the no-stop
-  result (§3) but still flatters any hold-to-convergence rule; a true point-in-time universe
-  (with delisted coins) would be the clean fix and is the most valuable remaining data work.
+- **Survivorship** (Result 3): the main backtests use the current top-50, but the no-stop result
+  was re-tested on the full 204-symbol on-disk universe (incl. crashed/meme/late-listed names,
+  point-in-time entry) and *strengthened* (iteration 15), and is structural-break stress-robust
+  (iteration 8). The residual gap — fully-delisted coins (LUNA/FTT) and in-sample *exits* — is the
+  one gold-standard check still open; it needs a delisted-coin data pull.
 - Microstructure tests are concentrated in 2024, BTC/ETH/SOL-heavy; broader months would
   strengthen generality (the 31-day institutional run and full-history reversion test help).
 - Effective sample size is the binding constraint for small effects: few, correlated pairs
@@ -443,7 +461,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 |---|---|
 | 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
-| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_sanity.py`, `wf_diag.py` |
+| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 4c. Hidden/iceberg liquidity | `scratch/hidden_liquidity.py` |

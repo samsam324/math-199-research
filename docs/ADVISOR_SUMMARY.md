@@ -68,10 +68,11 @@ mechanical floor and validated against placebos.
 
 - **Solid:** the two artifacts (both placebo-proven), microstructure near-efficiency (≈12 independent
   tests), the execution null, and that the reversion alpha is real, market-neutral, and stop-sensitive.
-- **Caveated:** all reversion numbers are on a **survivorship-filtered** universe (current top-50; a
-  structural-break stress test shows the result is robust to plausible delisting rates, but a true
-  point-in-time universe is the one clean check still outstanding); deployable Sharpe is a **range** (~1.7–2.5)
-  because of the multi-week-hold autocorrelation; drawdowns are quoted in leverage-equivalent terms.
+- **Caveated:** the reversion numbers' main run is **survivorship-filtered** (current top-50), but the
+  result is robust to it — re-tested on the full 204-symbol on-disk universe (incl. crashed/meme/late-listed
+  names, point-in-time entry) it *strengthens*, and it passes a structural-break stress test; the residual
+  gap is fully-delisted coins (LUNA/FTT), the one clean check still outstanding. Deployable Sharpe is a
+  **range** (~1.7–2.5) because of multi-week-hold autocorrelation; drawdowns are leverage-equivalent.
 
 ## Suggested next steps
 

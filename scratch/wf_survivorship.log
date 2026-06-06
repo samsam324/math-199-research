@@ -1,0 +1,21 @@
+================================================================================
+ITER-15: SURVIVORSHIP CHECK -- top-50 vs full 204-symbol on-disk universe
+================================================================================
+
+##### UNIVERSE: top-50 (survivorship-filtered)  (cols=49, splits=19, avg usable syms/window=39, avg ranked pairs=40) #####
+  config                hourlyS  monthlyS   maxDD%  netPnL%
+  stop|z|=4 (10p)         -2.25     -1.21   -493.3     -457
+  no-stop z (10p)          2.51      2.41    -41.2      789
+  no-stop z (40p)          3.18      2.54    -28.8      649
+
+##### UNIVERSE: FULL on-disk (204 incl. meme/crashed)  (cols=199, splits=19, avg usable syms/window=98, avg ranked pairs=40) #####
+  config                hourlyS  monthlyS   maxDD%  netPnL%
+  stop|z|=4 (10p)          0.42      0.32   -161.8      107
+  no-stop z (10p)          3.52      3.17    -29.1     1380
+  no-stop z (40p)          5.29      3.76    -23.2     1323
+
+================================================================================
+READING: if no-stop survives (similar Sharpe) on the FULL universe, the alpha is not
+merely a survivor-majors artifact. If it collapses, survivorship was load-bearing.
+DONE in 37s
+================================================================================
