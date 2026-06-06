@@ -1,0 +1,12 @@
+because the majors' spread is ~1 tick and the unfilled-tail chase dominates any capture.
+====================================================================================================
+
+====================================================================================================
+CAPTURABILITY: corr of candidate L2 features with per-order execution advantage
+  target1 = passive_minus_agg (negative => posting was the cheaper choice)
+  target2 = naive fill (1=filled within 30s).  |corr|~0 => feature can't time execution.
+====================================================================================================
+  book_ofi (dir)     corr(.,passive-agg)=+0.0604   corr(.,fill)=-0.0600
+  cancel_imb (dir)   corr(.,passive-agg)=+0.0333   corr(.,fill)=-0.0767
+  spread_bps         corr(.,passive-agg)=-0.0230   corr(.,fill)=-0.1848
+  |book_ofi|         corr(.,passive-agg)=+0.0153   corr(.,fill)=-0.0531

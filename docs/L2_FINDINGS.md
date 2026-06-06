@@ -45,14 +45,19 @@ The five results:
    that version loses. *(Iteration 7's "loses even gross" headline was stop-specific and is
    corrected here — see §3.)*
 
-4. **Microstructure / order flow is near-efficient at every tradeable horizon.** Across
-   OFI, VPIN, Kyle's-λ, book-OFI, cancellations, deep book, cross-asset lead-lag and
-   institutional flow, order-flow information has a **seconds-scale half-life** and is
-   2–3 orders of magnitude below trading costs by any horizon you could act on. The one
-   genuine positive is **contemporaneous price formation / execution**, not a signal:
-   book-side OFI and the cancellation channel (invisible to trade data) describe how price
-   forms, and that has execution value, not alpha. *(The advisor's L3-from-L2 and
-   retail/institutional ideas, done concretely — see §4.)*
+4. **Microstructure / order flow is near-efficient at every tradeable horizon — and even
+   the "execution value" consolation does not survive measurement.** Across OFI, VPIN,
+   Kyle's-λ, book-OFI, cancellations, deep book, cross-asset lead-lag and institutional
+   flow, order-flow information has a **seconds-scale half-life** and is 2–3 orders of
+   magnitude below trading costs by any horizon you could act on. Book-side OFI and the
+   cancellation channel (invisible to trade data) genuinely describe *contemporaneous*
+   price formation — but when I finally **measured** whether that helps execution
+   (iteration 9: 18,432 simulated orders, real event-level book+tape), the answer is **no**:
+   aggressive crossing is cheapest for majors (spread ≈ 1 tick), and the L3-from-L2 signal
+   correlates **+0.06** (noise) with the per-order post-vs-cross advantage — it cannot time
+   placement. A perfect-foresight oracle *could* save ~1.6 bps, so the value exists, but no
+   contemporaneous L2 feature forecasts it. *(The advisor's L3-from-L2 and retail/
+   institutional ideas, done concretely and measured — see §4.)*
 
 5. **Realistic L2 execution costs are ~17–23% cheaper than the flat 5 bps assumption** for
    liquid majors, computed by walking the real book (`src/l2_costs.py`). Prior flat-cost
@@ -210,6 +215,14 @@ quarter near-delisting rate (~80%/yr attrition); at plausible rates (≤5%/quart
 primarily a delisting-tail artifact — the honest caveats are the holding horizon, the −41%
 drawdown, and the survivor-co-movement third, not blow-up risk.
 
+And it is not an autocorrelation artifact of the multi-week holds: aggregated to the
+**conservative unit of observation — the 19 disjoint test windows** (not the autocorrelated
+hourly series the bootstrap used), the no-stop mean window return is +41.6% with **t=+3.65**,
+**16/19 windows positive** (sign-p=0.004); the paired no-stop−stop difference is positive in
+**18/19 windows** (sign-p<0.001). The stop's worst single window is **−150%** vs the no-stop's
+−23% — a direct picture of the stop converting reverting positions into realized losses.
+Script: `scratch/wf_nostop_winlevel.py`.
+
 ### Honest bottom line on tradeability
 
 Mean reversion is real and selectable (Result 2), and it *is* monetizable — but only in a
@@ -248,8 +261,42 @@ not signal.
   reductions are cancels, not trades** — invisible to trade-flow analysis — and trailing
   cancel-imbalance carries directional info with the right sign (t up to −38).
 - But all of it is **contemporaneous** (predictive increment decays to ~0 by 30s); R² ≤ 2–3%.
-  This is **price-formation / execution** value, not a forecast. Scripts:
-  `scratch/book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `deep_book_probe.py`.
+  This describes price formation — and the natural hope was that it has **execution** value
+  even if not forecast value. Iteration 9 measured that hope directly (below) and rejects it.
+  Scripts: `scratch/book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `deep_book_probe.py`.
+
+### Execution value — measured for the first time, and the signal does not capture it *(iteration 9)*
+
+For six iterations this project *asserted* that "the microstructure payoff is in execution,"
+but never measured it. Iteration 9 did: **18,432 parent orders** ($10k & $50k, randomized
+side, every 5 min) across BTC/ETH/SOL/AVAX over 8 days of **event-level** book + trade tape,
+comparing three executions by implementation shortfall vs arrival mid — aggressive crossing,
+naive passive (post-at-best with a real queue/fill model, cross on non-fill), and an
+**L3-aware** rule that posts vs crosses on the book-OFI + cancellation signal. Scripts:
+`scratch/exec_value.py`, `exec_value_verify.py` (logs alongside).
+
+| pooled, H=30s (bps vs mid, lower=better) | cost |
+|---|---:|
+| **Aggressive** (always cross) — the baseline | **+1.34** |
+| Naive passive (always post) | +2.79 |
+| L3-aware (signal post/cross) | +1.98 |
+| Random placebo at same post-rate | +1.88 |
+| **Oracle** — perfect per-order foresight | **−0.23** |
+
+Findings, with the placebo/oracle controls that make them decisive:
+- **Aggressive crossing is the cheapest method** for the majors — their spread is ≈1 tick
+  (BTC ≈ 0.02 bps), so there is almost no spread to capture passively, and the unfilled-tail
+  chase makes naive passive *worse* (+2.79).
+- **The L3-from-L2 signal carries no execution-timing information.** It loses to a random
+  post/cross at the same post-rate (z = +2–3 *worse*), **sign-flipping does not rescue it**,
+  and its correlation with the per-order post-vs-cross advantage is **+0.06** — noise. No other
+  L2 feature does better (cancellation +0.03, spread −0.02, |OFI| +0.02). So this is not a
+  sign error or a weak signal; it is the absence of signal.
+- **The opportunity is real but unforecastable from contemporaneous L2.** A perfect-foresight
+  oracle turns +1.34 into **−0.23 bps** (a +1.57 bps swing) — execution value genuinely exists
+  — but capturing it requires predicting whether price drifts before your passive order fills,
+  which a *contemporaneous* price-formation signal by construction does not forecast. This is
+  the same wall as the alpha results: the signal describes the present, not the near future.
 
 **Everything else, all null with the right control:** seconds-OFI on the spread (R²≈0.001,
 ~0.02 bps vs ~20 bps cost; `pair_ofi_spread.py`); VPIN regime-filter (dead and sign-inverted
@@ -260,11 +307,14 @@ carry *less* than top-of-book (`deep_book_probe.py`); microstructure vs HAR-RV f
 forecasting (HAR already wins, OOS R²≈0.51; micro adds ~2–3% of that, not worth the churn;
 `har_vol_regress.py`).
 
-**Thesis:** crypto majors are microstructure-efficient at every horizon you could trade
-against ~10–20 bps costs. Order flow (trade + book) explains *contemporaneous* price
-formation extremely well and carries genuine **permanent** information, but that information
-has a **seconds-scale half-life**. The microstructure payoff is in **execution** (which leg
-to post vs lift, cancellation-aware queue placement), not a directional signal.
+**Thesis (updated by iteration 9):** crypto majors are microstructure-efficient at every
+horizon you could trade against ~10–20 bps costs. Order flow (trade + book) explains
+*contemporaneous* price formation extremely well and carries genuine **permanent**
+information, but that information has a **seconds-scale half-life** — and it is *contemporaneous*,
+so it forecasts neither returns (the alpha results) nor the near-future fills that would give
+it **execution** value (the measured null above). The earlier "the payoff is in execution"
+hope is now retracted: the signal describes how price forms, but cannot be turned into either
+a directional edge or an execution edge net of the unforecastable future.
 
 ---
 
@@ -318,6 +368,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
 | 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
+| 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 5. L2 costs | `src/l2_costs.py`, `scripts/run_portfolio_backtest.py --with-l2-costs` |
 | 6. Rolling-z artifact | `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py` |
 

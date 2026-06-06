@@ -6,6 +6,55 @@ the next iteration.
 
 ---
 
+## Iteration 9 — the advisor's "execution value" finally MEASURED — and it's a clean null (another self-correction)
+
+This iteration chased the advisor's L3-from-L2 idea to the one place I'd repeatedly *claimed* it pays off but never tested:
+**execution.** From iters 3–4 onward I asserted "the microstructure payoff is in execution, not signal" and listed
+"quantify the execution value vs the `l2_costs` book-walk" as a next step — for six iterations, unmeasured. So I measured it.
+
+### A. Execution-value experiment (`scratch/exec_value.py`, `exec_value_verify.py`) — the L3 signal does NOT help execution
+18,432 parent orders ($10k/$50k, randomized side, every 5 min) across BTC/ETH/SOL/AVAX, 8 days of **event-level** raw book
++ trade tape, implementation shortfall vs arrival mid. Three executions: aggressive cross, naive passive (real queue/fill
+model, cross on non-fill), and **L3-aware** (post vs cross on the book-OFI + cancellation signal). Pooled (H=30s, bps):
+- **Aggressive crossing is cheapest: +1.34 bps.** Naive passive +2.79 (median fill ~0 but the unfilled-tail chase kills the
+  mean). L3-aware +1.98. The majors' spread is ≈1 tick (BTC ≈0.02 bps) so there's almost no spread to capture passively.
+- **The L3-from-L2 signal carries no execution-timing info.** It LOSES to a random post/cross at the same post-rate
+  (z=+2–3 worse); **sign-flipping doesn't rescue it** (I verified — flipped is also worse, confounded only by post-rate);
+  and `corr(signal, per-order passive−aggressive advantage) = +0.06` — noise. No L2 feature beats it (cancel +0.03,
+  spread −0.02, |OFI| +0.02). **Not a sign error, not a weak signal — the absence of signal.**
+- **The opportunity is real but unforecastable from contemporaneous L2.** A perfect-foresight ORACLE (post when passive
+  will be cheaper, else cross) hits **−0.23 bps** — a +1.57 bps swing — so execution value EXISTS. But capturing it needs
+  to predict whether price drifts before your passive fills, which a *contemporaneous* signal by construction can't. Same
+  wall as the alpha results: the signal describes the present, not the near future.
+- **Self-correction:** the six-iteration "payoff is in execution" claim is now **retracted** in `L2_FINDINGS.md` Result 4.
+  The microstructure signal is genuine *price-formation description* but yields neither a directional nor an execution edge.
+
+### B. Iter-8 self-check (`scratch/wf_nostop_winlevel.py`) — the no-stop correction holds at the conservative unit
+The "find a flaw in the last analysis" pass on iter-8: the no-stop +2.51 *hourly* Sharpe has multi-week holds, so the
+168h-block bootstrap CI is too tight. Re-tested at the honest unit — the **19 disjoint test windows**: mean window return
++41.6%, **t=+3.65, 16/19 windows positive** (sign-p=0.004); paired no-stop−stop positive in **18/19 windows** (sign-p<0.001);
+the stop's worst window is **−150%** vs no-stop's −23%. So iter-8's correction is *not* an autocorrelation artifact — it
+strengthens. (The flaw I looked for wasn't there; the result is conservative-robust.)
+
+### What am I missing? / next iteration
+- **The microstructure chapter is now definitively closed.** Every angle — directional alpha, vol forecasting, regime
+  filtering, lead-lag, institutional flow, deep book, and now execution — is measured and near-efficient/null. The advisor's
+  L3-from-L2 and volume-as-information ideas are answered concretely and honestly: real contemporaneous information, no
+  actionable edge of any kind. Further microstructure signal-hunting is not warranted.
+- The one genuinely open data task remains the **point-in-time / survivorship-free universe** for the reversion backtest
+  (iter-8 plan item 1) — delisted coins (LUNA/FTT/...) are absent; the no-stop result is stress-robust but a clean
+  point-in-time re-run would close the last gap.
+- Also worth one clean iteration: **characterize the no-stop exposure as basket cointegration** (PCA/Johansen on survivor
+  majors) — is it pairwise alpha or a slow market-neutral reversion factor? That would precisely name what the +2.51 is.
+
+### Plan for next iteration (prioritized)
+1. **Point-in-time universe** (include delisted symbols) → re-run the §3 stop/no-stop matrix; does no-stop survive a
+   genuinely survivorship-free universe? Cleanest remaining check; needs a small delisted-coin data pull.
+2. **Characterize the no-stop exposure** (basket cointegration / PCA factor) — name the +2.51 honestly.
+3. `L2_FINDINGS.md` is the canonical paper draft; keep it as the single source of truth.
+
+---
+
 ## Iteration 8 — consolidation + a MAJOR self-correction: iter-7's "loses even gross" was stop-specific
 
 Two deliverables: (1) the paper-ready synthesis **`docs/L2_FINDINGS.md`** (all 8 iterations, with the two artifact
