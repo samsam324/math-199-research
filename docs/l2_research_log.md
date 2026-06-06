@@ -6,6 +6,60 @@ the next iteration.
 
 ---
 
+## Iteration 3 — VPIN regime-filter is dead (and inverted); book-side flow ("L3 from L2") genuinely adds info
+
+Tested the two tradeable-horizon ideas from iter 2, each designed around its failure mode (redundancy / incrementality).
+
+### A. VPIN as a regime / trade-filter (8 pairs, 40 days, volume-clock VPIN, HAC) — **dead, instructively**
+- VPIN is **not** redundant with lagged realized vol (incremental R²≈**+0.012**, significant in 7/8 pairs) — but that increment is
+  ~10× smaller than what the spread's own lagged realized vol already provides (R²≈0.30).
+- **The sign is backwards from the toxicity thesis:** high VPIN predicts *lower* next-hour spread vol and *lower* decoupling
+  (high-VPIN hrs: 1.12 bps vs 1.29; decoupling 0.080 vs 0.122). Mechanically, volume-clock |buy−sell|/vol is highest when flow is
+  one-directional/orderly (trending) and lowest in balanced two-way churn — and it's the *churn/disagreement* regime that decouples a pair.
+  So VPIN is a **directional-consensus meter, not a danger meter.** "Skip high-VPIN hours" would *increase* drawdown.
+- Verdict: VPIN adds nothing exploitable beyond realized vol, and points the opposite way from the hypothesis. Filter idea killed.
+  Script: `scratch/vpin_spread_vol.py`.
+
+### B. Book-OFI / cancellation flow from raw L2 snapshots (Cont–Kukanov–Stoikov; BTC, ETH; HAC) — **the best result yet**
+The advisor's "infer L3 from L2," done concretely: reconstruct book-side order flow + cancellations from per-update `book_snapshot_25`.
+- **Contemporaneous price formation (the CKS finding, replicated on crypto):** book-OFI explains within-second mid moves much better
+  than trade flow. Joint R² 0.29 (BTC)/0.32 (ETH); **book-OFI incremental over trade-OFI = +0.125/+0.164** (larger than trade's increment
+  over book). Book/cancel/add flow describes price formation better than trades alone.
+- **Predictive:** book-OFI adds a small but strongly significant increment at 1s (+0.004 R²), decaying to ~0 by 30s — a fast, fast-decaying
+  complement; trade-OFI persists longer.
+- **Cancellation channel (invisible to trade data):** **81–85% of best-level size reductions are CANCELS, not trades.** Trailing cancel-imbalance
+  adds a further +0.003–0.007 R² with the correct sign (more bid cancels → price down; t up to −38). This is genuinely new information that pure
+  trade-flow analysis (and the whole prior pipeline) never saw. Scripts: `scratch/book_ofi_incremental.py`, `scratch/book_ofi_cancel_stretch.py`.
+- Verdict: book-side flow is **not** redundant with trades — it dominates contemporaneous price formation and the cancellation channel carries
+  directional info. Still sub-10s and low R² (≤2–3%, near-efficient mids), so incremental microstructure signal, not standalone alpha.
+
+### Cumulative picture after 3 iterations (this is becoming the paper's microstructure story)
+1. The "volume-as-information null" was a **timescale artifact** (iter 1).
+2. Order flow is informative at **seconds** (single-asset & spread) but **economically dead standalone** vs costs (iter 2).
+3. Trade **size** proxies information **per order, not per dollar**; institutions minimize footprint (iter 2).
+4. **VPIN toxicity** doesn't work as a regime filter and its sign is inverted (iter 3).
+5. **Book-side flow + cancellations ("L3 from L2") genuinely add information** over trades, esp. contemporaneously (iter 3).
+→ **Overarching thesis forming:** crypto 1s mids are near-efficient; trade+book order flow explains *contemporaneous* price formation well
+  but offers only fleeting (<10s), tiny (R²~0.1–0.4%) *forecast* power. The microstructure payoff is in **execution** (cancellation-aware queue
+  placement, which leg to post vs lift), **not** a directional signal for an hourly pairs strategy.
+
+### What am I missing? / next iteration
+- I keep finding "informative contemporaneously, dead for forecasting." The one **untested shot at tradeable-horizon alpha** is
+  **cross-asset lead-lag**: does BTC order flow / return *lead* alt returns (and thus the spread) at a **1–5 minute** horizon (slower, possibly
+  cost-surviving)? Crypto is known for BTC leading alts; the phase-1 proposal flagged lead-lag. This is the most promising remaining direction.
+- **Quantify the execution value** of book-OFI/cancellation signal: how much could cancellation-aware posting save vs the L2 book-walk cost we
+  already model (`src/l2_costs.py`)? Ties the microstructure work to a real $ number in the backtester.
+- **Robustness:** everything is Jan–Feb 2024, BTC/ETH-heavy. Re-test the headline (book-OFI increment, seconds-decay) on later months / more
+  symbols now that ~152 GB is cached, to make sure it's not a sample artifact.
+
+### Plan for next iteration (prioritized)
+1. **Cross-asset lead-lag order flow:** test whether BTC (and ETH) signed flow / return at t predicts alt and pair-spread returns at 1s–5min, HAC,
+   impact-decay curve; is any horizon both significant AND large enough to beat costs? This is the alpha hunt.
+2. Execution-value estimate of cancellation-aware placement vs `l2_costs` book-walk.
+3. Out-of-sample robustness of the book-OFI result on a later month.
+
+---
+
 ## Iteration 2 — order flow is real but economically dead on the spread; size *does* proxy information (per order)
 
 This iteration asked the question I was missing in iter 1: **permanent (information) vs transient
