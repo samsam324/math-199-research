@@ -6,6 +6,59 @@ the next iteration.
 
 ---
 
+## Iteration 7 — the bottom line: reversion is genuine & selectable OOS, but economically untradeable
+
+Two complementary tests answer the project's central question. They look opposed but reconcile cleanly: the effect is **statistically real**
+and **economically dead**.
+
+### A. Does mean-reversion persist out-of-sample? **YES — it's selectable (positive, defensible finding).**
+Strict OOS persistence test, all 1,225 pairs, **9 disjoint walk-forward splits** (6mo train → next 3mo test), static OLS hedge, every number net
+of the rolling-z mechanical floor:
+- In-sample reversion metrics **predict OOS reversion**: Spearman ρ(train OU-kappa, OOS excess reversion) = **+0.46** [+0.37,+0.54], p<0.001,
+  **positive in every one of the 9 splits**. Variance-ratio and in-sample-excess agree (ρ≈±0.46).
+- **Top-quintile vs bottom-quintile OOS excess reversion = +0.69z** [+0.58,+0.81], p<0.001 (top ≈+0.88z ≈ 2× universe avg, ~5× bottom).
+- Placebo: random quintile spread = +0.0001z; shuffling the train→OOS link collapses ρ to −0.002. Floor-subtraction isn't manufacturing it
+  (top/bottom floors identical 0.986/0.984); train kappa even predicts OOS kappa (+0.47). Scripts: `scratch/persistence_test.py`, `persistence_robust.py`.
+- **So, unlike cointegration (artifact, ~chance), reversion is a graded, selectable, persistent property** — a real foundation. *But selectability ≠ profitability.*
+
+### B. Honest net-of-cost walk-forward backtest — **NO edge; negative even gross.**
+19 walk-forward splits, OU-half-life selection, static hedge, z-rule (enter|z|≥2 / exit|z|≤0.5 / stop|z|≥4), realistic costs, placebos:
+- **Net Sharpe −2.25** [−3.21,−1.34] at ~30 bps round-trip; **−1.30** even at ~2 bps. **Gross Sharpe −1.15** — loses *before* costs, and is **worse than random-pair selection**.
+- Why: selected pairs' train half-life (40–140h) **explodes to 200–4,000h OOS** — fast reversion doesn't persist *at tradeable speed*; spreads drift to
+  new levels and hit the |z|=4 stop at a loss. The genuine OOS reversion is only **+0.155z/48h** (t≈7, real) — tiny, swamped by stop-outs/churn, and
+  orders of magnitude below ~30 bps cost.
+- The rolling-in-test-z variant looks spectacular (+4.75 Sharpe) **but is the mechanical artifact**: random pairs (+2.18) and **phase-randomized noise
+  (+2.42)** reproduce it. Zero selection information — must not be reported as an edge. Scripts: `scratch/wf_backtest.py`, `wf_sanity.py`, `wf_diag.py`.
+
+### Reconciliation & the project's honest bottom line
+A (selectability, in z-units over 48h) and B (traded P&L) are **both right**: reversion is a real, selectable *statistical* property, but its magnitude
+(+0.155–0.45z) is too small and too slow/unreliable to survive a practical entry/exit/stop rule and two-leg costs. The asymmetric stop turns the thin
+mean-reversion into a net loss because the minority of |z|>2 spreads that keep diverging dominate. **The strategy, as specified, loses money.**
+
+### The paper is now fully formed (and it's a good, honest one)
+1. **The "99.7% cointegration" headline is a Kalman whitening artifact** (iter 6; `docs/CORRECTION_kalman_cointegration.md`) — methodological contribution.
+2. **Mean-reversion is genuinely selectable OOS** (ρ=0.46 across 9 splits, clean placebo) — a real positive result.
+3. **…but economically untradeable** after realistic costs / a practical rule (net Sharpe −2.25, gross −1.15) — and the apparent rolling-z "edge" is a
+   second artifact (noise earns +2.4 Sharpe under it).
+4. **Microstructure / order flow is near-efficient at tradeable horizons** (seconds half-life; value is execution/price-formation, not signal) — iters 1–6.
+5. **Realistic L2 costs are ~17–23% below the flat assumption** for liquid majors — but don't rescue the strategy.
+Net: a rigorous **cautionary-tale / null paper** with two genuine methodological contributions (the Kalman-innovation and rolling-z artifacts, both
+demonstrated with placebos) and one real-but-unprofitable statistical effect. This is more publishable, and more honest, than the original optimistic framing.
+
+### What am I missing? / the loop has reached its scientific conclusion → consolidate
+The core questions are now answered; further signal-hunting is likely to keep hitting the near-efficiency wall. Highest-value remaining work is
+**consolidation**, not new tests:
+- **Distill a single paper-ready findings document** from this log (the 5 results above), with the placebo-validated artifacts front-and-center for the advisor/collaborator. This is next iteration's main task.
+- Two optional robustness items if time: (i) re-estimate with a *rolling* hedge (B froze beta; real trading re-estimates) to confirm it doesn't rescue P&L; (ii) confirm the +0.155z reversion is/ isn't capturable by a slower, no-stop, vol-targeted variant (likely still sub-cost, but worth one clean check).
+- Stop adding microstructure signals — that line is exhausted and consistently near-efficient.
+
+### Plan for next iteration (prioritized)
+1. **Write the paper-ready findings doc** (`docs/L2_FINDINGS.md`): the corrected cointegration result, selectable-but-untradeable reversion, microstructure efficiency, L2 costs — with the key tables and the two artifact demonstrations.
+2. Optional clean robustness: rolling-hedge backtest + slow/no-stop vol-targeted reversion variant (does *any* implementation clear cost? expected: no).
+3. Make sure the advisor sees `CORRECTION_kalman_cointegration.md`.
+
+---
+
 ## Iteration 6 — ⚠️ MAJOR: the "99.7% cointegration" pillar is a Kalman artifact; reversion is real but modest
 
 This is the most consequential iteration: chasing the iter-5 power problem to its root exposed a **false headline result** in the
