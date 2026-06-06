@@ -6,6 +6,43 @@ the next iteration.
 
 ---
 
+## Iteration 12 — the risk-rule efficient frontier: the alpha is capturable at ~30% DD by a patient, diversified, never-stop book
+
+The advisor-relevant culmination of iters 8–11: is the no-stop −41% drawdown fatal, or does a practical risk rule capture
+the alpha at a bearable drawdown? Mapped (Sharpe, max-DD, Calmar) across pair-count / stop / exit / sizing
+(`scratch/wf_frontier.py`, realistic 30 bps). DD is in per-unit-notional / leverage-equivalent units (read for ranking).
+
+### Findings
+- **Diversification cuts drawdown AND raises Sharpe:** 10→20→40 pairs (no-stop z): maxDD −41% → −31% → **−29%**, Sharpe
+  +2.51 → +2.93 → **+3.18**. The −41% baseline DD was partly idiosyncratic and shrinks with breadth — the single most useful
+  practical lever.
+- **Best risk-adjusted = 40-pair, no stop, convergence exit:** Sharpe **+3.44**, maxDD −31%, **Calmar 5.1**. Vol-targeting
+  barely moves the frontier (Sharpe 3.0 vs 3.2; DD similar).
+- **Stops hurt at every width** — the iter-8 lesson, now quantified on the frontier: tight \|z\|=4 is catastrophic (−265%
+  leverage-equiv DD, churn, 23.5k trades); even a *wide* \|z\|=6 stop is the worst of both worlds (−78% DD, Sharpe collapses
+  to 1.5, 13.7k trades) — it still cuts reverting winners *and* realizes the rare blow-up the no-stop rule holds through.
+- So the honest, most-positive-yet framing: **the alpha is capturable at Sharpe ~3 / Calmar ~5 / ~30% DD by a patient,
+  well-capitalized, market-neutral book that diversifies wide and never stops.** A real strategy profile — just not the
+  tight-risk-managed hourly one the project specified. Updated `L2_FINDINGS.md` Result 3 + exec summary.
+
+### What am I missing? / state of the project
+- The reversion result is now characterized AND bounded (selectable, market-neutral, diversified, significant, robust, and
+  capturable at ~30% DD with breadth + no stop). The microstructure chapter is closed. The remaining caveats are intrinsic:
+  survivorship universe, multi-month holds, ~⅓ survivor-co-movement floor, leverage-equiv DD units.
+- **I am at genuine diminishing returns on new analysis.** 12 iterations have produced a complete, honest, internally
+  consistent paper (`L2_FINDINGS.md`): 2 methodological artifacts (Kalman, rolling-z), microstructure near-efficiency across
+  ~12 tests incl. execution + hidden liquidity, and a vindicated-but-patient-only reversion alpha with a mapped risk frontier.
+- The two genuinely remaining items are (1) the **survivorship-free / point-in-time universe** (needs a delisted-coin data
+  pull; the stress test already shows break-robustness, so lower marginal value), and (2) **advisor packaging** (one-pager).
+
+### Plan for next iteration (prioritized)
+1. **Advisor-facing one-pager** distilled from `L2_FINDINGS.md` — the research has converged; communication is now the
+   highest-value work.
+2. Point-in-time universe (delisted coins) only if a cheap pull is feasible.
+3. `L2_FINDINGS.md` remains the single source of truth.
+
+---
+
 ## Iteration 11 — hidden/iceberg liquidity (novel L3-from-L2) + the no-stop edge is diversified, not a factor bet
 
 Two parallel deliverables: a genuinely novel microstructure *measurement* (the advisor's "infer L3 from L2", taken as

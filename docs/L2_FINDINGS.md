@@ -37,13 +37,14 @@ The five results:
 3. **…and its profitability hinges entirely on the stop/exit rule — the real finding.**
    With a conventional |z|=4 stop the strategy loses (net Sharpe −2.25), and the loss is
    *caused by the stop* (it realizes losses on spreads that later revert), not by costs.
-   Remove the stop and hold to convergence and it earns +2.51 net Sharpe (robust to
-   plausible delisting rates) — but only as a slow, multi-month exposure (median ~35-day
-   holds; 78% of positions never converge within the quarter) with a −41% drawdown, ~⅓ of
-   it generic survivor co-movement (random-pair placebo +0.89). So the premise is
-   monetizable, but **not** as the hourly, stop-managed stat-arb the project specified —
-   that version loses. *(Iteration 7's "loses even gross" headline was stop-specific and is
-   corrected here — see §3.)*
+   Remove the stop and hold to convergence and it earns +2.51 net Sharpe — and it is
+   **genuine market-neutral, diversified, OOS-significant alpha** (β≈−0.06; factor R²=1.7%;
+   t=3.65 across 19 windows; robust to delistings). Diversifying 10→40 pairs lifts it to
+   Sharpe ~3.2–3.4 at a ~30% (from −41%) drawdown. But it is only capturable as a slow,
+   multi-month, never-stop, ~30%-drawdown book (median ~35-day holds; 78% never converge in
+   a quarter; ~⅓ generic survivor co-movement) — **not** the hourly, stop-managed stat-arb
+   the project specified, which loses (the stop, at any width, is what destroys it).
+   *(Iteration 7's "loses even gross" headline was stop-specific and is corrected here — §3.)*
 
 4. **Microstructure / order flow is near-efficient at every tradeable horizon — and even
    the "execution value" consolation does not survive measurement.** Across OFI, VPIN,
@@ -242,12 +243,40 @@ bets — not one crowded basket. So the no-stop edge is *genuine, market-neutral
 mean-reversion alpha* — the project's core premise is vindicated as a real statistical effect;
 the failure was the risk rule and horizon, not the absence of reversion.
 
+### The risk-rule efficient frontier — diversification helps, stops hurt *(iteration 12)*
+
+The advisor-relevant question: is the −41% drawdown fatal, or can a practical risk rule capture
+the alpha at a bearable drawdown? Mapping (Sharpe, max-drawdown) across pair-count / stop / exit /
+sizing (`scratch/wf_frontier.py`, realistic 30 bps; DD in per-unit-notional/leverage-equivalent
+terms, so read it for *ranking*):
+
+| config | net Sharpe | max DD | Calmar |
+|---|---:|---:|---:|
+| 10-pair no-stop (iter-8 baseline) | +2.51 | −41% | 4.0 |
+| 20-pair no-stop | +2.93 | −31% | 5.0 |
+| **40-pair no-stop** | **+3.18** | **−29%** | 4.7 |
+| **40-pair no-stop, convergence exit** | **+3.44** | −31% | **5.1** |
+| 40-pair *wide* stop \|z\|=6 | +1.52 | −78% | 0.7 |
+| 40-pair *tight* stop \|z\|=4 | −1.82 | −265% | — |
+
+- **Diversification cuts the drawdown *and* lifts Sharpe:** 10→40 pairs takes maxDD −41%→−29% and
+  Sharpe +2.51→+3.18 — the −41% was partly idiosyncratic and shrinks with breadth.
+- **Stops hurt at every width.** A tight \|z\|=4 stop is catastrophic (churn, −265% leverage-equiv
+  DD); even a *wide* \|z\|=6 stop is the worst of both worlds (−78% DD, Sharpe 1.5) — it still cuts
+  reverting winners *and* realizes the rare blow-up the no-stop rule holds through and recovers from.
+- Vol-targeting barely moves the frontier. **Best risk-adjusted = 40-pair, no stop, convergence
+  exit: Sharpe +3.4, ~−30% DD, Calmar ~5.**
+
+So the alpha is capturable — but only for a **patient, well-capitalized, market-neutral book** that
+diversifies wide, never stops, and can sit through a ~30% drawdown and multi-month holds. That is a
+real strategy profile, just not the tight-risk-managed hourly one the project specified.
+
 ### Honest bottom line on tradeability
 
-Mean reversion is real, selectable (Result 2), and **market-neutral** (iteration 10), and it
-*is* monetizable — but only in a form far from the project's stated design: a slow, multi-month,
-deep-drawdown hold-the-spread exposure on a survivorship-filtered universe, ~⅓ of it a generic
-survivor-co-movement floor. As the **hourly,
+Mean reversion is real, selectable (Result 2), **market-neutral and diversified** (iterations 10–11),
+and it *is* monetizable at Sharpe ~3 / Calmar ~5 — but only in a form far from the project's stated
+design: a slow, multi-month, ~30%-drawdown, never-stop hold-the-spread book on a survivorship-filtered
+universe, ~⅓ of it a generic survivor-co-movement floor. As the **hourly,
 stop-managed stat-arb** originally specified it **loses** (−2.25), because the stop required
 to bound risk at hourly cadence is precisely what destroys the thin, slow reversion. The
 defensible claim is the *sensitivity itself*: report the stop/exit-rule dependence (and the
@@ -395,7 +424,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 |---|---|
 | 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
-| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_sanity.py`, `wf_diag.py` |
+| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 4c. Hidden/iceberg liquidity | `scratch/hidden_liquidity.py` |
