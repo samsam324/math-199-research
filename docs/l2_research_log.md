@@ -6,6 +6,52 @@ the next iteration.
 
 ---
 
+## Iteration 4 — the alpha hunt fails twice (cleanly); the near-efficiency thesis is now robust
+
+Took the two remaining shots at tradeable-horizon directional alpha, each designed around its classic trap.
+
+### A. Cross-asset lead-lag BTC→alts (6 symbols; staleness control) — **null (artifact + arbitraged)**
+- Huge **contemporaneous** co-movement (r(0) 0.44–0.61 at 1s, rising to 0.64–0.81 at 60s as noise averages out), but **no exploitable directional lead**.
+- The decisive control worked: the 1–5s "BTC leads alt" cross-correlation shoulder **collapses at 30s/60s sampling** (where alts aren't stale — they're stale 50–70% of seconds at 1s). That is the textbook **spurious-lead-lag-from-stale-prices** signature, not causation.
+- Predictive R² 0.3–1.4%, <1 bp per +1 SD vs ~10 bps taker cost. The only strong signal (BTC return → alt at 5s, t=17) is a few-seconds, already-arbitraged effect. Spread lead (AVAX−ETH BTC-flow t≈2.2) is <2 bps on a two-leg trade. Not tradeable. Script: `scratch/leadlag_xasset.py`.
+
+### B. Institutional net flow → 15-min / 1-h returns (BTC/ETH/SOL, 31 days; HAC) — **null, and the sign is REVERSAL**
+The advisor's "volume-as-institutional-information," at a tradeable horizon, building on iter-2's ~2× permanent impact for large orders.
+- Institutional (>$10k) = 35–46% of volume but 2–3% of orders — a meaningful split.
+- **Incremental R² of institutional flow over (total flow + momentum): +0.036% (15m), +0.032% (1h) — essentially zero.**
+- Where it loads "significantly" (pooled 15m t=−2.63; SOL 1h t=−2.38) the sign is **negative**: institutional buying predicts *lower* future returns — short-horizon **price-pressure mean-reversion**, the opposite of informed continuation. The informed-vs-noise test fails (institutional doesn't load + while retail loads −; dominant effect is *negative* momentum = reversal).
+- Per-symbol 1h "hits" are overfitting (BTC +1.85t at 12d → +0.89t at 31d; SOL persists − ; incoherent across same-class assets).
+- Reconciles iter-2: large orders *do* carry ~2× permanent impact, but it's impounded **within seconds**; by 15m–1h it's fully priced, leaving mean-reverting noise. Script: `scratch/inst_flow_horizon2.py`.
+
+### The thesis is now robust (4 iterations, ~6 independent tests, all pointing the same way)
+**Crypto majors are microstructure-efficient at every tradeable horizon.** Order flow (trade + book) and large-order footprint explain
+*contemporaneous* price formation extremely well and carry genuine **permanent** information — but that information has a **seconds-scale
+half-life**. By any horizon you could actually trade against ~10–20 bps costs, the directional predictability is gone or has reverted to
+mean-reverting price-pressure noise. Every natural "volume-as-alpha" hypothesis we could construct has now been falsified with the right control:
+seconds-OFI (dead after cost), spread-OFI (dead), VPIN regime-filter (dead + inverted), cross-asset lead-lag (staleness + arbitraged), institutional
+flow at 15m–1h (reversal, not information). The genuine, robust positive findings are about **price formation / execution, not signal**: book-OFI
+dominates contemporaneous moves (+0.12–0.16 incr R²), and the cancellation channel (>80% of best-level liquidity withdrawal, invisible to trade data)
+carries directional info contemporaneously.
+
+### What am I missing? / where to take it next
+- I've been hunting **return** predictability and consistently finding near-efficiency. Two constructive directions remain that don't require beating
+  efficiency:
+  1. **Execution value (the one place the signal has real $):** quantify how much an OFI/cancellation-aware passive placement saves vs the L2 book-walk
+     cost we already model in `src/l2_costs.py`. This converts the robust contemporaneous signal into a number on the strategy's bottom line.
+  2. **Volatility (risk), not direction:** realized vol is highly predictable (iter-3, R²≈0.30). Do microstructure features (book-OFI volatility,
+     cancellation intensity, trade intensity, quoted-spread dynamics) improve *volatility* forecasting *incrementally* over realized vol? Better vol
+     forecasts → better position sizing → better Sharpe **without** directional alpha. This is the most-overlooked, still-plausible win.
+- **Consolidation:** the microstructure story has reached a natural conclusion on the alpha question and is now paper-ready — next loop should also
+  begin distilling `l2_research_log.md` into a clean "what L2 taught us" findings section (honest null on alpha + positive on price-formation/execution).
+- Robustness watchpoint: still mostly Jan–Feb 2024, BTC/ETH/SOL. The 31-day institutional run helps; a volatile later month would strengthen generality.
+
+### Plan for next iteration (prioritized)
+1. **Execution-value experiment:** simulate OFI/cancellation-aware passive vs aggressive placement on real book data; measure bps saved vs `l2_costs` book-walk; feed into a with/without backtest.
+2. **Microstructure → volatility forecasting:** incremental-over-realized-vol test for vol (not return); if it works, wire a vol feature into sizing.
+3. Begin the paper-ready findings distillation.
+
+---
+
 ## Iteration 3 — VPIN regime-filter is dead (and inverted); book-side flow ("L3 from L2") genuinely adds info
 
 Tested the two tradeable-horizon ideas from iter 2, each designed around its failure mode (redundancy / incrementality).
