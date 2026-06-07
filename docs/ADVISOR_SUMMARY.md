@@ -67,7 +67,8 @@ mechanical floor and validated against placebos.
 ## What's solid vs what's caveated
 
 - **Solid:** the two artifacts (both placebo-proven), microstructure near-efficiency (≈12 independent
-  tests), the execution null, and that the reversion alpha is real, market-neutral, and stop-sensitive.
+  tests, now re-validated across **all 12 months of 2024** incl. the Aug-5 crash — the findings replicate
+  in every regime), the execution null, and that the reversion alpha is real, market-neutral, stop-sensitive.
 - **Caveated:** the reversion numbers' main run is **survivorship-filtered** (current top-50), but the
   result is robust to it — re-tested on the full 204-symbol on-disk universe (incl. crashed/meme/late-listed
   names, point-in-time entry) it *strengthens*, and it passes a structural-break stress test; the residual

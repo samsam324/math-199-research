@@ -6,6 +6,45 @@ the next iteration.
 
 ---
 
+## Iteration 16 — redo on full-2024 L2 data: every microstructure finding generalizes (incl. the Aug-5 crash)
+
+User asked to "redo analysis with the new data." The L2 download (paused-research, kept running) now covers **all of 2024**
+(~362 days × 50 symbols raw), vs the ~5–10 days of Jan 2024 the microstructure chapter originally used — directly attacking
+its biggest standing caveat ("Jan 2024 only, BTC/ETH-heavy"). Note: the ingested 1s stores are stale (data/l2 → Jun, data/
+trades → Apr), so the redo reads RAW csv.gz directly and samples **13 days across all 12 months + 4 symbols**, deliberately
+including volatile regimes (Aug-5 yen-carry crash, Mar-13 BTC-near-ATH, Nov–Dec rally). Three parallel subagents; I verified
+each script+log against the reported numbers. New files: `scratch/{book_ofi,exec_value,hidden_liquidity,inst_flow}_2024.{py,log}`.
+
+### Results — all four findings replicate; near-efficiency holds in every regime
+- **Book-OFI + cancellations** (the "best micro result"): contemporaneous book-OFI incr-over-trade R² = +0.11–0.48 (stronger
+  in illiquid AVAX), cancel share 77–90%, predictive decay to ~0 by 30s — all 4 symbols, all year. **On Aug-5 order flow gets
+  LESS predictive, not more** (predictive R² @1s drops, cancel signal collapses to t≈0).
+- **Execution value**: aggressive crossing still cheapest (pooled 1.10 bps); L3 signal still no edge (corr +0.03, loses to
+  placebo, sign-flip fails, oracle saves +1.40). **On the crash the oracle opportunity GROWS (+2.34 bps) but the signal's
+  corr collapses to +0.003** — it helps least exactly where it could help most. No regime-dependence.
+- **Hidden / iceberg liquidity**: prevalence replicates (1.3–4% of volume; iceberg BTC/ETH/SOL ~10–12% ≫ AVAX ~1.9%);
+  predictive null holds (HAC). *New descriptive observation:* hidden volume **spikes 2–3× on the crash** (BTC 5.7% vs 2.7%) —
+  institutions hide more in stress — but still non-predictive.
+- **Institutional flow**: reversal-not-information all year; ~0 incremental R²; **zero** continuation regimes across 26
+  day×horizon cells incl. the crash.
+
+### What this settles / what am I missing
+- The microstructure null is **robust across all 2024 market conditions, not a Jan-2024 artifact** — if anything near-
+  efficiency holds *more* firmly in stress. The single genuinely new finding is descriptive (hidden-liquidity surges in the
+  crash). Updated `L2_FINDINGS.md` Result 4 (new "Full-2024 robustness" subsection) + limitations.
+- The reversion/backtest results are unaffected (they use multi-year hourly `spot_1h`, not the L2 raw).
+- Caveat that remains: still 2024-only and ≤4 symbols for event-level work; the ingested 1s stores would need a re-ingest to
+  run the *ingested-reading* scripts (ofi_horizons, pair_ofi_spread, impact_decomp) on full-year — those still cap at H1 2024.
+- The download is still running and eating disk (~160 GB free, ~190 GB/day); it has no remaining analytical purpose — should
+  be stopped soon.
+
+### Plan / state
+The "Jan 2024 only" caveat is now closed. The paper is unchanged in conclusions but materially more robust. Remaining optional
+work: re-ingest 2024 to refresh the 1s stores and re-run the ingested-reading OFI scripts (confirmatory); else the project is
+complete. Recommend stopping the background download.
+
+---
+
 ## Iteration 15 — the survivorship check (no data pull needed!) — the alpha SURVIVES and strengthens
 
 I'd flagged the survivorship-free universe as needing a delisted-coin data pull. "What am I missing?" — I checked what's

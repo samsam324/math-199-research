@@ -1,0 +1,191 @@
+==============================================================================
+HIDDEN / ICEBERG LIQUIDITY — inferring an L3 quantity from L2 + tape
+Symbols: ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'AVAXUSDT']
+Dates  : 2024-01-15 .. 2024-12-16 (13 days)
+==============================================================================
+  BTCUSDT 2024-01-15: book=714757 trades=1657415 episodes(traded)=65794
+  BTCUSDT 2024-02-15: book=785293 trades=1786563 episodes(traded)=68583
+  BTCUSDT 2024-03-13: book=782259 trades=2501193 episodes(traded)=64219
+  BTCUSDT 2024-04-16: book=817543 trades=2604356 episodes(traded)=131110
+  BTCUSDT 2024-05-15: book=734517 trades=1729455 episodes(traded)=66270
+  BTCUSDT 2024-06-14: book=678668 trades=1643149 episodes(traded)=45170
+  BTCUSDT 2024-07-15: book=814129 trades=2600424 episodes(traded)=73229
+  BTCUSDT 2024-08-05: book=856660 trades=7568447 episodes(traded)=362563
+  BTCUSDT 2024-08-06: book=839071 trades=3433791 episodes(traded)=167603
+  BTCUSDT 2024-09-16: book=745255 trades=3145152 episodes(traded)=58578
+  BTCUSDT 2024-10-15: book=755559 trades=6245619 episodes(traded)=95258
+  BTCUSDT 2024-11-12: book=852894 trades=11498834 episodes(traded)=198691
+  BTCUSDT 2024-12-16: book=790815 trades=8048051 episodes(traded)=87583
+  ETHUSDT 2024-01-15: book=746720 trades=789141 episodes(traded)=59424
+  ETHUSDT 2024-02-15: book=807930 trades=1347611 episodes(traded)=98800
+  ETHUSDT 2024-03-13: book=813104 trades=1536457 episodes(traded)=76720
+  ETHUSDT 2024-04-16: book=802404 trades=1461776 episodes(traded)=147065
+  ETHUSDT 2024-05-15: book=677902 trades=760813 episodes(traded)=55822
+  ETHUSDT 2024-06-14: book=694144 trades=729689 episodes(traded)=55448
+  ETHUSDT 2024-07-15: book=782655 trades=1617263 episodes(traded)=72904
+  ETHUSDT 2024-08-05: book=858228 trades=7064103 episodes(traded)=398225
+  ETHUSDT 2024-08-06: book=844288 trades=2870132 episodes(traded)=185937
+  ETHUSDT 2024-09-16: book=732544 trades=2102319 episodes(traded)=67569
+  ETHUSDT 2024-10-15: book=746382 trades=3306511 episodes(traded)=91060
+  ETHUSDT 2024-11-12: book=848066 trades=7072954 episodes(traded)=213229
+  ETHUSDT 2024-12-16: book=816124 trades=7117624 episodes(traded)=116419
+  SOLUSDT 2024-01-15: book=764841 trades=434865 episodes(traded)=57404
+  SOLUSDT 2024-02-15: book=761629 trades=658456 episodes(traded)=60561
+  SOLUSDT 2024-03-13: book=798221 trades=1411840 episodes(traded)=98354
+  SOLUSDT 2024-04-16: book=827654 trades=1530833 episodes(traded)=177866
+  SOLUSDT 2024-05-15: book=761636 trades=749404 episodes(traded)=73234
+  SOLUSDT 2024-06-14: book=709798 trades=590068 episodes(traded)=67884
+  SOLUSDT 2024-07-15: book=789843 trades=1139996 episodes(traded)=63131
+  SOLUSDT 2024-08-05: book=861265 trades=7092545 episodes(traded)=438265
+  SOLUSDT 2024-08-06: book=851361 trades=3567599 episodes(traded)=214856
+  SOLUSDT 2024-09-16: book=709238 trades=1104551 episodes(traded)=43742
+  SOLUSDT 2024-10-15: book=740821 trades=2210459 episodes(traded)=92360
+  SOLUSDT 2024-11-12: book=842452 trades=5190072 episodes(traded)=220471
+  SOLUSDT 2024-12-16: book=789428 trades=2819670 episodes(traded)=98236
+  AVAXUSDT 2024-01-15: book=601618 trades=115013 episodes(traded)=20789
+  AVAXUSDT 2024-02-15: book=606341 trades=205233 episodes(traded)=31515
+  AVAXUSDT 2024-03-13: book=705544 trades=471263 episodes(traded)=59030
+  AVAXUSDT 2024-04-16: book=681886 trades=235639 episodes(traded)=50045
+  AVAXUSDT 2024-05-15: book=528633 trades=111021 episodes(traded)=17349
+  AVAXUSDT 2024-06-14: book=558481 trades=119397 episodes(traded)=16690
+  AVAXUSDT 2024-07-15: book=532212 trades=146787 episodes(traded)=15820
+  AVAXUSDT 2024-08-05: book=799568 trades=471496 episodes(traded)=83546
+  AVAXUSDT 2024-08-06: book=685968 trades=148054 episodes(traded)=27834
+  AVAXUSDT 2024-09-16: book=512872 trades=171860 episodes(traded)=10282
+  AVAXUSDT 2024-10-15: book=563454 trades=367974 episodes(traded)=28462
+  AVAXUSDT 2024-11-12: book=780188 trades=1313943 episodes(traded)=97064
+  AVAXUSDT 2024-12-16: book=670084 trades=485608 episodes(traded)=43962
+
+##############################################################################
+# (1) DESCRIPTIVE — hidden fraction & iceberg-episode rate per symbol
+#     (LOWER BOUND: post-update snapshots under-detect hidden fills)
+##############################################################################
+     sym  traded_episodes  iceberg_episodes  iceberg_rate_pct   exec_vol_base  hidden_vol_base  hidden_frac_pct  hidden_frac_notional_pct
+ BTCUSDT          1484651            155529           10.4758    388,114.0577      12,376.5111           3.1889                    3.1928
+ ETHUSDT          1638622            165651           10.1092  3,925,350.8836     155,649.2149           3.9652                    3.6633
+ SOLUSDT          1706364            205935           12.0686 41,795,686.4780   1,658,898.8790           3.9691                    3.9208
+AVAXUSDT           502388              9325            1.8561 36,094,467.6800     482,620.2700           1.3371                    1.4868
+
+[saved] C:\Users\jackw\Desktop\math-199-research\scratch\hidden_liquidity_2024_persym.csv
+
+##############################################################################
+# (1b) PER-DAY x SYMBOL hidden fraction & iceberg rate (regime view)
+##############################################################################
+      date      sym  episodes  iceberg_rate_pct  hidden_frac_pct
+2024-01-15 AVAXUSDT     20789            0.6831           0.3728
+2024-01-15  BTCUSDT     65794            6.6404           2.5717
+2024-01-15  ETHUSDT     59424            5.5516           2.3657
+2024-01-15  SOLUSDT     57404            2.3430           1.9393
+2024-02-15 AVAXUSDT     31515            1.1169           1.0585
+2024-02-15  BTCUSDT     68583            6.8661           2.2960
+2024-02-15  ETHUSDT     98800            6.9423           2.5062
+2024-02-15  SOLUSDT     60561            3.2067           3.0066
+2024-03-13 AVAXUSDT     59030            3.2695           3.4035
+2024-03-13  BTCUSDT     64219            8.5458           3.1194
+2024-03-13  ETHUSDT     76720            7.2224           1.7015
+2024-03-13  SOLUSDT     98354            8.2549           2.8926
+2024-04-16 AVAXUSDT     50045            0.5795           0.5495
+2024-04-16  BTCUSDT    131110            5.4389           2.2806
+2024-04-16  ETHUSDT    147065            4.0112           2.4768
+2024-04-16  SOLUSDT    177866            4.1863           3.1885
+2024-05-15 AVAXUSDT     17349            1.5217           1.3518
+2024-05-15  BTCUSDT     66270            6.9428           2.8215
+2024-05-15  ETHUSDT     55822            4.1722           2.2875
+2024-05-15  SOLUSDT     73234            4.3436           3.8861
+2024-06-14 AVAXUSDT     16690            0.9646           0.8979
+2024-06-14  BTCUSDT     45170            5.5413           2.3725
+2024-06-14  ETHUSDT     55448            4.8045           2.0018
+2024-06-14  SOLUSDT     67884            3.5089           1.6295
+2024-07-15 AVAXUSDT     15820            0.6131           0.5180
+2024-07-15  BTCUSDT     73229            5.5770           1.9524
+2024-07-15  ETHUSDT     72904            5.5525           2.1883
+2024-07-15  SOLUSDT     63131            3.6733           1.0329
+2024-08-05 AVAXUSDT     83546            1.7834           1.3943
+2024-08-05  BTCUSDT    362563            9.6670           5.6588
+2024-08-05  ETHUSDT    398225           11.1337           7.9519
+2024-08-05  SOLUSDT    438265           16.2753           7.6628
+2024-08-06 AVAXUSDT     27834            0.3233           0.4578
+2024-08-06  BTCUSDT    167603            8.2093           3.2249
+2024-08-06  ETHUSDT    185937            7.1707           3.8684
+2024-08-06  SOLUSDT    214856           14.3184           3.3140
+2024-09-16 AVAXUSDT     10282            0.5252           0.3283
+2024-09-16  BTCUSDT     58578           22.0970           2.2444
+2024-09-16  ETHUSDT     67569           15.8860           4.8813
+2024-09-16  SOLUSDT     43742            9.2314           1.5727
+2024-10-15 AVAXUSDT     28462            1.5881           0.9571
+2024-10-15  BTCUSDT     95258           20.5379           2.3698
+2024-10-15  ETHUSDT     91060           22.8223           3.1120
+2024-10-15  SOLUSDT     92360           18.0024           3.1614
+2024-11-12 AVAXUSDT     97064            3.3957           1.9983
+2024-11-12  BTCUSDT    198691           11.3860           3.2194
+2024-11-12  ETHUSDT    213229           12.2821           5.0868
+2024-11-12  SOLUSDT    220471           18.6210           5.0871
+2024-12-16 AVAXUSDT     43962            1.6082           0.8361
+2024-12-16  BTCUSDT     87583           21.3569           4.1253
+2024-12-16  ETHUSDT    116419           16.8675           1.9098
+2024-12-16  SOLUSDT     98236           15.6653           2.7793
+
+[saved] C:\Users\jackw\Desktop\math-199-research\scratch\hidden_liquidity_2024_perday.csv
+
+  Aug-5 crash-day vs full-sample-mean (hidden_frac_pct / iceberg_rate_pct):
+    BTCUSDT  crash hf=5.659% ir=9.67%  | non-crash-mean hf=2.716% ir=10.76%
+    ETHUSDT  crash hf=7.952% ir=11.13%  | non-crash-mean hf=2.865% ir=9.44%
+    SOLUSDT  crash hf=7.663% ir=16.28%  | non-crash-mean hf=2.791% ir=8.78%
+    AVAXUSDT crash hf=1.394% ir=1.78%  | non-crash-mean hf=1.061% ir=1.35%
+
+##############################################################################
+# (2) PREDICTIVE — hourly panel + Newey-West (HAC) tests
+##############################################################################
+[saved] C:\Users\jackw\Desktop\math-199-research\scratch\hidden_liquidity_2024_panel.csv  (rows=1249)
+
+Panel for regressions: N=1199 sym-hours across 4 symbols
+Feature means (per symbol):
+          hidden_fraction  iceberg_rate  signed_hidden      rv  ofi_norm  spread
+sym                                                                             
+AVAXUSDT          0.00925       0.01178        0.00021 0.01192  -0.01301 0.00033
+BTCUSDT           0.02798       0.10773       -0.00116 0.00706  -0.01764 0.00000
+ETHUSDT           0.02902       0.09354       -0.00123 0.00838  -0.00376 0.00000
+SOLUSDT           0.02828       0.08990        0.00018 0.01205  -0.00121 0.00007
+
+----------------------------------------------------------------------
+(a) Predict NEXT-hour realized vol. Incremental over rv + trade intensity.
+----------------------------------------------------------------------
+Baseline  R^2 = 0.47272  (rv, trade_count)
+Full      R^2 = 0.47776  (+ hidden_fraction, iceberg_rate)
+Incremental R^2 = 0.00504
+
+HAC (Newey-West, L=3) coefficients on the FULL model:
+term                          coef     HAC_t         p
+const                      0.00000     0.000    1.0000
+rv_z                       0.62151    10.450    0.0000
+trade_count_z              0.11755     2.835    0.0046
+hidden_fraction_z          0.00960     0.468    0.6398
+iceberg_rate_z            -0.09069    -3.250    0.0012
+
+----------------------------------------------------------------------
+(b) Signed hidden activity vs price direction.
+    ASK-hidden = absorbed buying; BID-hidden = absorbed selling.
+----------------------------------------------------------------------
+
+CONTEMPORANEOUS: ret ~ signed_hidden + ofi_norm   R^2=0.20804
+term                          coef     HAC_t         p
+const                      0.00000     0.000    1.0000
+signed_hidden_z           -0.05790    -2.347    0.0189
+ofi_norm_z                 0.47082    14.735    0.0000
+
+NEXT-HOUR: ret_next ~ signed_hidden + ofi_norm    R^2=0.00242
+term                          coef     HAC_t         p
+const                     -0.00000    -0.000    1.0000
+signed_hidden_z            0.02040     0.911    0.3623
+ofi_norm_z                -0.05161    -1.685    0.0919
+
+Next-hour return incremental R^2 from adding signed_hidden to OFI: 0.00038
+
+======================================================================
+INTERPRETATION GUIDE:
+ - |HAC t| < ~2.0  => not significant; treat as null.
+ - Incremental R^2 near 0 + small t on hidden terms => near-efficiency:
+   hidden liquidity is REAL & measurable but adds no predictive edge.
+======================================================================
+
+DONE.

@@ -400,14 +400,41 @@ carry *less* than top-of-book (`deep_book_probe.py`); microstructure vs HAR-RV f
 forecasting (HAR already wins, OOS R²≈0.51; micro adds ~2–3% of that, not worth the churn;
 `har_vol_regress.py`).
 
-**Thesis (updated by iteration 9):** crypto majors are microstructure-efficient at every
+### Full-2024 robustness — the "Jan 2024 only" caveat is resolved *(iteration 16)*
+
+The whole microstructure chapter originally ran on ~5–10 days of Jan 2024 (the only data then
+ingested). With the L2 download now covering all of 2024, the key findings were re-run on **13
+days sampled across all 12 months and 4 symbols (BTC/ETH/SOL/AVAX), deliberately including the
+volatile regimes** — the **Aug 5 2024 yen-carry-unwind crash**, the March BTC-ATH run, and the
+Nov–Dec rally (scripts `scratch/{book_ofi,exec_value,hidden_liquidity,inst_flow}_2024.py`). Every
+finding replicates and the **near-efficiency thesis holds in every regime, including the crash**:
+
+- **Book-OFI + cancellations:** contemporaneous book-OFI incremental-over-trade R² = +0.11 to
+  +0.48 (stronger in illiquid AVAX), cancel share 77–90%, predictive power still decays to ~0 by
+  30s — all four symbols, all year. On the Aug 5 crash order flow gets *less* predictive, not more.
+- **Execution:** aggressive crossing still cheapest (pooled 1.10 bps); the L3 signal still carries
+  no execution-timing edge (corr +0.03, loses to placebo). On the crash the oracle opportunity
+  *grows* (+2.34 bps) but the signal's correlation collapses to ~0 (+0.003) — it helps least
+  exactly where it could help most.
+- **Hidden liquidity:** prevalence replicates (1.3–4% of volume; iceberg rate BTC/ETH/SOL ~10–12%
+  ≫ AVAX ~1.9%); predictive null holds (HAC). *New observation:* hidden volume **spikes 2–3× on
+  the crash day** (BTC 5.7% vs 2.7%) — institutions hide more in stress — but it is still not
+  predictive.
+- **Institutional flow:** reversal-not-information holds all year; ~0 incremental R²; **zero**
+  continuation regimes found across 26 day×horizon cells, including the crash.
+
+So the microstructure null is **not a Jan-2024 artifact** — it is robust across 2024's full range
+of market conditions. If anything, near-efficiency holds *more* firmly in stress.
+
+**Thesis (validated across all 2024):** crypto majors are microstructure-efficient at every
 horizon you could trade against ~10–20 bps costs. Order flow (trade + book) explains
 *contemporaneous* price formation extremely well and carries genuine **permanent**
 information, but that information has a **seconds-scale half-life** — and it is *contemporaneous*,
 so it forecasts neither returns (the alpha results) nor the near-future fills that would give
 it **execution** value (the measured null above). The earlier "the payoff is in execution"
-hope is now retracted: the signal describes how price forms, but cannot be turned into either
-a directional edge or an execution edge net of the unforecastable future.
+hope is retracted: the signal describes how price forms, but cannot be turned into either
+a directional edge or an execution edge net of the unforecastable future. This now holds across
+all of 2024, all four symbols, and the year's most violent regime (the Aug 5 crash).
 
 ---
 
@@ -447,8 +474,10 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
   point-in-time entry) and *strengthened* (iteration 15), and is structural-break stress-robust
   (iteration 8). The residual gap — fully-delisted coins (LUNA/FTT) and in-sample *exits* — is the
   one gold-standard check still open; it needs a delisted-coin data pull.
-- Microstructure tests are concentrated in 2024, BTC/ETH/SOL-heavy; broader months would
-  strengthen generality (the 31-day institutional run and full-history reversion test help).
+- Microstructure tests now span **all 12 months of 2024** (4 symbols, incl. the Aug 5 crash;
+  iteration 16) — the original "Jan 2024 only" caveat is resolved and every finding replicated.
+  Still 2024-specific and ≤4 symbols for the event-level work; 2023/2025–26 L2 would extend it
+  further (the download has the data; re-ingest pending).
 - Effective sample size is the binding constraint for small effects: few, correlated pairs
   give statistically fragile extreme-event counts — a real limit on detecting any thin edge.
 - Single exchange / quote currency / interval, as in phase 1.

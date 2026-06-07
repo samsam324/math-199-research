@@ -1,0 +1,127 @@
+============================================================================================
+INSTITUTIONAL FLOW -> FUTURE RETURN | 13 days across 2024 | flow=signed-USD share of bar vol
+Dates: ['2024-01-15', '2024-02-15', '2024-03-13', '2024-04-16', '2024-05-15', '2024-06-14', '2024-07-15', '2024-08-05', '2024-08-06', '2024-09-16', '2024-10-15', '2024-11-12', '2024-12-16']
+============================================================================================
+
+########## HORIZON = 15min ##########
+
+[POOLED (sym-FE) 15min]  n=3648
+  (1) inst-only:       beta=-1.51 bps/share  t=-0.17  R2=0.001%
+  (2) +total+mom:      inst b=-3.75 t=-0.22 | total b=+4.89 t=+0.42 | mom b=-269.057 t=-0.60
+      R2full=0.062% R2(no-inst)=0.061%  >> INCR-R2(inst)=+0.0009%
+  (3) inst-vs-noise:   inst b=-2.32 t=-0.24 | mid b=+4.06 t=+0.39 | retail b=-26.71 t=-0.98
+  (4) tradeability:    sd(inst share)=0.091  E[fwd ret|+1sd inst]=-0.138 bps  (cost ~10-20 bps round-trip)
+
+[BTCUSDT 15min]  n=1216
+  (1) inst-only:       beta=+11.79 bps/share  t=+1.37  R2=0.090%
+  (2) +total+mom:      inst b=+20.25 t=+1.03 | total b=-6.81 t=-0.42 | mom b=+7.493 t=+0.01
+      R2full=0.099% R2(no-inst)=0.055%  >> INCR-R2(inst)=+0.0433%
+  (3) inst-vs-noise:   inst b=+13.27 t=+1.47 | mid b=-5.56 t=-0.31 | retail b=-10.30 t=-0.26
+  (4) tradeability:    sd(inst share)=0.112  E[fwd ret|+1sd inst]=+1.318 bps  (cost ~10-20 bps round-trip)
+
+[ETHUSDT 15min]  n=1216
+  (1) inst-only:       beta=+5.62 bps/share  t=+0.28  R2=0.008%
+  (2) +total+mom:      inst b=+21.09 t=+0.68 | total b=-20.32 t=-1.11 | mom b=+841.351 t=+1.03
+      R2full=0.622% R2(no-inst)=0.595%  >> INCR-R2(inst)=+0.0265%
+  (3) inst-vs-noise:   inst b=+7.76 t=+0.34 | mid b=-3.56 t=-0.22 | retail b=-13.08 t=-0.29
+  (4) tradeability:    sd(inst share)=0.090  E[fwd ret|+1sd inst]=+0.504 bps  (cost ~10-20 bps round-trip)
+
+[SOLUSDT 15min]  n=1216
+  (1) inst-only:       beta=-50.36 bps/share  t=-2.25  R2=0.210%
+  (2) +total+mom:      inst b=-97.41 t=-2.49 | total b=+40.16 t=+2.21 | mom b=-1038.986 t=-1.91
+      R2full=1.168% R2(no-inst)=0.856%  >> INCR-R2(inst)=+0.3124%
+  (3) inst-vs-noise:   inst b=-61.89 t=-2.24 | mid b=+20.23 t=+1.13 | retail b=-22.44 t=-0.43
+  (4) tradeability:    sd(inst share)=0.068  E[fwd ret|+1sd inst]=-3.407 bps  (cost ~10-20 bps round-trip)
+
+########## HORIZON = 1h ##########
+
+[POOLED (sym-FE) 1h]  n=858
+  (1) inst-only:       beta=-39.56 bps/share  t=-0.75  R2=0.048%
+  (2) +total+mom:      inst b=+142.47 t=+1.68 | total b=-106.83 t=-1.85 | mom b=-538.824 t=-0.98
+      R2full=0.856% R2(no-inst)=0.652%  >> INCR-R2(inst)=+0.2041%
+  (3) inst-vs-noise:   inst b=+17.50 t=+0.31 | mid b=-145.74 t=-2.43 | retail b=-91.82 t=-0.64
+  (4) tradeability:    sd(inst share)=0.059  E[fwd ret|+1sd inst]=-2.331 bps  (cost ~10-20 bps round-trip)
+
+[BTCUSDT 1h]  n=286
+  (1) inst-only:       beta=-50.50 bps/share  t=-0.69  R2=0.199%
+  (2) +total+mom:      inst b=+212.06 t=+1.78 | total b=-199.82 t=-1.97 | mom b=-547.714 t=-0.71
+      R2full=1.910% R2(no-inst)=1.147%  >> INCR-R2(inst)=+0.7637%
+  (3) inst-vs-noise:   inst b=-32.84 t=-0.46 | mid b=-136.06 t=-1.19 | retail b=-484.11 t=-2.62
+  (4) tradeability:    sd(inst share)=0.072  E[fwd ret|+1sd inst]=-3.639 bps  (cost ~10-20 bps round-trip)
+
+[ETHUSDT 1h]  n=286
+  (1) inst-only:       beta=-58.00 bps/share  t=-0.74  R2=0.135%
+  (2) +total+mom:      inst b=+122.00 t=+1.02 | total b=-71.37 t=-0.85 | mom b=-1196.879 t=-1.73
+      R2full=2.228% R2(no-inst)=2.066%  >> INCR-R2(inst)=+0.1620%
+  (3) inst-vs-noise:   inst b=+4.69 t=+0.06 | mid b=-128.98 t=-1.50 | retail b=-135.52 t=-0.65
+  (4) tradeability:    sd(inst share)=0.058  E[fwd ret|+1sd inst]=-3.385 bps  (cost ~10-20 bps round-trip)
+
+[SOLUSDT 1h]  n=286
+  (1) inst-only:       beta=+25.22 bps/share  t=+0.16  R2=0.006%
+  (2) +total+mom:      inst b=+276.97 t=+1.09 | total b=-127.83 t=-1.18 | mom b=-162.126 t=-0.19
+      R2full=0.495% R2(no-inst)=0.185%  >> INCR-R2(inst)=+0.3097%
+  (3) inst-vs-noise:   inst b=+124.59 t=+0.67 | mid b=-185.17 t=-1.84 | retail b=+221.00 t=+0.82
+  (4) tradeability:    sd(inst share)=0.043  E[fwd ret|+1sd inst]=+1.084 bps  (cost ~10-20 bps round-trip)
+
+============================================================================================
+CRASH-DAY REGIME (2024-08-05) ONLY  — inst flow -> fwd return
+============================================================================================
+
+########## CRASH 15min ##########
+
+[POOLED CRASH 15min]  n=282
+  (1) inst-only:       beta=+159.78 bps/share  t=+0.75  R2=0.258%
+  (2) +total+mom:      inst b=+244.71 t=+0.66 | total b=+6.76 t=+0.04 | mom b=-678.598 t=-0.97
+      R2full=0.618% R2(no-inst)=0.447%  >> INCR-R2(inst)=+0.1702%
+  (3) inst-vs-noise:   inst b=+187.19 t=+0.74 | mid b=+13.16 t=+0.07 | retail b=-530.60 t=-1.19
+  (4) tradeability:    sd(inst share)=0.051  E[fwd ret|+1sd inst]=+8.139 bps  (cost ~10-20 bps round-trip)
+
+########## CRASH 1h ##########
+
+[POOLED CRASH 1h]  n=66
+  (1) inst-only:       beta=+186.58 bps/share  t=+0.27  R2=0.056%
+  (2) +total+mom:      inst b=+2062.23 t=+1.29 | total b=-1225.40 t=-1.52 | mom b=+209.011 t=+0.20
+      R2full=2.626% R2(no-inst)=0.551%  >> INCR-R2(inst)=+2.0747%
+  (3) inst-vs-noise:   inst b=+885.59 t=+0.89 | mid b=-1266.41 t=-1.53 | retail b=+475.65 t=+0.17
+  (4) tradeability:    sd(inst share)=0.032  E[fwd ret|+1sd inst]=+5.905 bps  (cost ~10-20 bps round-trip)
+
+============================================================================================
+PER-DAY INST-FLOW SIGN SWEEP (model 2: inst | +total+mom controls)
+  beta2_inst > 0 & |t| > 2  => CONTINUATION (new); < 0 => reversal (orig)
+============================================================================================
+
+-- horizon 15min --
+  2024-01-15: n= 282  inst_b= +12.74 t= +0.33  incrR2=+0.0373%  -> flat
+  2024-02-15: n= 282  inst_b=  -4.53 t= -0.10  incrR2=+0.0042%  -> flat
+  2024-03-13: n= 282  inst_b=  -5.74 t= -0.15  incrR2=+0.0046%  -> flat
+  2024-04-16: n= 282  inst_b=-131.23 t= -1.39  incrR2=+0.5147%  -> flat
+  2024-05-15: n= 282  inst_b= +38.20 t= +1.04  incrR2=+0.2561%  -> flat
+  2024-06-14: n= 264  inst_b= -30.74 t= -0.72  incrR2=+0.2418%  -> flat
+  2024-07-15: n= 282  inst_b= -22.62 t= -0.72  incrR2=+0.1552%  -> flat
+  2024-08-05: n= 282  inst_b=+244.71 t= +0.66  incrR2=+0.1702%  -> flat
+  2024-08-06: n= 282  inst_b= +86.68 t= +0.88  incrR2=+0.2395%  -> flat
+  2024-09-16: n= 282  inst_b=  +1.71 t= +0.08  incrR2=+0.0011%  -> flat
+  2024-10-15: n= 282  inst_b= +26.75 t= +0.81  incrR2=+0.1366%  -> flat
+  2024-11-12: n= 282  inst_b=-157.04 t= -2.17  incrR2=+1.3206%  -> reversal
+  2024-12-16: n= 282  inst_b=  -9.00 t= -0.30  incrR2=+0.0283%  -> flat
+
+-- horizon 1h --
+  2024-01-15: n=  66  inst_b= +64.57 t= +0.34  incrR2=+0.1232%  -> flat
+  2024-02-15: n=  66  inst_b=+292.30 t= +1.91  incrR2=+1.7051%  -> flat
+  2024-03-13: n=  66  inst_b=+569.28 t= +1.46  incrR2=+4.9742%  -> flat
+  2024-04-16: n=  66  inst_b=-336.50 t= -0.64  incrR2=+0.3409%  -> flat
+  2024-05-15: n=  66  inst_b=+409.88 t= +1.73  incrR2=+2.8676%  -> flat
+  2024-06-14: n=  66  inst_b=  -7.15 t= -0.04  incrR2=+0.0015%  -> flat
+  2024-07-15: n=  66  inst_b=-291.88 t= -1.85  incrR2=+3.2739%  -> flat
+  2024-08-05: n=  66  inst_b=+2062.23 t= +1.29  incrR2=+2.0747%  -> flat
+  2024-08-06: n=  66  inst_b=+674.13 t= +1.66  incrR2=+1.5373%  -> flat
+  2024-09-16: n=  66  inst_b=  +3.36 t= +0.03  incrR2=+0.0004%  -> flat
+  2024-10-15: n=  66  inst_b=-207.55 t= -1.09  incrR2=+0.5197%  -> flat
+  2024-11-12: n=  66  inst_b=-433.92 t= -0.91  incrR2=+1.0323%  -> flat
+  2024-12-16: n=  66  inst_b= -35.12 t= -0.14  incrR2=+0.0434%  -> flat
+
+============================================================================================
+CLASS SHARE SANITY (volume & order-count share by class, ALL days)
+  BTCUSDT: vol% inst=51.5 mid=40.4 retail= 8.1 | ordr% inst= 2.0 mid=10.3 retail=87.7
+  ETHUSDT: vol% inst=33.1 mid=57.6 retail= 9.3 | ordr% inst= 1.1 mid=11.6 retail=87.3
+  SOLUSDT: vol% inst=17.6 mid=63.1 retail=19.3 | ordr% inst= 0.4 mid=10.5 retail=89.1
