@@ -1,0 +1,236 @@
+==============================================================================
+SYMBOL: BTCUSDT   days 2024-01-15..2024-12-16  (event-time, no freq confound)
+==============================================================================
+
+[1] CLASS SHARES (marketable orders aggregated by ts+side)
+                    cnt  cnt_share            vol  vol_share
+cls                                                         
+retail         10346694     0.7392  1,709,207,677     0.0358
+mid             2771754     0.1980  9,233,408,169     0.1935
+institutional    878026     0.0627 36,763,005,007     0.7706
+  total orders: 13,996,474
+
+[2/3] RESPONSE FUNCTIONS R_c(h)
+  -- RAW (bps) --
+   h(s)         0        1        2        5       10       30       60      120      300
+   retail           0.000    0.125    0.165    0.210    0.231    0.237    0.220    0.226    0.210
+   mid              0.000    0.234    0.301    0.377    0.429    0.440    0.423    0.470    0.828
+   institutional    0.000    0.326    0.397    0.486    0.545    0.608    0.621    0.615    0.685
+  -- per-$1M (bps/$1M) --
+   h(s)         0        1        2        5       10       30       60      120      300
+   retail           0.000 5246.065 6932.035 8365.082 9228.933 9739.54110214.43611061.73013153.293
+   mid              0.000   98.383  128.099  160.908  180.628  185.264  173.815  205.024  364.373
+   institutional    0.000   15.645   19.266   23.416   26.088   29.167   30.144   27.780   32.176
+
+[4] PERMANENT vs TRANSIENT (permanent = R(300))
+  -- RAW bps --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       10,346,694         165    0.237     30    0.210      0.027    88.7
+   mid          2,771,754       3,331    0.828    300    0.828      0.000   100.0
+   institutional  878,026      41,870    0.685    300    0.685      0.000   100.0
+  -- per-$1M --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       10,346,694         16513153.293    30013153.293      0.000   100.0
+   mid          2,771,754       3,331  364.373    300  364.373      0.000   100.0
+   institutional  878,026      41,870   32.176    300   32.176      0.000   100.0
+
+[5] CLUSTER-BOOTSTRAP SEs (over 13 days, B=500) at key horizons
+  -- RAW bps: mean (se) --
+   class                       h=1              h=10              h=60             h=300
+   retail           0.125 ( 0.010)    0.231 ( 0.025)    0.220 ( 0.063)    0.210 ( 0.180)
+   mid              0.234 ( 0.014)    0.429 ( 0.033)    0.423 ( 0.082)    0.828 ( 0.130)
+   institutional    0.326 ( 0.018)    0.545 ( 0.047)    0.621 ( 0.046)    0.685 ( 0.106)
+  -- per-$1M: mean (se) --
+   class                       h=1              h=10              h=60             h=300
+   retail        5246.065 (1088.979) 9228.933 (1848.276)10214.436 (3621.763)13153.293 (7977.560)
+   mid             98.383 ( 6.857)  180.628 (16.063)  173.815 (37.799)  364.373 (58.486)
+   institutional   15.645 ( 1.015)   26.088 ( 2.204)   30.144 ( 2.238)   32.176 ( 3.637)
+
+[6] REGIME BREAKOUT (does size->impact ranking survive the crash?)
+  -- CRASH days ['2024-08-05'] (RAW bps; permanent = R(300)) --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       1,709,148         158    0.733    300    0.733      0.000   100.0
+   mid            643,945       3,479    0.796    300    0.796      0.000   100.0
+   institutional  168,730      35,920    1.065    300    1.065      0.000   100.0
+  -- CALM days (all others) (RAW bps; permanent = R(300)) --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       8,637,546         167    0.220     10    0.107      0.113    48.6
+   mid          2,127,809       3,286    0.838    300    0.838      0.000   100.0
+   institutional  709,296      43,285    0.646    120    0.595      0.051    92.1
+==============================================================================
+SYMBOL: ETHUSDT   days 2024-01-15..2024-12-16  (event-time, no freq confound)
+==============================================================================
+
+[1] CLASS SHARES (marketable orders aggregated by ts+side)
+                   cnt  cnt_share            vol  vol_share
+cls                                                        
+retail         7061632     0.7368  1,117,351,493     0.0457
+mid            2024366     0.2112  6,879,566,516     0.2817
+institutional   498132     0.0520 16,428,253,018     0.6726
+  total orders: 9,584,130
+
+[2/3] RESPONSE FUNCTIONS R_c(h)
+  -- RAW (bps) --
+   h(s)         0        1        2        5       10       30       60      120      300
+   retail           0.000    0.154    0.192    0.208    0.185    0.096    0.036    0.311    0.717
+   mid              0.000    0.240    0.281    0.289    0.270    0.091    0.071    0.391    0.608
+   institutional    0.000    0.319    0.373    0.414    0.483    0.522    0.475    0.518    0.476
+  -- per-$1M (bps/$1M) --
+   h(s)         0        1        2        5       10       30       60      120      300
+   retail           0.000 9265.15711438.04812755.87413082.97514362.00213943.91116560.68323366.368
+   mid              0.000   97.549  117.973  119.323  110.983   20.654   -6.801  241.884  434.642
+   institutional    0.000   16.581   19.220   21.434   23.956   23.432   16.904   18.424   22.643
+
+[4] PERMANENT vs TRANSIENT (permanent = R(300))
+  -- RAW bps --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       7,061,632         158    0.717    300    0.717      0.000   100.0
+   mid          2,024,366       3,398    0.608    300    0.608      0.000   100.0
+   institutional  498,132      32,980    0.522     30    0.476      0.046    91.2
+  -- per-$1M --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       7,061,632         15823366.368    30023366.368      0.000   100.0
+   mid          2,024,366       3,398  434.642    300  434.642      0.000   100.0
+   institutional  498,132      32,980   23.956     10   22.643      1.314    94.5
+
+[5] CLUSTER-BOOTSTRAP SEs (over 13 days, B=500) at key horizons
+  -- RAW bps: mean (se) --
+   class                       h=1              h=10              h=60             h=300
+   retail           0.154 ( 0.011)    0.185 ( 0.078)    0.036 ( 0.252)    0.717 ( 0.234)
+   mid              0.240 ( 0.011)    0.270 ( 0.102)    0.071 ( 0.304)    0.608 ( 0.104)
+   institutional    0.319 ( 0.015)    0.483 ( 0.041)    0.475 ( 0.066)    0.476 ( 0.143)
+  -- per-$1M: mean (se) --
+   class                       h=1              h=10              h=60             h=300
+   retail        9265.157 (1078.533)13082.975 (2411.322)13943.911 (5909.669)23366.368 (4745.115)
+   mid             97.549 ( 5.602)  110.983 (44.683)   -6.801 (159.259)  434.642 (95.709)
+   institutional   16.581 ( 0.734)   23.956 ( 1.222)   16.904 ( 9.567)   22.643 (10.094)
+
+[6] REGIME BREAKOUT (does size->impact ranking survive the crash?)
+  -- CRASH days ['2024-08-05'] (RAW bps; permanent = R(300)) --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       1,632,418         170    1.664    300    1.664      0.000   100.0
+   mid            622,728       3,423    0.468    300    0.468      0.000   100.0
+   institutional  126,477      30,270    0.716     30    0.601      0.115    84.0
+  -- CALM days (all others) (RAW bps; permanent = R(300)) --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       5,429,214         155    0.433    120    0.432      0.002    99.6
+   mid          1,401,638       3,387    0.670    300    0.670      0.000   100.0
+   institutional  371,655      33,902    0.510     60    0.434      0.077    84.9
+==============================================================================
+SYMBOL: SOLUSDT   days 2024-01-15..2024-12-16  (event-time, no freq confound)
+==============================================================================
+
+[1] CLASS SHARES (marketable orders aggregated by ts+side)
+                   cnt  cnt_share           vol  vol_share
+cls                                                       
+retail         4796992     0.7298   980,626,366     0.0753
+mid            1532458     0.2331 4,915,091,206     0.3774
+institutional   243610     0.0371 7,127,197,926     0.5473
+  total orders: 6,573,060
+
+[2/3] RESPONSE FUNCTIONS R_c(h)
+  -- RAW (bps) --
+   h(s)         0        1        2        5       10       30       60      120      300
+   retail           0.000    0.154    0.196    0.256    0.276    0.341    0.389    0.700    0.692
+   mid              0.000    0.257    0.320    0.388    0.416    0.596    0.689    0.913    0.925
+   institutional    0.000    0.318    0.388    0.431    0.435    0.555    0.521    0.702    0.584
+  -- per-$1M (bps/$1M) --
+   h(s)         0        1        2        5       10       30       60      120      300
+   retail           0.000 4615.286 5602.977 7828.318 8568.91011853.13617684.85130516.99742009.113
+   mid              0.000  108.626  137.207  161.457  172.495  273.200  341.174  465.232  526.467
+   institutional    0.000   18.420   22.268   24.481   24.302   30.148   29.715   39.964   41.165
+
+[4] PERMANENT vs TRANSIENT (permanent = R(300))
+  -- RAW bps --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       4,796,992         204    0.700    120    0.692      0.009    98.7
+   mid          1,532,458       3,207    0.925    300    0.925      0.000   100.0
+   institutional  243,610      29,257    0.702    120    0.584      0.118    83.2
+  -- per-$1M --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       4,796,992         20442009.113    30042009.113      0.000   100.0
+   mid          1,532,458       3,207  526.467    300  526.467      0.000   100.0
+   institutional  243,610      29,257   41.165    300   41.165      0.000   100.0
+
+[5] CLUSTER-BOOTSTRAP SEs (over 13 days, B=500) at key horizons
+  -- RAW bps: mean (se) --
+   class                       h=1              h=10              h=60             h=300
+   retail           0.154 ( 0.012)    0.276 ( 0.035)    0.389 ( 0.056)    0.692 ( 0.136)
+   mid              0.257 ( 0.017)    0.416 ( 0.025)    0.689 ( 0.100)    0.925 ( 0.139)
+   institutional    0.318 ( 0.024)    0.435 ( 0.048)    0.521 ( 0.172)    0.584 ( 0.257)
+  -- per-$1M: mean (se) --
+   class                       h=1              h=10              h=60             h=300
+   retail        4615.286 (764.185) 8568.910 (1563.003)17684.851 (3492.729)42009.113 (15010.022)
+   mid            108.626 ( 8.726)  172.495 (11.674)  341.174 (54.355)  526.467 (102.548)
+   institutional   18.420 ( 1.556)   24.302 ( 3.279)   29.715 ( 8.518)   41.165 (13.301)
+
+[6] REGIME BREAKOUT (does size->impact ranking survive the crash?)
+  -- CRASH days ['2024-08-05'] (RAW bps; permanent = R(300)) --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       1,263,502         220    0.942    120    0.607      0.335    64.4
+   mid            464,680       3,060    1.298    120    1.168      0.131    89.9
+   institutional   46,137      28,166    1.897    120    0.559      1.339    29.4
+  -- CALM days (all others) (RAW bps; permanent = R(300)) --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       3,533,490         199    0.722    300    0.722      0.000   100.0
+   mid          1,067,778       3,271    0.819    300    0.819      0.000   100.0
+   institutional  197,473      29,511    0.590    300    0.590      0.000   100.0
+==============================================================================
+SYMBOL: AVAXUSDT   days 2024-01-15..2024-12-16  (event-time, no freq confound)
+==============================================================================
+
+[1] CLASS SHARES (marketable orders aggregated by ts+side)
+                   cnt  cnt_share         vol  vol_share
+cls                                                     
+retail         1088860     0.7731 215,826,330     0.1307
+mid             294835     0.2093 860,544,645     0.5209
+institutional    24728     0.0176 575,518,998     0.3484
+  total orders: 1,408,423
+
+[2/3] RESPONSE FUNCTIONS R_c(h)
+  -- RAW (bps) --
+   h(s)         0        1        2        5       10       30       60      120      300
+   retail           0.000    0.180    0.231    0.312    0.321    0.382    0.345    0.499    0.969
+   mid              0.000    0.375    0.445    0.549    0.564    0.639    0.758    1.208    1.508
+   institutional    0.000    0.379    0.436    0.583    0.615    0.901    0.918    0.633    0.048
+  -- per-$1M (bps/$1M) --
+   h(s)         0        1        2        5       10       30       60      120      300
+   retail           0.000 3575.192 4665.531 6612.109 5519.965 7033.249 7573.036 9587.22324128.445
+   mid              0.000  176.121  208.772  259.597  266.258  297.562  364.437  625.887  840.798
+   institutional    0.000   23.610   27.711   35.803   38.555   52.149   51.106   32.155    2.863
+
+[4] PERMANENT vs TRANSIENT (permanent = R(300))
+  -- RAW bps --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       1,088,860         198    0.969    300    0.969      0.000   100.0
+   mid            294,835       2,919    1.508    300    1.508      0.000   100.0
+   institutional   24,728      23,274    0.918     60    0.048      0.869     5.3
+  -- per-$1M --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail       1,088,860         19824128.445    30024128.445      0.000   100.0
+   mid            294,835       2,919  840.798    300  840.798      0.000   100.0
+   institutional   24,728      23,274   52.149     30    2.863     49.287     5.5
+
+[5] CLUSTER-BOOTSTRAP SEs (over 13 days, B=500) at key horizons
+  -- RAW bps: mean (se) --
+   class                       h=1              h=10              h=60             h=300
+   retail           0.180 ( 0.021)    0.321 ( 0.037)    0.345 ( 0.129)    0.969 ( 0.267)
+   mid              0.375 ( 0.027)    0.564 ( 0.023)    0.758 ( 0.174)    1.508 ( 0.331)
+   institutional    0.379 ( 0.058)    0.615 ( 0.125)    0.918 ( 0.172)    0.048 ( 0.252)
+  -- per-$1M: mean (se) --
+   class                       h=1              h=10              h=60             h=300
+   retail        3575.192 (615.242) 5519.965 (1229.157) 7573.036 (3081.830)24128.445 (9619.171)
+   mid            176.121 (13.224)  266.258 (17.186)  364.437 (93.325)  840.798 (168.040)
+   institutional   23.610 ( 3.179)   38.555 ( 7.254)   51.106 (11.049)    2.863 (15.569)
+
+[6] REGIME BREAKOUT (does size->impact ranking survive the crash?)
+  -- CRASH days ['2024-08-05'] (RAW bps; permanent = R(300)) --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail         150,018         234    1.092    300    1.092      0.000   100.0
+   mid             41,051       2,758    3.159    300    3.159      0.000   100.0
+   institutional    1,806      18,817    2.575    120    1.149      1.426    44.6
+  -- CALM days (all others) (RAW bps; permanent = R(300)) --
+   class                n   meanNotnl     peak peak_h     perm  transient   %perm
+   retail         938,842         192    0.949    300    0.949      0.000   100.0
+   mid            253,784       2,945    1.241    300    1.241      0.000   100.0
+   institutional   22,922      23,625    0.865     60   -0.038      0.903    -4.4

@@ -27,6 +27,15 @@ each script+log against the reported numbers. New files: `scratch/{book_ofi,exec
   institutions hide more in stress — but still non-predictive.
 - **Institutional flow**: reversal-not-information all year; ~0 incremental R²; **zero** continuation regimes across 26
   day×horizon cells incl. the crash.
+- **Per-order impact by trade size** (`impact_decomp_2024.py`, added after the disk fix): the advisor's per-trade
+  retail-vs-institutional question. Replicates across all 2024 + 4 symbols at the robust seconds horizon — 1s impact
+  monotone in size (institutional > mid > retail on every symbol), institutional ≈ **2.0–2.6× retail**, ~11 bootstrap-SEs
+  wide; institutional transient hump replicates on calm days (~85–92% permanent). Caveat: the 300s "permanent" estimate is
+  noisy on the broad sample (drift-contaminated for tiny retail orders / the crash) — the finding rests on seconds-horizon
+  impact. **Process note:** the subagent for this one *stalled on a self-armed Monitor* (the known failure mode) and returned
+  without finishing; it had run BTC only, whose lone-300s-outlier looked "broken." I took over, confirmed the script was sound
+  (correct raw-book adaptation, bootstrap SEs, regime split), ran it to completion myself, and read all 4 symbols — clean
+  replication. Lesson reinforced: verify stalled-subagent output by re-running, don't trust a partial log.
 
 ### What this settles / what am I missing
 - The microstructure null is **robust across all 2024 market conditions, not a Jan-2024 artifact** — if anything near-

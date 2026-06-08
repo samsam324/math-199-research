@@ -327,11 +327,18 @@ falsified with the appropriate control, and the genuine positives are about pric
 not signal.
 
 **The advisor's "retail vs institutional / volume as information" (iters 1–2, 4).**
-- Trade size **is** a proxy for information *per order*: per-order permanent (information)
-  impact is monotone in size, institutional (>$10k) ≈ 1.6–2.1 bps ≈ **2× retail**, with a
-  transient liquidity hump that decays 13–20% (classic temporary impact). *Per dollar* the
-  ranking inverts but that excess is mechanical (tick/bounce on a tiny denominator), not
-  information — institutions split/time to minimize footprint. Script: `scratch/impact_decomp.py`.
+- Trade size **is** a proxy for information *per order*: per-order impact is monotone in size,
+  institutional (>$10k) ≈ **2× retail**, with a transient liquidity hump (classic temporary
+  impact). *Per dollar* the ranking inverts but that excess is mechanical (tick/bounce on a tiny
+  denominator), not information — institutions split/time to minimize footprint. Script:
+  `scratch/impact_decomp.py`. **Validated across all 2024 + 4 symbols (iteration 16,
+  `impact_decomp_2024.py`):** at the robust seconds horizon the monotonic ranking replicates on
+  every symbol — 1s impact institutional > mid > retail (BTC 0.33/0.23/0.13, ETH 0.32/0.24/0.15,
+  SOL 0.32/0.26/0.15, AVAX 0.38/0.38/0.18 bps), institutional ≈ **2.0–2.6× retail**, separation
+  ~11 bootstrap-SEs wide; the institutional transient hump replicates on calm days (≈85–92%
+  permanent). (Caveat: the 300s "permanent" estimate is noisy on the broader sample — drift-
+  contaminated for tiny retail orders and on the Aug 5 crash — so the finding rests on the
+  seconds-horizon impact, consistent with the seconds half-life everywhere else.)
 - At a **tradeable** horizon (15m–1h) institutional net flow adds **+0.03% incremental R²**
   (≈ zero), and where it loads the sign is **reversal** (price-pressure mean-reversion),
   *not* informed continuation: the seconds-scale information is fully priced by 15 min.
