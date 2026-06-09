@@ -32,9 +32,10 @@ alpha** — just slow, deep-drawdown, and only profitable if you *don't* use a s
    one, only harvestable as a patient never-stop book.** Removing the stop-loss flips a losing backtest
    (−2.25 Sharpe) to a winner; the effect is market-neutral (β ≈ −0.06) and diversified (loads <2% on the
    top-10 statistical factors). On a **single honest combined test** — no-stop 40-pair on the top-50 **plus
-   the delisted coins** (LUNA/UST/FTT, point-in-time), at monthly frequency — it is **ann ≈ 2.3 Sharpe**
-   (≈2.5 on a literal point-in-time liquidity-ranked universe) at a ~30% drawdown, frequency-honest. Caveats
-   to report honestly: (a) **selection-sensitive** — a deflated-Sharpe correction survives if the trial set
+   the delisted coins** (LUNA/UST/FTT, point-in-time), at monthly frequency — it is **ann ≈ 2.3 Sharpe** on
+   Binance, but **replicates on an independent exchange (Coinbase) at only ~1.5** — confirming the effect is
+   *real* (not Binance overfitting) yet **~40% weaker out-of-venue**, so **~1.5 is the honest venue-robust
+   figure**. Caveats to report honestly: (a) **selection-sensitive** — a deflated-Sharpe correction survives if the trial set
    is the no-stop *family* but fails if the whole stop-vs-no-stop search counts; (b) **survivorship robustness
    rests on the selector *avoiding* dead coins, not withstanding them** (in the point-in-time test, LUNA is
    unselected in its crash window; dead coins contribute ~0 PnL) — the real risk is the per-pair tail (a held
@@ -75,26 +76,25 @@ mechanical floor and validated against placebos.
 ## What's solid vs what's caveated
 
 - **Solid:** the two artifacts (both placebo-proven), microstructure near-efficiency (≈12 independent
-  tests, now re-validated across **all 12 months of 2024** incl. the Aug-5 crash — the findings replicate
-  in every regime), the execution null, and that the reversion effect is real, market-neutral, and
-  stop-sensitive (the backtest engine was audited clean — no look-ahead/PnL bug).
-- **Caveated:** the reversion *effect* is genuine but **modest**, so report it conservatively. The honest
-  single number is the **combined test: ann ≈ 2.3 Sharpe** (no-stop 40-pair, top-50 + delisted, point-in-time,
-  monthly). Around it: (i) **selection-sensitive** — a deflated-Sharpe correction *survives* if the trial set
-  is the no-stop family but *fails* the whole stop-vs-no-stop search, so significance depends on framing;
-  (ii) **survivorship** is now *in* the combined number (~10% dent vs the no-delisted top-50), and a live book
-  still needs an explicit delisting/structural-break control (forcing a LUNA pair through May-2022 = a total
-  leg loss); (iii) the supports (t=3.65, ρ=0.46, market-neutrality) are **correlated** (same data/selection),
-  not independent; drawdowns are leverage-equivalent.
+  tests, now re-validated across **all 12 months of 2024** incl. the Aug-5 crash), the execution null, and
+  that the reversion effect is real, market-neutral, stop-sensitive, and — crucially — **replicates on an
+  independent exchange (Coinbase)**, so it is *not* Binance overfitting (engine audited clean, no look-ahead/PnL bug).
+- **Caveated:** the reversion *effect* is genuine but **modest** — the honest **venue-robust figure is
+  ~1.5 monthly Sharpe** (Coinbase), with the Binance ~2.3–2.5 ~40% optimistic. Around it: (i) **selection-
+  sensitive** — a deflated-Sharpe correction *survives* the no-stop-family trial set but *fails* the whole
+  stop-vs-no-stop search; (ii) **survivorship robustness rests on the selector *avoiding* dead coins, not
+  withstanding them** (a held LUNA pair through May-2022 = −100%/leg) — a live book needs a delisting/
+  structural-break control; (iii) the within-Binance supports (t=3.65, ρ=0.46, market-neutrality) are
+  **correlated** (same data/selection); drawdowns are leverage-equivalent.
 
 ## Suggested next steps
 
 1. **Retract the 99.7% cointegration claim** and independently reproduce the Kalman placebo before any
    external use of the phase-1 results.
-2. The reversion effect is real but **modest and selection-/survivorship-fragile** — before pursuing it,
-   it needs a **pre-registered, deflated-Sharpe-aware** test of a single fixed config (wide 40+ pair,
-   no-stop, market-neutral) with an explicit delisting/structural-break control, on a true point-in-time
-   universe. The delisted-coin survivorship check is now **done** (Task 2: weakens but survives).
+2. The reversion effect is real (it **replicates cross-exchange on Coinbase**, now done) but **modest
+   (~1.5 venue-robust Sharpe) and selection-sensitive** — before pursuing it, it needs a **pre-registered,
+   deflated-Sharpe-aware** test of a single fixed config (wide 40+ pair, no-stop, market-neutral) with an
+   explicit delisting/structural-break control. The delisted-coin survivorship check is also done (Task 2).
 3. Treat the microstructure chapter as closed for alpha; its only real-world value is the ~20% cheaper
    cost estimate from walking the book. The pre-registered H1 (institutional flow → reversion) was run
    once and **fails / is near-powerless** on the cleanly-cointegrated universe — see `phase2_l2/docs/H1_RESULT.md`.

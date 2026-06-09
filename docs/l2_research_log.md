@@ -6,6 +6,26 @@ the next iteration.
 
 ---
 
+## Cross-exchange validation — the effect is REAL (not Binance overfitting), but ~40% weaker out-of-venue
+
+The red-team's sharpest open criticism (the no-stop "independent" supports all share the Binance universe/selection) is
+finally answered with the one genuinely orthogonal test: an **independent exchange**. Pulled **Coinbase** hourly for the
+41 majors on both venues (`scratch/coinbase_pull.py`, 53 MB, 5.4y) and ran the identical no-stop pipeline
+(`scratch/cross_exchange.py`).
+- **Replicates directionally → the effect is real, not Binance-specific:** Coinbase no-stop monthly Sharpe **+1.4–1.6**
+  (ACH-excluded), positive, ~−35% DD; stop-loses/no-stop-wins holds on **both** venues.
+- **~40% weaker out-of-venue:** ~**1.5 (Coinbase) vs ~2.5 (Binance)** on the same symbols → the Binance ~2.5 was
+  **optimistic**; venue-robust figure **~1.5**. Pair overlap only 0.19 Jaccard, so it replicates the *strategy*, not the *pairs*.
+- **Audited — NOT a data artifact** (subagent, 8th audit): Coinbase coverage excellent (often cleaner than Binance);
+  the raw 0.88/−98% was *one* idiosyncratic thin-alt pump (ACH +308%, identical on both venues) the OU selector
+  over-concentrated on Coinbase — remove it → clean 1.4–1.6/−35% (on Binance ACH is a no-op). Cost-sensitivity mild.
+- → Headline retempered: the deployable, **venue-robust** no-stop figure is **~1.5 monthly Sharpe**, not ~2.5; updated
+  `L2_FINDINGS.md` (new cross-exchange subsection + bottom line + exec summary) and `ADVISOR_SUMMARY.md`. This is the
+  strongest single result of the constructive phase: it *confirms the effect is genuine* (answers the overfitting
+  criticism) while *downgrading its magnitude ~40%*.
+
+---
+
 ## Literal point-in-time survivorship test + its audit — "robust" was avoidance, not resilience
 
 Constructive follow-up (red-team / Task-2-audit noted the combined test used a *conservative proxy*). Built a literal

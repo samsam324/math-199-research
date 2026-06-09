@@ -41,8 +41,10 @@ The five results:
    **genuine market-neutral, diversified** effect (β≈−0.06; factor R²=1.7%; window-level
    t=3.65) — but a **real-but-modest** one, not a clean alpha. On a *single* combined test
    (no-stop 40-pair on the top-50 **+ delisted coins**, point-in-time, monthly — the honest
-   "all-hits-at-once" run) it is **ann ≈ 2.3 Sharpe** (≈2.5 on a literal point-in-time
-   liquidity-ranked universe), frequency-honest. Survivorship: the *aggregate* is stable, but
+   "all-hits-at-once" run) it is **ann ≈ 2.3 Sharpe** on Binance — but it **replicates on an
+   independent exchange (Coinbase) at only ~1.5**, confirming the effect is *real* (not Binance
+   overfitting) yet **~40% weaker out-of-venue**, so ~1.5 is the honest venue-robust figure.
+   Survivorship: the *aggregate* is stable, but
    only because the selector **avoids** the about-to-collapse coins (LUNA is unselected in its
    crash window) and dead coins sit flat — the in-position delisting tail (a held LUNA pair =
    −100%/leg) is the real, untested-in-aggregate risk, needing a structural-break stop. Its
@@ -351,11 +353,37 @@ then the deflated Sharpe from the **same** run.
   between: **the effect is selection-sensitive but not cleanly killed.** (My earlier "fails DSR at N≥25"
   used only the harsh all-configs framing and over-stated the problem.)
 
+### Cross-exchange validation — the effect is real (not Binance overfitting), but ~40% weaker out-of-venue
+
+The red-team's sharpest criticism: the no-stop result's "independent" supports all share the *Binance*
+universe/selection (correlated, not orthogonal). The one genuinely orthogonal test is an independent
+exchange. The identical no-stop pipeline was run on **Coinbase** hourly (`scratch/coinbase_pull.py`,
+`cross_exchange.py`), restricted to the **41 majors on both venues** (USD vs USDT quote, different
+participants) — so only the venue differs.
+
+- **It replicates directionally — the effect is *real*, not Binance-specific overfitting:** Coinbase
+  no-stop monthly Sharpe is **+1.4–1.6** (ACH-excluded), positive, at a comparable ~−35% drawdown; and
+  the stop-loses/no-stop-wins structure holds cleanly on **both** venues.
+- **…but ~40% weaker out-of-venue:** **~1.5 vs ~2.5** on the same symbols on Binance — so the Binance
+  ~2.5 was **optimistic**; the venue-robust estimate is **~1.5**. Pair selection overlaps only 0.19
+  Jaccard across venues (noisier Coinbase spreads pick different pairs) — so this replicates the
+  *strategy*, not the *pairs*, which is the stronger claim.
+- **Audited — the gap is NOT data quality** (that hypothesis was falsified): Coinbase coverage is
+  excellent (missing-bar ≤2%, max gap 5–6h, often *cleaner* than Binance), price scales ~1:1. The raw
+  Coinbase 0.88 / −98% DD was dominated by **one idiosyncratic thin-alt pump (ACH, +308% — identical on
+  both venues)** the OU selector over-concentrated on Coinbase; removing it gives the clean ~1.4–1.6 /
+  −35% (on Binance, removing ACH is a no-op). Cost-sensitivity is mild (~−0.1 Sharpe per +30 bps).
+
+This is the **first orthogonal evidence**: the mean-reversion effect is genuinely real and venue-robust
+*in direction*, but its *magnitude* is venue-sensitive and the Binance headline overstated it by ~40%.
+
 ### Honest bottom line on tradeability
 
-Mean reversion is real, selectable (Result 2), and **market-neutral and diversified** (iterations 10–11);
-on the single combined test it is monetizable at a **frequency-honest Sharpe ≈ 2.3** (≈2.5 on a literal
-point-in-time universe; 40-pair, monthly) — a **real but modest** effect, not a clean alpha. Three honest
+Mean reversion is real, selectable (Result 2), and **market-neutral and diversified** (iterations 10–11),
+and it **replicates on an independent exchange** (Coinbase) — so it is a *genuine* effect, not Binance
+overfitting. But its honest, **venue-robust magnitude is ~1.5 monthly Sharpe** (Coinbase), not the ~2.5
+Binance figure (which the cross-exchange test shows was ~40% optimistic) — a **real but modest** effect,
+not a clean alpha. Three honest
 hedges, with their *non-independence* now stated:
 - **Selection-sensitive** (deflated Sharpe survives the no-stop-family trial set but fails the whole-search
   set — depends on the framing).
@@ -555,7 +583,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 |---|---|
 | 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
-| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `nostop_dsr.py`, `nostop_combined.py`, `nostop_pit.py`, `wf_sanity.py`, `wf_diag.py` |
+| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `nostop_dsr.py`, `nostop_combined.py`, `nostop_pit.py`, `coinbase_pull.py`, `cross_exchange.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 4c. Hidden/iceberg liquidity | `scratch/hidden_liquidity.py` |
