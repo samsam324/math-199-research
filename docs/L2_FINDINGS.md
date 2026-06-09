@@ -259,9 +259,11 @@ universe's returns, `scratch/wf_nostop_pca.py`): the market factor PC1 explains 
 variance but only **0.35%** of the no-stop return, and the **top 10 eigenportfolios together
 (84% of universe variance) explain just 1.7%** of it (max single-factor R² 0.49%). So the
 no-stop return is **diversified idiosyncratic** mean-reversion across many ~independent pair
-bets — not one crowded basket. So the no-stop edge is *genuine, market-neutral, diversified
-mean-reversion alpha* — the project's core premise is vindicated as a real statistical effect;
-the failure was the risk rule and horizon, not the absence of reversion.
+bets — not one crowded basket. So the no-stop edge is a *genuine, market-neutral, diversified
+mean-reversion effect* — the market-neutrality and factor-bet confounds are rejected, and the
+failure of the *stopped* version is the risk rule and horizon, not the absence of reversion.
+(Its statistical *significance* is separately tempered by the deflated-Sharpe / selection caveat
+below — the effect is real but modest, not confidently significant.)
 
 ### The risk-rule efficient frontier — diversification helps, stops hurt *(iteration 12)*
 
