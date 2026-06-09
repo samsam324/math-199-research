@@ -94,7 +94,7 @@ stress and the iter-15 broad-universe test both left it intact or stronger). The
 Replace the silent survivorship caveat with: *"The no-stop mean-reversion alpha was re-tested
 on a point-in-time universe including the fully-delisted survivorship-worst coins (LUNA, UST,
 FTT, LUNC, with their actual collapses in the data). The alpha survives — monthly Sharpe
-3.76 → 3.56, max drawdown −23% → −28% — because (i) 40-pair diversification absorbs even
+3.76 → 3.56, max drawdown −23.2% → −28.0% — because (i) 40-pair diversification absorbs even
 −100%+ single-pair losses and (ii) the reversion-speed selection largely avoids trending,
 about-to-collapse names. The avoidance is not guaranteed, however: forced to hold a Terra
 pair through the May-2022 collapse, the no-stop rule loses a full leg (~−100% to −1435% in

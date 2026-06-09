@@ -3,12 +3,13 @@
 *Dated 2026-06-08. The single locked evaluation of the pre-registered hypothesis
 (`phase2_l2/docs/NOTES.md`, locked 2026-06-03). Run once; not re-tuned.*
 
-## Verdict: **FAIL** (and the test is severely underpowered on the available universe)
+## Verdict: **FAIL** — and the test is near-powerless on this universe (see caveat)
 
 The hypothesis predicted a **negative** Spearman correlation between the over-leg institutional
 buy-imbalance and the forward spread change on |spread_z|≥2 bars. The observed correlation is
 **+0.007 (slightly positive — the opposite sign)**, nowhere near significant in the predicted
-direction. **It does not pass.**
+direction. **It does not pass.** (As the caveat below shows, this is best read as "fails in the
+predicted direction, on a near-powerless test" — not a strong falsification.)
 
 ## What was run
 
@@ -41,7 +42,8 @@ X = trailing W=60 mean of the over-leg institutional buy-imbalance; Y = `target_
 | Robustness (raw-spread over-leg, proper alpha) | +0.0033 | 0.78 | no |
 
 p is **>0.93 in the predicted direction at every Newey-West lag (60/120/240) and by block
-bootstrap** — an unambiguous fail. (Per-pair ρ range −0.016…+0.018, mixed sign, all economically nil.)
+bootstrap** — it fails in the predicted direction (though, per the caveat, the test is
+near-powerless). (Per-pair ρ range −0.016…+0.018, mixed sign, all economically nil.)
 
 ## Two methodology notes (both documented as the spec requires)
 
@@ -65,11 +67,12 @@ bootstrap** — an unambiguous fail. (Per-pair ρ range −0.016…+0.018, mixed
 **X is zero for 99.3% of the |spread_z|≥2 bars** (220 distinct values across 1.03M obs; three
 pairs have X≡0). The $100k+ institutional bucket is essentially **empty at 1-second scale on
 these cleanly-cointegrated thin-alt pairs**. So the FAIL is "**no signal *and* no power**," not
-a strong falsification. This exposes a fundamental tension created by the cointegration
-retraction: **the genuinely-cointegrated pairs are illiquid alts with ~no institutional flow,
-while the pairs that carry meaningful $100k flow (BTC/ETH/SOL majors) are not genuinely
-cointegrated** (loop 6). The pre-registered H1 cannot be meaningfully evaluated where both
-conditions hold, because in this universe they are close to mutually exclusive.
+a strong falsification. This exposes a tension created by the cointegration
+retraction: **in this sample the genuinely-cointegrated pairs are illiquid alts with ~no
+institutional flow, while the pairs carrying meaningful $100k flow (BTC/ETH/SOL majors) are not
+genuinely cointegrated** (loop 6). So here the two conditions **rarely co-occur — an empirical
+observation in this sample, not a proven structural exclusion** — and the pre-registered H1
+cannot be meaningfully evaluated where both hold.
 
 **Verified the sparsity is real, not a pipeline bug:** across the 15 legs over ~6.56M held-out
 1-second bars each, the number of seconds containing *any* $100k+ trade is **0 (VTHO) to 743
@@ -85,21 +88,24 @@ imbalance was rebuilt with a **≥$10k** bucket (`scratch/h1_explore_threshold.p
 real variation (80% zero, vs 99.3% at $100k). Result: within-pair combined Spearman **rho =
 −0.0001**, one-sided p ≈ **0.49** at lags 60/120/240 and by bootstrap — a **clean null** (per-pair
 rho's scatter ±0.01–0.03 around zero, mixed sign). So even with a tradeable institutional
-threshold there is **no institutional-flow → reversion signal** on these pairs: the hypothesis
-looks genuinely **unsupported here, not merely underpowered**. A re-pre-registration with a lower
-threshold would, on this evidence, also fail. (This stays exploratory — it would need its own
-locked pre-registration to count as a test.)
+threshold there is **no *detectable* institutional-flow → reversion signal** on these pairs.
+**This is absence of evidence, not evidence of absence:** the exploratory is still on the same
+thin-alt universe, X is still 80% zero, and no equivalence bound (smallest effect of interest)
+was pre-set, so a true null cannot be distinguished from a small effect. And $10k is one
+arbitrary choice among many plausible thresholds (a forking path) — a *confirmatory* claim would
+require pre-registering the threshold rule (e.g. an ADV-percentile). This stays exploratory; it
+would need its own locked pre-registration to count as a test.
 
 ## Interpretation (one sentence)
 
 On the cleanly-cointegrated universe the pre-registered H1 fails — institutional buy-imbalance
 on the over-leg shows no negative (reversion-predictive) relationship with the forward spread
-change (ρ≈+0.007, one-sided p≈0.94); the locked $100k test is underpowered (institutional flow
-near-absent on these illiquid pairs), but the exploratory ≥$10k variant — where X does vary —
-returns a clean null (ρ≈0.000, p≈0.49), so the signal appears genuinely **absent**, not merely
-unmeasured; a definitive test would still require a new pre-registration on a universe that is
-both cointegrated and liquid, which (given the loop-6 cointegration retraction) may not exist
-in this data.
+change (ρ≈+0.007, one-sided p≈0.94); the locked $100k test is near-powerless (institutional flow
+near-absent on these illiquid pairs), and even the exploratory ≥$10k variant — where X does vary
+— returns no *detectable* signal (ρ≈0.000, p≈0.49), which is absence of evidence rather than
+evidence of absence (no equivalence bound was set); a definitive test would require a new
+pre-registration on a universe that is both cointegrated and liquid, two conditions that rarely
+co-occurred in this sample.
 
 *Scripts: `scratch/h1_select.py` (selection), `h1_build_features.py` (held-out features via
 `phase2_l2` code), `h1_test.py` (this evaluation); raw log `scratch/h1_test_result.log`.*
