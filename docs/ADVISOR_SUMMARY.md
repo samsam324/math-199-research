@@ -28,12 +28,16 @@ alpha** — just slow, deep-drawdown, and only profitable if you *don't* use a s
    predicts OOS reversion: Spearman **ρ = +0.46** across 9 disjoint walk-forward splits, top-minus-bottom
    quintile **+0.69z**, clean placebo. So there *is* a real, graded property to build on.
 
-3. **…and it is genuine market-neutral, diversified alpha — but only harvestable as a patient,
-   never-stop book.** Removing the stop-loss flips a losing backtest (−2.25 Sharpe) to a winner; the
-   alpha is market-neutral (β ≈ −0.06 to BTC/market), diversified (loads <2% on the top-10 statistical
-   factors), and OOS-significant (t = 3.65 across 19 windows). Realistic **deployable Sharpe ≈ 2
-   (range ~1.7–2.5** once you account for the multi-week-hold autocorrelation), at a **~30% drawdown**
-   with 40 pairs. **The catch:** a stop-loss of *any* width destroys it (it realizes losses on spreads
+3. **…and there is a genuine market-neutral, diversified mean-reversion effect — but a *suggestive,
+   modest* one, only harvestable as a patient never-stop book.** Removing the stop-loss flips a losing
+   backtest (−2.25 Sharpe) to a winner; the effect is market-neutral (β ≈ −0.06), diversified (loads <2%
+   on the top-10 statistical factors), and window-level significant (t = 3.65 across 19 windows), with
+   a frequency-honest **Sharpe ≈ 2 (range ~1.7–2.5)** at a **~30% drawdown** (40 pairs). **But it is not
+   confidently significant:** because "no-stop" was *selected* from ~10 risk-rule variants, a deflated-
+   Sharpe (Bailey–López de Prado) correction is marginal at N=10 and **fails at N≥25 trials**; and it
+   **dents under survivorship** (3.76→3.56, −23%→−28% with real delisted LUNA/UST/FTT). So report it as a
+   real-but-modest, three-ways-hedged effect, not a clean alpha. **The catch:** a stop-loss of *any* width
+   destroys it (it realizes losses on spreads
    that then revert), holds average **~35 days**, and ~⅓ of the return is a generic survivor-co-movement
    floor. So it is a real strategy for a patient, well-capitalized, market-neutral investor — **not** the
    tight-risk-managed hourly stat-arb the project originally specified, which loses.
@@ -68,18 +72,24 @@ mechanical floor and validated against placebos.
 
 - **Solid:** the two artifacts (both placebo-proven), microstructure near-efficiency (≈12 independent
   tests, now re-validated across **all 12 months of 2024** incl. the Aug-5 crash — the findings replicate
-  in every regime), the execution null, and that the reversion alpha is real, market-neutral, stop-sensitive.
-- **Caveated:** the reversion numbers' main run is **survivorship-filtered** (current top-50), but the
-  result is robust to it — re-tested on the full 204-symbol on-disk universe (incl. crashed/meme/late-listed
-  names, point-in-time entry) it *strengthens*, and it passes a structural-break stress test; the residual
-  gap is fully-delisted coins (LUNA/FTT), the one clean check still outstanding. Deployable Sharpe is a
-  **range** (~1.7–2.5) because of multi-week-hold autocorrelation; drawdowns are leverage-equivalent.
+  in every regime), the execution null, and that the reversion effect is real, market-neutral, and
+  stop-sensitive (the backtest engine was audited clean — no look-ahead/PnL bug).
+- **Caveated:** the reversion *effect* is genuine but **modest and three-ways-hedged**, so report it
+  conservatively: (i) **selection-fragile** — "no-stop" was picked from ~10 risk-rule variants and fails a
+  deflated-Sharpe correction at N≥25 trials (marginal at N=10); (ii) **survivorship** — the main run is the
+  current top-50, but re-tested on the full 204-symbol universe it *strengthens*, and with the real
+  fully-delisted coins (LUNA/UST/FTT, Task 2) it **weakens but survives** (Sharpe 3.76→3.56, DD −23.2%→−28.0%)
+  while needing an explicit delisting/structural-break control; (iii) the **deployable Sharpe is a range
+  ~1.7–2.5** (multi-week-hold autocorrelation), drawdowns leverage-equivalent.
 
 ## Suggested next steps
 
 1. **Retract the 99.7% cointegration claim** and independently reproduce the Kalman placebo before any
    external use of the phase-1 results.
-2. If we want to pursue the reversion alpha, build it as a **wide (40+ pair), no-stop, market-neutral
-   book** and validate on a **point-in-time (survivorship-free) universe** — the only material open check.
+2. The reversion effect is real but **modest and selection-/survivorship-fragile** — before pursuing it,
+   it needs a **pre-registered, deflated-Sharpe-aware** test of a single fixed config (wide 40+ pair,
+   no-stop, market-neutral) with an explicit delisting/structural-break control, on a true point-in-time
+   universe. The delisted-coin survivorship check is now **done** (Task 2: weakens but survives).
 3. Treat the microstructure chapter as closed for alpha; its only real-world value is the ~20% cheaper
-   cost estimate from walking the book.
+   cost estimate from walking the book. The pre-registered H1 (institutional flow → reversion) was run
+   once and **fails / is near-powerless** on the cleanly-cointegrated universe — see `phase2_l2/docs/H1_RESULT.md`.
