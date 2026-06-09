@@ -172,6 +172,14 @@ z-units-per-48h property is not the same as profitability* (§3).
 
 ## Result 3 — Profitability hinges entirely on the stop/exit rule *(the real bottom line)*
 
+> **⚠️ Magnitude correction (read first).** The Sharpe figures in this section's tables (+2.51, +2.54,
+> ~2.0–2.5, etc.) are the **naive** monthly/hourly numbers each iteration produced. A from-zero independent
+> verification (four clean-room re-implementations + a skeptic; see *Independent verification* below) later
+> showed they are **serial-correlation- and venue-inflated**: the honest HAC-corrected, independent-venue
+> figure is **~1.0 monthly Sharpe** (~0.85 Coinbase to ~1.4 Binance), not ~2.5. The *qualitative* findings
+> in this section (stop loses, no-stop wins, market-neutral, diversified) stand; the *magnitudes* below are
+> superseded by the ~1.0 headline.
+
 Honest net-of-cost walk-forward backtest (`scratch/wf_backtest.py`, `wf_robustness.py`,
 `wf_nostop_stress.py`): 19 walk-forward splits, OU-half-life pair selection, static train
 hedge, z-entry |z|≥2, realistic costs, with random-pair and phase-randomized placebos. The
@@ -311,11 +319,12 @@ inflates the deployable number. Recomputing at lower frequencies (`scratch/wf_sh
 | 40-pair no-stop conv-exit | 3.45 | 4.01 | 3.24 | **2.06** | [1.59, 2.61] |
 | 10-pair no-stop z-exit | 2.53 | 3.29 | 2.98 | **2.41** | [1.75, 3.18] |
 
-The honest deployable Sharpe is the low-frequency value: **~2.0–2.5 (monthly), not ~3.2–3.4** — but it
-**survives** (monthly CIs strictly positive, lower bounds 1.6–2.0). (Even monthly is mildly optimistic
-since some holds exceed a month — p95 ≈ 88 days; the most conservative *quarterly/window* unit gives
-**~1.7** for 10 pairs (iter-9, t=3.65). So the defensible deployable figure is a **range ~1.7–2.5,
-central ≈ 2**.) And the ranking flips: at the honest monthly frequency the **best config is 40-pair
+The low-frequency value is **~2.0–2.5 (monthly), not ~3.2–3.4** — but **this monthly figure was itself
+later shown to be serial-correlation-inflated** (the ~35-day holds span months: Binance monthly AC(1)=+0.48),
+so the HAC-corrected, independent-venue-honest figure is **~1.0**, not ~2 (see *Independent verification*
+below — this supersedes the "~1.7–2.5, central ≈ 2" estimate stated here). At this point I still treated
+monthly as honest; the conservative *quarterly/window* unit already hinted lower (**~1.7** for 10 pairs,
+iter-9, t=3.65). And the ranking flips: at the lower frequency the **best config is 40-pair
 no-stop z-exit (Sharpe ~2.5)**, not the convergence-exit that looked best hourly. So the iteration-12
 "+3.4 / conv-exit-is-best" was itself an hourly artifact.
 
