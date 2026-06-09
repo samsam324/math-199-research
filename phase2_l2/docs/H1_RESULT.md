@@ -71,16 +71,35 @@ while the pairs that carry meaningful $100k flow (BTC/ETH/SOL majors) are not ge
 cointegrated** (loop 6). The pre-registered H1 cannot be meaningfully evaluated where both
 conditions hold, because in this universe they are close to mutually exclusive.
 
+**Verified the sparsity is real, not a pipeline bug:** across the 15 legs over ~6.56M held-out
+1-second bars each, the number of seconds containing *any* $100k+ trade is **0 (VTHO) to 743
+(ADA)** — at most ~0.01% of seconds; institutional share of dollar volume is 0–0.9%. VTHO has
+**zero** $100k+ trades in the entire held-out period. The $100k threshold is simply far above
+these coins' trade sizes.
+
+## Exploratory (NOT the locked test): is there a signal at a *tradeable* threshold?
+
+The collaborator's `NOTES.md` flags that $100k may need a liquidity-appropriate threshold. As a
+**hypothesis-generating** check (it does **not** re-run or change the locked H1), the over-leg
+imbalance was rebuilt with a **≥$10k** bucket (`scratch/h1_explore_threshold.py`), where X has
+real variation (80% zero, vs 99.3% at $100k). Result: within-pair combined Spearman **rho =
+−0.0001**, one-sided p ≈ **0.49** at lags 60/120/240 and by bootstrap — a **clean null** (per-pair
+rho's scatter ±0.01–0.03 around zero, mixed sign). So even with a tradeable institutional
+threshold there is **no institutional-flow → reversion signal** on these pairs: the hypothesis
+looks genuinely **unsupported here, not merely underpowered**. A re-pre-registration with a lower
+threshold would, on this evidence, also fail. (This stays exploratory — it would need its own
+locked pre-registration to count as a test.)
+
 ## Interpretation (one sentence)
 
 On the cleanly-cointegrated universe the pre-registered H1 fails — institutional buy-imbalance
 on the over-leg shows no negative (reversion-predictive) relationship with the forward spread
-change (ρ≈+0.007, one-sided p≈0.94) — but the result is uninformative rather than a strong
-refutation, because $100k institutional flow is near-absent on these illiquid pairs, so a
-faithful test of the hypothesis would require either a liquidity-appropriate institutional
-threshold or a universe that is both cointegrated and liquid (which, given the loop-6
-cointegration retraction, may not exist here) — and that would be a new pre-registration, not
-a re-run of this one.
+change (ρ≈+0.007, one-sided p≈0.94); the locked $100k test is underpowered (institutional flow
+near-absent on these illiquid pairs), but the exploratory ≥$10k variant — where X does vary —
+returns a clean null (ρ≈0.000, p≈0.49), so the signal appears genuinely **absent**, not merely
+unmeasured; a definitive test would still require a new pre-registration on a universe that is
+both cointegrated and liquid, which (given the loop-6 cointegration retraction) may not exist
+in this data.
 
 *Scripts: `scratch/h1_select.py` (selection), `h1_build_features.py` (held-out features via
 `phase2_l2` code), `h1_test.py` (this evaluation); raw log `scratch/h1_test_result.log`.*
