@@ -45,9 +45,9 @@ The five results:
    independent exchange (Coinbase) at only ~1.5**, confirming the effect is *real* (not Binance
    overfitting) yet **~40% weaker out-of-venue**, so ~1.5 is the honest venue-robust figure.
    Survivorship: the *aggregate* is stable, but
-   only because the selector **avoids** the about-to-collapse coins (LUNA is unselected in its
-   crash window) and dead coins sit flat — the in-position delisting tail (a held LUNA pair =
-   −100%/leg) is the real, untested-in-aggregate risk, needing a structural-break stop. Its
+   only because the selector **avoids** the about-to-collapse coins; the in-position delisting
+   tail (a held LUNA pair = −100%/leg) is the real risk — but it is **controllable** with a
+   structural-break circuit breaker (caps it at ~no Sharpe cost; §3 deployability). Its
    significance is also **selection-sensitive** (the
    deflated Sharpe survives the no-stop-family trial set but fails the whole stop-vs-no-stop
    search), and its "independent" supports are actually correlated (same universe/selection/
