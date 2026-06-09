@@ -28,16 +28,17 @@ alpha** — just slow, deep-drawdown, and only profitable if you *don't* use a s
    predicts OOS reversion: Spearman **ρ = +0.46** across 9 disjoint walk-forward splits, top-minus-bottom
    quintile **+0.69z**, clean placebo. So there *is* a real, graded property to build on.
 
-3. **…and there is a genuine market-neutral, diversified mean-reversion effect — but a *suggestive,
-   modest* one, only harvestable as a patient never-stop book.** Removing the stop-loss flips a losing
-   backtest (−2.25 Sharpe) to a winner; the effect is market-neutral (β ≈ −0.06), diversified (loads <2%
-   on the top-10 statistical factors), and window-level significant (t = 3.65 across 19 windows), with
-   a frequency-honest **Sharpe ≈ 2 (range ~1.7–2.5)** at a **~30% drawdown** (40 pairs). **But it is not
-   confidently significant:** because "no-stop" was *selected* from ~10 risk-rule variants, a deflated-
-   Sharpe (Bailey–López de Prado) correction is marginal at N=10 and **fails at N≥25 trials**; and it
-   **dents under survivorship** (3.76→3.56, −23%→−28% with real delisted LUNA/UST/FTT). So report it as a
-   real-but-modest, three-ways-hedged effect, not a clean alpha. **The catch:** a stop-loss of *any* width
-   destroys it (it realizes losses on spreads
+3. **…and there is a genuine market-neutral, diversified mean-reversion effect — but a *real-but-modest*
+   one, only harvestable as a patient never-stop book.** Removing the stop-loss flips a losing backtest
+   (−2.25 Sharpe) to a winner; the effect is market-neutral (β ≈ −0.06) and diversified (loads <2% on the
+   top-10 statistical factors). On a **single honest combined test** — no-stop 40-pair on the top-50 **plus
+   the delisted coins** (LUNA/UST/FTT, point-in-time), at monthly frequency — it is **ann ≈ 2.3 Sharpe** at
+   a ~30% drawdown: survivorship-tested on the deployable book (a ~10% dent) and frequency-honest. Caveats
+   to report honestly: its significance is **selection-sensitive** (a deflated-Sharpe correction survives if
+   the trial set is the no-stop *family* but fails if the whole stop-vs-no-stop search counts), and its
+   "independent" supports (t=3.65, ρ=0.46, market-neutrality…) are **correlated** (same universe/selection/
+   windows), not orthogonal. So: real but modest, not a clean alpha. **The catch:** a stop-loss of *any*
+   width destroys it (it realizes losses on spreads
    that then revert), holds average **~35 days**, and ~⅓ of the return is a generic survivor-co-movement
    floor. So it is a real strategy for a patient, well-capitalized, market-neutral investor — **not** the
    tight-risk-managed hourly stat-arb the project originally specified, which loses.
@@ -74,13 +75,14 @@ mechanical floor and validated against placebos.
   tests, now re-validated across **all 12 months of 2024** incl. the Aug-5 crash — the findings replicate
   in every regime), the execution null, and that the reversion effect is real, market-neutral, and
   stop-sensitive (the backtest engine was audited clean — no look-ahead/PnL bug).
-- **Caveated:** the reversion *effect* is genuine but **modest and three-ways-hedged**, so report it
-  conservatively: (i) **selection-fragile** — "no-stop" was picked from ~10 risk-rule variants and fails a
-  deflated-Sharpe correction at N≥25 trials (marginal at N=10); (ii) **survivorship** — the main run is the
-  current top-50, but re-tested on the full 204-symbol universe it *strengthens*, and with the real
-  fully-delisted coins (LUNA/UST/FTT, Task 2) it **weakens but survives** (Sharpe 3.76→3.56, DD −23.2%→−28.0%)
-  while needing an explicit delisting/structural-break control; (iii) the **deployable Sharpe is a range
-  ~1.7–2.5** (multi-week-hold autocorrelation), drawdowns leverage-equivalent.
+- **Caveated:** the reversion *effect* is genuine but **modest**, so report it conservatively. The honest
+  single number is the **combined test: ann ≈ 2.3 Sharpe** (no-stop 40-pair, top-50 + delisted, point-in-time,
+  monthly). Around it: (i) **selection-sensitive** — a deflated-Sharpe correction *survives* if the trial set
+  is the no-stop family but *fails* the whole stop-vs-no-stop search, so significance depends on framing;
+  (ii) **survivorship** is now *in* the combined number (~10% dent vs the no-delisted top-50), and a live book
+  still needs an explicit delisting/structural-break control (forcing a LUNA pair through May-2022 = a total
+  leg loss); (iii) the supports (t=3.65, ρ=0.46, market-neutrality) are **correlated** (same data/selection),
+  not independent; drawdowns are leverage-equivalent.
 
 ## Suggested next steps
 

@@ -6,6 +6,30 @@ the next iteration.
 
 ---
 
+## Holistic red-team — caught a category error + an over-correction; ran the ONE combined test
+
+A skeptical-referee pass over the *whole* conclusion set (vs the 6 component audits) found two systemic issues invisible
+to any single-component check, plus minor ones:
+- **B1 (category error, mine):** the survivorship dent (3.76→3.56) was on the **204-universe**; the deployable Sharpe
+  (~1.7–2.5) was **top-50** — I'd grafted the 204-hit onto the top-50 number ("~1.6–2.4"). The deployable book was never
+  actually survivorship-tested.
+- **B2:** the no-stop result's "independent supports" (t=3.65, ρ=0.46, market-neutrality, factor-R², break-robustness)
+  share the *same* universe/selection/overlapping-windows — correlated, not orthogonal. Plus ρ=0.46 is the best of 4 train
+  metrics (un-deflated); the 19 windows have overlapping trains.
+- **I2:** my last-iteration "fails DSR at N≥25" used `sr_var` from ALL configs (incl. the catastrophic tight-stops), which
+  inflates it; it was an over-correction.
+
+**Fix — ran the single honest combined test (`scratch/nostop_combined.py`):** no-stop 40p on top-50 **+ delisted coins**
+(point-in-time), **monthly**, deflated-Sharpe from the same run. Result: **ann ≈ 2.29 Sharpe** (survivorship dent ~10% is
+borne by the deployable book — the chained ~1.6–2.4 was roughly right but now *tested*). DSR is **selection-sensitive**:
+fails (0.12@N=25) under the all-configs trial set, **survives (≈1.0)** under the no-stop-family trial set (those variants
+cluster at ann ~1.9–2.4). So the honest verdict is "real but modest, selection-*sensitive* not cleanly killed" — between my
+"vindicated alpha" (too strong) and "fails DSR" (too harsh). Propagated to `L2_FINDINGS.md` (combined-test subsection +
+correlated-supports caveat) and `ADVISOR_SUMMARY.md`. Kalman-artifact retraction confirmed airtight; microstructure null
+robust. 6 subagent audits total this session (3 H1-pipeline, H1-results, core-engine, holistic-red-team) + best-practice web research.
+
+---
+
 ## Adversarial deep-audit pass — core engine CLEAN, but a missed best-practice tempers the headline
 
 A hard self-review + subagent audits of the *central* positive result (the no-stop ~+2.5 Sharpe), not just the remote tasks.
