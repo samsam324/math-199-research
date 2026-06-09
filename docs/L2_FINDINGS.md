@@ -37,9 +37,12 @@ The five results:
 3. **…and its profitability hinges entirely on the stop/exit rule — the real finding.**
    With a conventional |z|=4 stop the strategy loses (net Sharpe −2.25), and the loss is
    *caused by the stop* (it realizes losses on spreads that later revert), not by costs.
-   Remove the stop and hold to convergence and it earns +2.51 net Sharpe — and it is
-   **genuine market-neutral, diversified, OOS-significant alpha** (β≈−0.06; factor R²=1.7%;
-   t=3.65 across 19 windows; robust to delistings). Diversifying 10→40 pairs cuts the drawdown
+   Remove the stop and hold to convergence and it earns +2.51 net Sharpe — a
+   **genuine market-neutral, diversified** effect (β≈−0.06; factor R²=1.7%; window-level
+   t=3.65 across 19 windows) — but a **suggestive/modest** one, not confidently significant:
+   it does **not robustly survive a deflated-Sharpe correction** for the ~10-config risk-rule
+   search (DSR marginal at N=10, fails at N≥25), and it **dents under survivorship** (Task 2:
+   3.76→3.56, −23%→−28% with real delisted coins). Diversifying 10→40 pairs cuts the drawdown
    −41%→−29% at a **frequency-honest deployable Sharpe ~2–2.5** (the hourly +3.2 is autocorrelation-
    inflated by the month-long holds; iteration 13). But it is only capturable as a slow,
    multi-month, never-stop, ~30%-drawdown book (median ~35-day holds; 78% never converge in
@@ -306,17 +309,32 @@ diversifies wide, never stops, and can sit through a ~30% drawdown and multi-mon
 **realistic Sharpe ~2–2.5** (not 3+). A real strategy profile, just not the tight-risk-managed hourly
 one the project specified.
 
+### Deflated Sharpe — the no-stop result was *selected*, and doesn't robustly survive that *(audit)*
+
+The no-stop config was the winner of a search over ~10 risk rules (the iteration-12 frontier: stop
+on/off/wide × z/time/convergence exits × 10/20/40 pairs × vol-target). Iterations 13/15 corrected for
+*frequency* and *survivorship* but never for this *selection*. Applying the Bailey–López de Prado
+deflated Sharpe (the same tool `RESULTS.md` held phase 1 to; `scratch/nostop_dsr.py`), with sr_var from
+the searched configs' monthly Sharpes: the no-stop monthly Sharpe (ann +2.54) is **below the expected
+best-of-N under the null** at realistic trial counts — DSR = **0.82 (marginal) at N=10, 0.18 at N=25,
+0.017 at N=50.** So **the headline does not robustly clear a multiple-comparisons correction.** (The DSR
+is somewhat *conservative* here — the searched configs are highly correlated and their Sharpe spread is
+*structural*, stop-loses/no-stop-wins, not pure noise; and the effect has independent support, the
+persistence ρ=0.46 and the 19-window t=3.65. But by phase 1's own standard it does not pass.) **Net: the
+no-stop alpha should be reported as a *suggestive, modest* effect, not a confidently-significant one** —
+fully in keeping with the project's cautious-null character.
+
 ### Honest bottom line on tradeability
 
-Mean reversion is real, selectable (Result 2), **market-neutral and diversified** (iterations 10–11),
-and it *is* monetizable at a **realistic (frequency-honest) Sharpe ~2–2.5** (iteration 13) — but only in
-a form far from the project's stated design: a slow, multi-month, ~30%-drawdown, never-stop hold-the-
-spread book on a survivorship-filtered universe, ~⅓ of it a generic survivor-co-movement floor. As the **hourly,
-stop-managed stat-arb** originally specified it **loses** (−2.25), because the stop required
-to bound risk at hourly cadence is precisely what destroys the thin, slow reversion. The
-defensible claim is the *sensitivity itself*: report the stop/exit-rule dependence (and the
-window-dependence — the model ranking also flips by window, `l2_analysis.md` Finding 2), not
-a single Sharpe.
+Mean reversion is real and selectable (Result 2), **market-neutral and diversified** (iterations 10–11),
+and *suggestively* monetizable at a **frequency-honest Sharpe ~2–2.5** (iteration 13) — but the headline
+is hedged on three independent axes: it is **selection-fragile** (fails deflated Sharpe at N≥25, above),
+**survivorship-sensitive** (dents to 3.56 / −28% with delisted coins, Task 2), and realizable **only in a
+form far from the stated design** — a slow, multi-month, ~30%-drawdown, never-stop hold-the-spread book,
+~⅓ of it a generic survivor-co-movement floor. As the **hourly, stop-managed stat-arb** originally
+specified it **loses** (−2.25): the stop that bounds hourly risk is precisely what destroys the thin, slow
+reversion. The defensible claim is the *sensitivity itself*: report the stop/exit-rule dependence and the
+selection/survivorship caveats, not a single Sharpe.
 
 ---
 
@@ -497,7 +515,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 |---|---|
 | 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
-| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `wf_sanity.py`, `wf_diag.py` |
+| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `nostop_dsr.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 4c. Hidden/iceberg liquidity | `scratch/hidden_liquidity.py` |

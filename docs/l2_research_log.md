@@ -6,6 +6,26 @@ the next iteration.
 
 ---
 
+## Adversarial deep-audit pass — core engine CLEAN, but a missed best-practice tempers the headline
+
+A hard self-review + subagent audits of the *central* positive result (the no-stop ~+2.5 Sharpe), not just the remote tasks.
+- **Core backtest engine audit (subagent, `simulate_pair_v`/`wf_*`): CLEAN.** No look-ahead (static-z uses train-only
+  mu/sd/α/β; `pos_lag` causal; train/test never co-mingle), correct dollar-neutral PnL + round-trip costs, correct no-stop
+  marking (unconverged positions' adverse marks ARE counted; NaN→0 doesn't let losses escape), unbiased monthly Sharpe,
+  correct 19-window t-stat. The +2.5 is **not a coding bug**; its only fragility is the autocorrelation-inflated *hourly*
+  Sharpe, already exposed by the monthly/window numbers.
+- **Deflated Sharpe — the gap I'd missed (`scratch/nostop_dsr.py`).** The no-stop config was *selected* from ~10 risk-rule
+  configs (iter-12 frontier); I'd corrected for frequency + survivorship but never for this selection. Bailey–López de Prado
+  DSR: no-stop monthly Sharpe (ann +2.54) is **below the expected best-of-N under the null** — DSR **0.82 (marginal) @N=10,
+  0.18 @N=25, 0.017 @N=50.** So it **does not robustly clear a multiple-comparisons correction.** (DSR is conservative here:
+  configs are correlated and the spread is structural, not noise; and the effect has independent support — persistence ρ=0.46,
+  window t=3.65. But by phase-1's own DSR standard it fails.) → Headline retempered to **suggestive/modest, not confidently
+  significant**; updated `L2_FINDINGS.md` Result 3 + exec summary. The no-stop alpha is now hedged on *three* independent axes:
+  selection-fragile (DSR), survivorship-sensitive (Task 2), and realizable only as a slow/deep-drawdown/never-stop book.
+- 5 subagent audits total across this push (3 H1-pipeline, 1 H1-results, 1 core-engine) + 2 best-practice web-research passes.
+
+---
+
 ## Remote tasks (from the Mac, `docs/REMOTE_TASKS.md`) — both DONE, adversarially audited
 
 The collaborator pushed two paper-blocking tasks. Both completed, with a 3-subagent adversarial audit + best-practices
