@@ -6,6 +6,35 @@ the next iteration.
 
 ---
 
+## Remote tasks (from the Mac, `docs/REMOTE_TASKS.md`) — both DONE, adversarially audited
+
+The collaborator pushed two paper-blocking tasks. Both completed, with a 3-subagent adversarial audit + best-practices
+web research before finalizing. Outputs: `phase2_l2/docs/H1_RESULT.md`, `phase2_l2/docs/SURVIVORSHIP_DELISTED.md`.
+
+### Task 1 — the pre-registered H1 one-shot: **FAIL (and underpowered)**
+Ran the locked hypothesis (institutional buy-imbalance on the over-leg → spread reversion) ONCE. Substituted the
+artifact Kalman-ADF pair selection (loop 6) with the cleanly EG-cointegrated pairs ranked by OU reversion speed (loop 7
+metric), leakage-safe (selection + hedge use only pre-boundary hourly data). Held-out tail = last 20% of 2024 1s
+(boundary 2024-10-19 19:12 UTC). Built features with the collaborator's frozen `phase2_l2` code. Result: Spearman = **+0.007**
+(wrong sign), one-sided negative p ≈ **0.94** at HAC lags 60/120/240 + block bootstrap → **FAIL**. **Decisive caveat:** X is
+**99.3% zero** — the $100k institutional bucket is near-empty at 1s on the cleanly-cointegrated *thin-alt* pairs, so the
+test is underpowered. Deep tension exposed: genuine cointegration (illiquid) and meaningful institutional flow (liquid
+majors) are near-mutually-exclusive in this universe.
+- **Adversarial review caught real bugs before the irreversible run:** (1) `over_is_a=(spread>0)` froze the over-leg on one
+  leg because alpha=0 left the spread off-center (fixed → `spread_z>0`, alpha-invariant); (2) HAC lag=60 understated the SE
+  on the overlapping-60 target (fixed → per-pair-combined HAC at lags 60/120/240, within-pair primary, block bootstrap).
+  All variants fail with the same sign, so the corrections only reinforce it.
+
+### Task 2 — delisted-coin survivorship re-test: **alpha weakens but survives**
+Pulled LUNA/UST/FTT/LUNC hourly (collapses in the data; Tardis confirmed to also carry their L2). Point-in-time
+entry/delisting exit, 40-pair no-stop reversion: monthly Sharpe **3.76→3.56**, maxDD **−23%→−28%** — first survivorship
+check to dent the result. Strategy mostly avoided the May-2022 collapse (reversion-speed selection shuns trending coins;
+UST excluded by coverage gate), but forcing a LUNA pair through it = total leg loss (~−100% dollar, −1435% log artifact).
+Survives via diversification, but the no-stop rule needs an explicit structural-break/delisting control. **Audit relabels
+applied:** 13 pairs actually traded (not 45; 31 inert post-collapse); −1435% is a log-sum artifact, dollar loss bounded −100%/leg.
+
+---
+
 ## Iteration 16 — redo on full-2024 L2 data: every microstructure finding generalizes (incl. the Aug-5 crash)
 
 User asked to "redo analysis with the new data." The L2 download (paused-research, kept running) now covers **all of 2024**
