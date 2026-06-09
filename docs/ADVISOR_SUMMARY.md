@@ -32,12 +32,15 @@ alpha** — just slow, deep-drawdown, and only profitable if you *don't* use a s
    one, only harvestable as a patient never-stop book.** Removing the stop-loss flips a losing backtest
    (−2.25 Sharpe) to a winner; the effect is market-neutral (β ≈ −0.06) and diversified (loads <2% on the
    top-10 statistical factors). On a **single honest combined test** — no-stop 40-pair on the top-50 **plus
-   the delisted coins** (LUNA/UST/FTT, point-in-time), at monthly frequency — it is **ann ≈ 2.3 Sharpe** at
-   a ~30% drawdown: survivorship-tested on the deployable book (a ~10% dent) and frequency-honest. Caveats
-   to report honestly: its significance is **selection-sensitive** (a deflated-Sharpe correction survives if
-   the trial set is the no-stop *family* but fails if the whole stop-vs-no-stop search counts), and its
-   "independent" supports (t=3.65, ρ=0.46, market-neutrality…) are **correlated** (same universe/selection/
-   windows), not orthogonal. So: real but modest, not a clean alpha. **The catch:** a stop-loss of *any*
+   the delisted coins** (LUNA/UST/FTT, point-in-time), at monthly frequency — it is **ann ≈ 2.3 Sharpe**
+   (≈2.5 on a literal point-in-time liquidity-ranked universe) at a ~30% drawdown, frequency-honest. Caveats
+   to report honestly: (a) **selection-sensitive** — a deflated-Sharpe correction survives if the trial set
+   is the no-stop *family* but fails if the whole stop-vs-no-stop search counts; (b) **survivorship robustness
+   rests on the selector *avoiding* dead coins, not withstanding them** (in the point-in-time test, LUNA is
+   unselected in its crash window; dead coins contribute ~0 PnL) — the real risk is the per-pair tail (a held
+   LUNA pair = −100%/leg), needing a structural-break stop; (c) its "independent" supports (t=3.65, ρ=0.46,
+   market-neutrality…) are **correlated** (same universe/selection/windows), not orthogonal. So: real but
+   modest, not a clean alpha. **The catch:** a stop-loss of *any*
    width destroys it (it realizes losses on spreads
    that then revert), holds average **~35 days**, and ~⅓ of the return is a generic survivor-co-movement
    floor. So it is a real strategy for a patient, well-capitalized, market-neutral investor — **not** the

@@ -5,7 +5,11 @@ point-in-time *entry* only. The faithful version: a TIME-VARYING top-N-by-liquid
 universe rebuilt every walk-forward window from the FULL on-disk pool (204 symbols +
 the 4 fully-delisted), so a coin is in the universe only while it is actually top-N
 liquid (LUNA/FTT are IN during 2021-22, drop out as they fade/delist; other
-then-liquid-now-faded coins are included too). No survivorship by construction.
+then-liquid-now-faded coins are included too). NOTE (audit): much-less- but NOT
+fully-survivorship-free (the 204 pool is currently-listed + 4 re-injected deaths);
+and the dead-coin tail is barely exercised here (dead coins ~5% of pair-slots, ~0
+PnL post-death, and the OU selector does not pick LUNA in its crash window) — so a
+robust 2.54 reflects selection AVOIDANCE, not demonstrated tail-resilience.
 
 For each window: rank symbols by TRAIN-window dollar volume (sum of close*volume),
 require >=90% train coverage, take the top-N (=50); OU-select 40 pairs from that
@@ -100,8 +104,9 @@ def main():
     print(f"  avg point-in-time universe size/window = {avg_u:.0f} | windows incl. a delisted coin = {dw}/{nwin}")
     print(f"\n  vs combined test (top-50+delisted fixed pool): monthly ~2.29")
     print(f"  vs broad-204 (iter-15): monthly ~3.76 (hourly 5.29)")
-    print("  Reading: if monthly Sharpe stays ~2-2.5 here, the no-stop effect is robust to a")
-    print("  fully point-in-time, survivorship-free liquidity-ranked universe.")
+    print("  Reading: 2.54 ~= top-50 baseline, BUT the dead-coin tail is barely exercised")
+    print("  (dead coins ~5% of pairs, ~0 PnL post-death, LUNA crash unselected) -> robustness")
+    print("  here is selection AVOIDANCE, not demonstrated in-position delisting resilience.")
 
 
 if __name__ == "__main__":

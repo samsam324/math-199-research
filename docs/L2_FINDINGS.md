@@ -41,8 +41,12 @@ The five results:
    **genuine market-neutral, diversified** effect (β≈−0.06; factor R²=1.7%; window-level
    t=3.65) — but a **real-but-modest** one, not a clean alpha. On a *single* combined test
    (no-stop 40-pair on the top-50 **+ delisted coins**, point-in-time, monthly — the honest
-   "all-hits-at-once" run) it is **ann ≈ 2.3 Sharpe**: survivorship-tested on the deployable
-   book (~10% dent) and frequency-honest. Its significance is **selection-sensitive** (the
+   "all-hits-at-once" run) it is **ann ≈ 2.3 Sharpe** (≈2.5 on a literal point-in-time
+   liquidity-ranked universe), frequency-honest. Survivorship: the *aggregate* is stable, but
+   only because the selector **avoids** the about-to-collapse coins (LUNA is unselected in its
+   crash window) and dead coins sit flat — the in-position delisting tail (a held LUNA pair =
+   −100%/leg) is the real, untested-in-aggregate risk, needing a structural-break stop. Its
+   significance is also **selection-sensitive** (the
    deflated Sharpe survives the no-stop-family trial set but fails the whole stop-vs-no-stop
    search), and its "independent" supports are actually correlated (same universe/selection/
    windows). Diversifying 10→40 pairs cuts the drawdown
@@ -326,14 +330,19 @@ then the deflated Sharpe from the **same** run.
 
 - **Result: ann Sharpe +2.29** (40-pair; +2.39 at 10-pair) on the fixed top-50+delisted pool. And the
   *most faithful* version — a **literal time-varying point-in-time top-50-by-liquidity universe** rebuilt
-  each window from the full 204+4 pool, so LUNA/FTT are in only while genuinely top-liquid (delisted coins
-  were in the universe **18/19 windows**; `scratch/nostop_pit.py`) — gives monthly **+2.54** (maxDD −21%),
-  essentially the **top-50 baseline**. So the deployable book is **survivorship-robust at the aggregate**:
-  the honest figure is **~2.3–2.5**, *tested* on a survivorship-free universe, not transferred. (The 204-
-  universe's 3.76→3.56 "dent" was on the *non-deployable* illiquid-meme universe; the fixed-pool 2.29 was a
-  slightly-worse-universe artifact. The real residual survivorship risk is **per-pair tail** — a single LUNA
-  pair held through the collapse is a −100% leg loss — which needs a structural-break stop, *not* the
-  aggregate Sharpe.)
+  each window from the full 204+4 pool, so LUNA/FTT are in only while genuinely top-liquid
+  (`scratch/nostop_pit.py`) — gives monthly **+2.54** (maxDD −21%), the **top-50 baseline**. But an audit of
+  this run shows the **survivorship stress is near-vanishing**, so this is *not* strong evidence of
+  robustness: the truly-dead coins (LUNA/UST/FTT) are only **~5% of pair-slots**, concentrated in 2 windows;
+  they contribute **~0 PnL** (post-death they sit flat); and the one real crash (LUNA, May-2022) is **never
+  selected** by the OU ranker even though LUNA is rank-1 liquid that window. So 2.54 ≈ the top-50 baseline
+  because the strategy **avoids** the dead coins (selection), *not* because it withstands them — **the
+  in-position delisting tail is untested here.** That tail is the real survivorship risk: a single LUNA pair
+  *held* through the collapse is a **−100% leg loss** (Task-2 forced worst case), which the no-stop rule has
+  no protection against → it needs a structural-break stop. (Also: the 204+4 pool is the *currently-listed*
+  set plus 4 re-injected deaths — coins removed beyond those 4 are still absent, so "survivorship-free"
+  overstates it. Net deployable figure ~2.3–2.5, with survivorship robustness resting on *selection
+  avoidance*, not demonstrated tail-resilience.)
 - **Deflated Sharpe is selection-*sensitive*, not a clean verdict** — it flips on how you count the search:
   with sr_var from **all ~10 searched configs** (incl. the catastrophic tight-stops), DSR = 0.64 (N=10) /
   0.12 (N=25) → *fails*; with sr_var from the **no-stop family only** (the genuinely-equivalent variants,
@@ -345,11 +354,15 @@ then the deflated Sharpe from the **same** run.
 ### Honest bottom line on tradeability
 
 Mean reversion is real, selectable (Result 2), and **market-neutral and diversified** (iterations 10–11);
-on the single combined test it is monetizable at a **frequency-honest, survivorship-tested Sharpe ≈ 2.3**
-(40-pair, top-50 + delisted, monthly) — a **real but modest** effect, not a clean alpha. Three honest
+on the single combined test it is monetizable at a **frequency-honest Sharpe ≈ 2.3** (≈2.5 on a literal
+point-in-time universe; 40-pair, monthly) — a **real but modest** effect, not a clean alpha. Three honest
 hedges, with their *non-independence* now stated:
 - **Selection-sensitive** (deflated Sharpe survives the no-stop-family trial set but fails the whole-search
   set — depends on the framing).
+- **Survivorship robustness rests on *avoidance*, not resilience** — the aggregate Sharpe is stable across
+  universe constructions, but the literal point-in-time test barely exercises the dead-coin tail (the OU
+  selector avoids LUNA in its crash window; dead coins ~0 PnL post-death). The real risk is the *per-pair*
+  delisting tail (a held LUNA pair = −100%/leg), which the no-stop rule must control with a structural-break stop.
 - **Correlated supports, not orthogonal confirmations** (red-team B2): the window-level t=3.65, the ρ=0.46
   persistence (Result 2), market-neutrality, factor-R² and break-robustness all run on the *same* top-50
   universe, OU selection and overlapping walk-forward windows — they are positively correlated views of one

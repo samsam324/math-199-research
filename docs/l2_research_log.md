@@ -6,6 +6,23 @@ the next iteration.
 
 ---
 
+## Literal point-in-time survivorship test + its audit — "robust" was avoidance, not resilience
+
+Constructive follow-up (red-team / Task-2-audit noted the combined test used a *conservative proxy*). Built a literal
+time-varying top-50-by-liquidity universe rebuilt each window from the full 204+4 pool (`scratch/nostop_pit.py`); no-stop
+40p → monthly **+2.54**, maxDD −21%. I initially wrote this up as "deployable book is survivorship-robust." **A subagent
+audit corrected me:** the construction is look-ahead-clean and genuinely point-in-time, BUT the dead-coin stress is
+**near-vanishing** — truly-dead LUNA/UST/FTT are only ~5% of pair-slots (2 windows), contribute **~0 PnL** (flat
+post-death), and the one real crash (LUNA, May-2022) is **never selected** by the OU ranker despite LUNA being rank-1
+liquid that window. So 2.54 ≈ top-50 baseline because the strategy **avoids** dead coins (selection), not because it
+withstands them; the in-position delisting tail is *untested* by the PIT and remains the per-pair −100%/leg risk (Task-2
+worst case). Also "survivorship-free" overstates it (pool is current-listed + 4 re-injected deaths). **Corrected the
+overclaim** across `L2_FINDINGS.md` (combined-test subsection, exec summary, bottom line) and `ADVISOR_SUMMARY.md`: the
+deployable figure is ~2.3–2.5, with survivorship robustness resting on *selection avoidance*, not demonstrated
+tail-resilience. (7th subagent audit; it caught me overstating a third time — the loop's adversarial value, working.)
+
+---
+
 ## Holistic red-team — caught a category error + an over-correction; ran the ONE combined test
 
 A skeptical-referee pass over the *whole* conclusion set (vs the 6 component audits) found two systemic issues invisible
