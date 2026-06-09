@@ -42,8 +42,10 @@ The five results:
    t=3.65) — but a **real-but-modest** one, not a clean alpha. On a *single* combined test
    (no-stop 40-pair on the top-50 **+ delisted coins**, point-in-time, monthly — the honest
    "all-hits-at-once" run) it is **ann ≈ 2.3 Sharpe** on Binance — but it **replicates on an
-   independent exchange (Coinbase) at only ~1.5**, confirming the effect is *real* (not Binance
-   overfitting) yet **~40% weaker out-of-venue**, so ~1.5 is the honest venue-robust figure.
+   independent exchange (Coinbase) at only ~1.0–1.2** (raw 0.88/1.19; the real-time circuit breaker
+   caps the drawdown but not the Sharpe; the 1.4–1.6 "ex-ACH" figure needs *hindsight*), confirming the
+   effect is *real* (not Binance overfitting) yet **~50–60% weaker out-of-venue** — so ~1.0–1.2 is the
+   honest venue-robust figure and the Binance ~2.5 was substantially optimistic.
    Survivorship: the *aggregate* is stable, but
    only because the selector **avoids** the about-to-collapse coins; the in-position delisting
    tail (a held LUNA pair = −100%/leg) is the real risk — but it is **controllable** with a
@@ -340,8 +342,9 @@ then the deflated Sharpe from the **same** run.
   selected** by the OU ranker even though LUNA is rank-1 liquid that window. So 2.54 ≈ the top-50 baseline
   because the strategy **avoids** the dead coins (selection), *not* because it withstands them — **the
   in-position delisting tail is untested here.** That tail is the real survivorship risk: a single LUNA pair
-  *held* through the collapse is a **−100% leg loss** (Task-2 forced worst case), which the no-stop rule has
-  no protection against → it needs a structural-break stop. (Also: the 204+4 pool is the *currently-listed*
+  *held* through the collapse is a **−100% leg loss** (Task-2 forced worst case), which the bare no-stop rule
+  has no protection against → but it is **controllable** with a structural-break circuit breaker (shown in the
+  deployability subsection below). (Also: the 204+4 pool is the *currently-listed*
   set plus 4 re-injected deaths — coins removed beyond those 4 are still absent, so "survivorship-free"
   overstates it. Net deployable figure ~2.3–2.5, with survivorship robustness resting on *selection
   avoidance*, not demonstrated tail-resilience.)
@@ -353,29 +356,33 @@ then the deflated Sharpe from the **same** run.
   between: **the effect is selection-sensitive but not cleanly killed.** (My earlier "fails DSR at N≥25"
   used only the harsh all-configs framing and over-stated the problem.)
 
-### Cross-exchange validation — the effect is real (not Binance overfitting), but ~40% weaker out-of-venue
+### Cross-exchange validation — the effect is real (not Binance overfitting), but ~50–60% weaker out-of-venue
 
 The red-team's sharpest criticism: the no-stop result's "independent" supports all share the *Binance*
 universe/selection (correlated, not orthogonal). The one genuinely orthogonal test is an independent
 exchange. The identical no-stop pipeline was run on **Coinbase** hourly (`scratch/coinbase_pull.py`,
-`cross_exchange.py`), restricted to the **41 majors on both venues** (USD vs USDT quote, different
-participants) — so only the venue differs.
+`cross_exchange.py`; all three numbers below reproduce from the committed script — log `cross_exchange.log`),
+restricted to the **41 majors on both venues** (USD vs USDT quote, different participants) — so only the
+venue differs.
 
-- **It replicates directionally — the effect is *real*, not Binance-specific overfitting:** Coinbase
-  no-stop monthly Sharpe is **+1.4–1.6** (ACH-excluded), positive, at a comparable ~−35% drawdown; and
-  the stop-loses/no-stop-wins structure holds cleanly on **both** venues.
-- **…but ~40% weaker out-of-venue:** **~1.5 vs ~2.5** on the same symbols on Binance — so the Binance
-  ~2.5 was **optimistic**; the venue-robust estimate is **~1.5**. Pair selection overlaps only 0.19
-  Jaccard across venues (noisier Coinbase spreads pick different pairs) — so this replicates the
-  *strategy*, not the *pairs*, which is the stronger claim.
-- **Audited — the gap is NOT data quality** (that hypothesis was falsified): Coinbase coverage is
-  excellent (missing-bar ≤2%, max gap 5–6h, often *cleaner* than Binance), price scales ~1:1. The raw
-  Coinbase 0.88 / −98% DD was dominated by **one idiosyncratic thin-alt pump (ACH, +308% — identical on
-  both venues)** the OU selector over-concentrated on Coinbase; removing it gives the clean ~1.4–1.6 /
-  −35% (on Binance, removing ACH is a no-op). Cost-sensitivity is mild (~−0.1 Sharpe per +30 bps).
+- **It replicates directionally — the effect is *real*, not Binance-specific overfitting:** raw Coinbase
+  no-stop monthly Sharpe is **+0.88 (10-pair) / +1.19 (20-pair)**, positive; and the stop-loses/no-stop-wins
+  structure holds cleanly on **both** venues. Pair selection overlaps only 0.19 Jaccard across venues
+  (noisier Coinbase spreads pick different pairs) — so this replicates the *strategy*, not the *pairs*.
+- **…but ~50–60% weaker out-of-venue:** ~**1.0 vs ~2.5** on the same symbols on Binance — so the Binance
+  ~2.5 was **substantially optimistic**; the honest venue-robust estimate is **~1.0–1.2**.
+- **What does *not* close the gap — and what its components are:** the −98% raw Coinbase 10-pair drawdown is
+  *one* idiosyncratic thin-alt pump (ACH, +308% — identical on both venues, so not a data artifact) that the
+  OU selector over-concentrated on the noisier Coinbase data. Two honest framings of removing it: (i) the
+  **real-time circuit breaker** (the deployable rule, §deployability) catches that pump and **caps the DD
+  (−98%→−48%, −61%→−35%) but barely moves the Sharpe (0.88→0.97, 1.19→1.14)** — because the −50% stop-loss is
+  still *realized*; (ii) deleting ACH entirely lifts the Sharpe to **1.40 / 1.62**, but that requires
+  *hindsight* (you can't know which pump to drop ex-ante) so it is **not** a deployable figure, only a
+  diagnosis. **Net: the deployable venue-robust Sharpe is ~1.0–1.2, not ~1.5.** (Data quality is *not* the
+  gap — Coinbase coverage ≤2% missing, often cleaner than Binance; cost-sensitivity mild, ~−0.1 Sharpe/+30bps.)
 
 This is the **first orthogonal evidence**: the mean-reversion effect is genuinely real and venue-robust
-*in direction*, but its *magnitude* is venue-sensitive and the Binance headline overstated it by ~40%.
+*in direction*, but its *magnitude* is venue-sensitive and the Binance headline overstated it by ~50–60%.
 
 ### Deployability — a structural-break circuit breaker caps the tail at ~no Sharpe cost *(constructive)*
 
@@ -399,10 +406,11 @@ adverse leg move). This constructively resolves the survivorship-tail caveat.
 
 Mean reversion is real, selectable (Result 2), and **market-neutral and diversified** (iterations 10–11),
 and it **replicates on an independent exchange** (Coinbase) — so it is a *genuine* effect, not Binance
-overfitting. But its honest, **venue-robust magnitude is ~1.5 monthly Sharpe** (Coinbase), not the ~2.5
-Binance figure (which the cross-exchange test shows was ~40% optimistic) — a **real but modest** effect,
-not a clean alpha. Its one real deployment risk — the per-pair delisting tail — is **controllable** with a
-structural-break circuit breaker (above) at ~no Sharpe cost. Three honest
+overfitting. But its honest, **venue-robust magnitude is ~1.0–1.2 monthly Sharpe** (Coinbase, raw or with
+the real-time circuit breaker), not the ~2.5 Binance figure (which the cross-exchange test shows was
+~50–60% optimistic) — a **real but modest** effect, not a clean alpha. Its one real deployment risk — the
+per-pair delisting tail — is **controllable** with a structural-break circuit breaker (above), which caps
+the drawdown (e.g. Coinbase −98%→−48%) at ~no Sharpe cost. Three honest
 hedges, with their *non-independence* now stated:
 - **Selection-sensitive** (deflated Sharpe survives the no-stop-family trial set but fails the whole-search
   set — depends on the framing).

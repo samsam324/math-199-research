@@ -1,0 +1,29 @@
+=== REVERIFY: nostop_combined ===
+SELECTED 40p nostop z on the COMBINED universe: monthly SR=+0.660 (ann +2.29)  skew=+0.99 kurt=3.90 T=57
+    N=10: sr_0(ann)=+2.15  DSR=0.637 -> marginal
+    N=25: sr_0(ann)=+2.73  DSR=0.119 -> FAILS
+    N=10: sr_0(ann)=+0.26  DSR=1.000 -> survives
+    N=25: sr_0(ann)=+0.33  DSR=1.000 -> survives
+=== REVERIFY: nostop_pit ===
+  hourly Sharpe = +2.92
+  MONTHLY Sharpe (frequency-honest) = +2.54
+  max drawdown = -20.8%
+  avg point-in-time universe size/window = 45 | windows incl. a delisted coin = 18/19
+=== REVERIFY: cross_exchange ===
+CROSS-EXCHANGE VALIDATION: 41 symbols on BOTH Binance & Coinbase
+no-stop 10p           Binance        2.12      2.59    -39.5
+no-stop 10p           Coinbase       0.82      0.88    -97.9
+stop|z|=4 10p         Binance       -0.65     -0.67   -156.0
+stop|z|=4 10p         Coinbase      -0.38     -0.33   -121.5
+no-stop 20p           Binance        2.07      2.50    -38.2
+no-stop 20p           Coinbase       0.98      1.19    -61.1
+stop|z|=4 20p         Binance       -1.68     -1.62   -249.4
+stop|z|=4 20p         Coinbase      -0.71     -0.68   -103.5
+Reading: if Coinbase no-stop monthly Sharpe ~ Binance's (and positive), the reversion
+=== REVERIFY: nostop_breakstop ===
+no-stop (baseline)                  2.29    -40.4                -282
++ either-leg adverse 50%            2.28    -38.6                -239
++ either-leg 50% + HALT             2.28    -29.5                -131
++ either-leg 30% + HALT             1.95    -28.2                -131
++ posloss 25% + HALT                2.11    -21.8                -131
+=== REVERIFY DONE ===

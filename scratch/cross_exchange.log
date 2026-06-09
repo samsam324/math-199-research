@@ -1,0 +1,36 @@
+================================================================================
+CROSS-EXCHANGE VALIDATION: 41 symbols on BOTH Binance & Coinbase
+  ['AAVEUSDT', 'ACHUSDT', 'ADAUSDT', 'ALGOUSDT', 'APEUSDT', 'ATOMUSDT', 'AVAXUSDT', 'BCHUSDT', 'BNBUSDT', 'BTCUSDT', 'DOGEUSDT', 'DOTUSDT', 'EGLDUSDT', 'ETHUSDT', 'FETUSDT', 'FILUSDT', 'FLOKIUSDT', 'GALAUSDT', 'GRTUSDT', 'HBARUSDT', 'IMXUSDT', 'LDOUSDT', 'LINKUSDT', 'LTCUSDT', 'MANAUSDT', 'NEARUSDT', 'NMRUSDT', 'OPUSDT', 'ROSEUSDT', 'SANDUSDT', 'SHIBUSDT', 'SOLUSDT', 'STORJUSDT', 'SUSHIUSDT', 'UNIUSDT', 'VETUSDT', 'VTHOUSDT', 'XLMUSDT', 'XRPUSDT', 'YFIUSDT', 'ZRXUSDT']
+================================================================================
+  Binance panel: (47131, 41)  span 2021-01-01..2026-05-18
+  Coinbase panel: (47449, 41)  span 2021-01-01..2026-06-01
+
+[A] RAW no-stop & spread-stop, identical pipeline:
+config                venue       hourlyS  monthlyS   maxDD%
+------------------------------------------------------------
+no-stop 10p           Binance        2.12      2.59    -39.5
+no-stop 10p           Coinbase       0.82      0.88    -97.9
+stop|z|=4 10p         Binance       -0.65     -0.67   -156.0
+stop|z|=4 10p         Coinbase      -0.38     -0.33   -121.5
+no-stop 20p           Binance        2.07      2.50    -38.2
+no-stop 20p           Coinbase       0.98      1.19    -61.1
+stop|z|=4 20p         Binance       -1.68     -1.62   -249.4
+stop|z|=4 20p         Coinbase      -0.71     -0.68   -103.5
+
+[B] no-stop + REAL-TIME circuit breaker (either-leg 50% adverse + HALT) — deployable risk rule:
+venue     pairs    rawMonthlyS +CB monthlyS  +CB maxDD%
+--------------------------------------------------------
+Binance   10p             2.59         2.70       -36.4
+Binance   20p             2.50         2.48       -33.6
+Coinbase  10p             0.88         0.97       -48.4
+Coinbase  20p             1.19         1.14       -35.0
+
+[C] ex-ACH (HINDSIGHT exclusion of one +308% pump — NOT deployable, for diagnosis only):
+  Binance   10p no-stop ex-ACH: monthly=+2.53  maxDD=-39.5%
+  Binance   20p no-stop ex-ACH: monthly=+2.46  maxDD=-38.2%
+  Coinbase  10p no-stop ex-ACH: monthly=+1.40  maxDD=-35.9%
+  Coinbase  20p no-stop ex-ACH: monthly=+1.62  maxDD=-34.4%
+
+Reading: [A] raw replicates POSITIVE on Coinbase (~0.9-1.2) but ~50-60% weaker than Binance ~2.5.
+[B] the circuit breaker caps the Coinbase DD (-98%->-48%) but barely moves the Sharpe (~1.0).
+[C] ex-ACH 1.4-1.6 requires HINDSIGHT (un-tradeable) -> the honest venue-robust figure is ~1.0-1.2.

@@ -33,13 +33,15 @@ alpha** — just slow, deep-drawdown, and only profitable if you *don't* use a s
    (−2.25 Sharpe) to a winner; the effect is market-neutral (β ≈ −0.06) and diversified (loads <2% on the
    top-10 statistical factors). On a **single honest combined test** — no-stop 40-pair on the top-50 **plus
    the delisted coins** (LUNA/UST/FTT, point-in-time), at monthly frequency — it is **ann ≈ 2.3 Sharpe** on
-   Binance, but **replicates on an independent exchange (Coinbase) at only ~1.5** — confirming the effect is
-   *real* (not Binance overfitting) yet **~40% weaker out-of-venue**, so **~1.5 is the honest venue-robust
-   figure**. Caveats to report honestly: (a) **selection-sensitive** — a deflated-Sharpe correction survives if the trial set
+   Binance, but **replicates on an independent exchange (Coinbase) at only ~1.0–1.2** (raw 0.88/1.19) —
+   confirming the effect is *real* (not Binance overfitting) yet **~50–60% weaker out-of-venue**, so **~1.0–1.2
+   is the honest venue-robust figure** (a 1.4–1.6 "ex-ACH" number circulates but needs *hindsight* — the
+   real-time circuit breaker caps that pump's DD, not its Sharpe). Caveats: (a) **selection-sensitive** — a deflated-Sharpe correction survives if the trial set
    is the no-stop *family* but fails if the whole stop-vs-no-stop search counts; (b) **survivorship robustness
    rests on the selector *avoiding* dead coins, not withstanding them** (in the point-in-time test, LUNA is
    unselected in its crash window; dead coins contribute ~0 PnL) — the real risk is the per-pair tail (a held
-   LUNA pair = −100%/leg), needing a structural-break stop; (c) its "independent" supports (t=3.65, ρ=0.46,
+   LUNA pair = −100%/leg) — but **controllable** with a structural-break circuit breaker (caps the DD at ~no
+   Sharpe cost, §deployability); (c) its "independent" supports (t=3.65, ρ=0.46,
    market-neutrality…) are **correlated** (same universe/selection/windows), not orthogonal. So: real but
    modest, not a clean alpha. **The catch:** a stop-loss of *any*
    width destroys it (it realizes losses on spreads
@@ -80,7 +82,8 @@ mechanical floor and validated against placebos.
   that the reversion effect is real, market-neutral, stop-sensitive, and — crucially — **replicates on an
   independent exchange (Coinbase)**, so it is *not* Binance overfitting (engine audited clean, no look-ahead/PnL bug).
 - **Caveated:** the reversion *effect* is genuine but **modest** — the honest **venue-robust figure is
-  ~1.5 monthly Sharpe** (Coinbase), with the Binance ~2.3–2.5 ~40% optimistic. Around it: (i) **selection-
+  ~1.0–1.2 monthly Sharpe** (Coinbase, raw or with the circuit breaker), with the Binance ~2.3–2.5 ~50–60%
+  optimistic. Around it: (i) **selection-
   sensitive** — a deflated-Sharpe correction *survives* the no-stop-family trial set but *fails* the whole
   stop-vs-no-stop search; (ii) **survivorship robustness rests on the selector *avoiding* dead coins, not
   withstanding them** (a held LUNA pair = −100%/leg) — but this is **controllable**: a structural-break
@@ -93,7 +96,7 @@ mechanical floor and validated against placebos.
 1. **Retract the 99.7% cointegration claim** and independently reproduce the Kalman placebo before any
    external use of the phase-1 results.
 2. The reversion effect is real (it **replicates cross-exchange on Coinbase**, now done) but **modest
-   (~1.5 venue-robust Sharpe) and selection-sensitive** — before pursuing it, it needs a **pre-registered,
+   (~1.0–1.2 venue-robust Sharpe) and selection-sensitive** — before pursuing it, it needs a **pre-registered,
    deflated-Sharpe-aware** test of a single fixed config (wide 40+ pair, no-stop, market-neutral) with an
    explicit delisting/structural-break control. The delisted-coin survivorship check is also done (Task 2).
 3. Treat the microstructure chapter as closed for alpha; its only real-world value is the ~20% cheaper

@@ -6,6 +6,24 @@ the next iteration.
 
 ---
 
+## Verification pass ("make absolutely sure") — corrected the cross-exchange headline DOWN to ~1.0–1.2
+
+Final reproduce-everything check + a fresh adversarial subagent (9th audit). Re-ran all four constructive scripts
+from scratch: combined 2.29, PIT 2.54, cross-exchange raw, breakstop 2.28/−131% — **all reproduce exactly** (log
+`scratch/verify_rerun.log`). Git clean + synced. **But the audit caught a real overstatement (the optimistic pattern,
+again):** the cross-exchange "~1.5 venue-robust" was the **ACH-excluded** number, which (a) wasn't reproducible from
+committed code and (b) requires *hindsight* (you can't know which pump to delete ex-ante). I tested the principled,
+non-hindsight version — does the **real-time circuit breaker** recover the Coinbase Sharpe? It does **not**: it caps the
+DD (−98%→−48%, −61%→−35%) but the Sharpe only goes 0.88→0.97 / 1.19→1.14 (the −50% stop is still realized). So the
+honest venue-robust figure is **~1.0–1.2, not ~1.5** (raw 0.88/1.19; ex-ACH 1.4–1.6 is hindsight-only, kept as a
+diagnosis). Cross-exchange overstatement was **~40%→~50–60% weaker**. Fixed: added the circuit-breaker + ex-ACH passes
+to `cross_exchange.py` (now reproducible, log `cross_exchange.log`), reframed L2_FINDINGS + ADVISOR + this log to
+~1.0–1.2, and tightened two stale "needs a structural-break stop" caveats to "controllable (and controlled)". The
+circuit-breaker, combined, and PIT claims all verified PASS; internal consistency PASS. (The entry below still quotes the
+pre-correction ~1.5 — superseded by this entry.)
+
+---
+
 ## Deployability — a structural-break circuit breaker caps the per-pair tail at ~no Sharpe cost (a POSITIVE)
 
 Last constructive item: can the one real deployment risk (the per-pair delisting/crash tail) be controlled without the harm
