@@ -324,9 +324,16 @@ top-50 book was never actually survivorship-tested; the dead coins live in the b
 fully-delisted coins** (LUNA/UST/FTT/LUNC, point-in-time entry/delisting exit), at **monthly** frequency,
 then the deflated Sharpe from the **same** run.
 
-- **Result: ann Sharpe +2.29** (40-pair; +2.39 at 10-pair) — i.e. the survivorship dent (~10%, 2.54→2.29)
-  **is** borne by the deployable book; the honest deployable-with-survivorship figure is **~2.3**, in the
-  lower half of the ~1.7–2.5 range, now *tested* rather than transferred.
+- **Result: ann Sharpe +2.29** (40-pair; +2.39 at 10-pair) on the fixed top-50+delisted pool. And the
+  *most faithful* version — a **literal time-varying point-in-time top-50-by-liquidity universe** rebuilt
+  each window from the full 204+4 pool, so LUNA/FTT are in only while genuinely top-liquid (delisted coins
+  were in the universe **18/19 windows**; `scratch/nostop_pit.py`) — gives monthly **+2.54** (maxDD −21%),
+  essentially the **top-50 baseline**. So the deployable book is **survivorship-robust at the aggregate**:
+  the honest figure is **~2.3–2.5**, *tested* on a survivorship-free universe, not transferred. (The 204-
+  universe's 3.76→3.56 "dent" was on the *non-deployable* illiquid-meme universe; the fixed-pool 2.29 was a
+  slightly-worse-universe artifact. The real residual survivorship risk is **per-pair tail** — a single LUNA
+  pair held through the collapse is a −100% leg loss — which needs a structural-break stop, *not* the
+  aggregate Sharpe.)
 - **Deflated Sharpe is selection-*sensitive*, not a clean verdict** — it flips on how you count the search:
   with sr_var from **all ~10 searched configs** (incl. the catastrophic tight-stops), DSR = 0.64 (N=10) /
   0.12 (N=25) → *fails*; with sr_var from the **no-stop family only** (the genuinely-equivalent variants,
@@ -535,7 +542,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 |---|---|
 | 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
-| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `nostop_dsr.py`, `nostop_combined.py`, `wf_sanity.py`, `wf_diag.py` |
+| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `nostop_dsr.py`, `nostop_combined.py`, `nostop_pit.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 4c. Hidden/iceberg liquidity | `scratch/hidden_liquidity.py` |
