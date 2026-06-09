@@ -40,15 +40,22 @@ flat when trading stops. Compared 204 vs 208. Scripts: `scratch/t2_survivorship_
 | universe | monthly Sharpe | max drawdown | delisted pairs ever selected |
 |---|---:|---:|---:|
 | 204-symbol on-disk (baseline) | **+3.76** | −23.2% | 0 |
-| 204 + {LUNA, UST, FTT, LUNC} | **+3.56** | **−28.0%** | 45 |
+| 204 + {LUNA, UST, FTT, LUNC} | **+3.56** | **−28.0%** | 45 selected (**~13 traded**) |
+
+(Of the 45 selections, **31 are LUNA pairs in the 2022-Q3 test window where LUNA's data had
+already ended** — they sit flat at +0.0% and are inert; only ~13 delisted-leg pairs actually
+traded. The inert pairs don't move Sharpe/DD.)
 
 This is the **first survivorship check to dent the result** (the iter-8 structural-break
 stress and the iter-15 broad-universe test both left it intact or stronger). The damage:
 
 - **The losses are concentrated in 2021**, holding hyper-volatile LUNA/FTT pairs that never
-  reverted within their window: e.g. KNC_LUNA **−145%**, BAT_LUNA **−142%**, XLM_LUNA −136%,
-  ONE_FTT −60%, XLM_FTT −56% (leverage-equivalent per-pair P&L). 40-pair diversification
-  absorbs them, but they deepen the drawdown −23% → −28% and shave ~0.2 off monthly Sharpe.
+  reverted within their window: e.g. KNC_LUNA, BAT_LUNA, XLM_LUNA, ONE_FTT, XLM_FTT.
+  **Units matter:** the backtest sums per-bar *log* spread returns, which overstates a
+  leg→0 move (e.g. the "−145%" log figures); the **realizable loss on a $1 long leg is
+  bounded at −100%**, so a fully-collapsed pair costs ≈ **−2.5% of the 40-pair book**, not the
+  larger log number. 40-pair diversification absorbs these; net they deepen the drawdown
+  −23% → −28% and shave ~0.2 off monthly Sharpe.
 - **The strategy mostly AVOIDED the actual May-2022 collapse window.** No LUNA or UST pair
   was selected for the 2022-Q2 test window: UST had only **54% train coverage** (listed
   2021-12-24) → excluded by the point-in-time gate; LUNA had full coverage but **did not
@@ -56,12 +63,16 @@ stress and the iter-15 broad-universe test both left it intact or stronger). The
   as intended: it avoids non-mean-reverting names).
 - **But that avoidance is load-bearing and partly fortuitous.** Forcing the no-stop rule to
   hold delisted-leg pairs *through* the May-2022 collapse (`t2_worstcase.py`): worst pair
-  **LUNA_BAT −1435%** (log-spread units; the realizable dollar loss on a $1 long leg is
-  bounded near −100%, still a total loss of that pair), mean **−67%** across 31 forced pairs
-  vs a typical pair's ~+30–40%. So had LUNA cleared the top-40 reversion cutoff in that one
-  window, a single pair would have cost ~−2.5% of the 40-pair book, and 2–3 such pairs would
-  have wrecked the quarter. This is the catastrophic tail the iter-8 stress test simulated —
-  now confirmed concretely with the real Terra collapse.
+  LUNA_BAT **−1435% in log-spread units — but that is a log-sum artifact** (summing per-bar
+  log returns overstates a leg→$0 by ~14×); the **realizable dollar loss is bounded at −100%
+  of the long leg** = a total loss of that pair = **≈ −2.5% of the 40-pair book per pair**.
+  Mean across the 31 forced pairs −67% (log) vs a typical pair ~+30–40%. So had LUNA cleared
+  the top-40 reversion cutoff in that one window, each such pair would cost ~−2.5% of the book
+  (bounded), and a cluster of them would badly damage the quarter — though even then 40-pair
+  diversification keeps it survivable. This is the catastrophic-tail mechanism the iter-8
+  stress test simulated, now confirmed concretely with the real Terra collapse. (FTT's own
+  Nov-2022 −94% crater is in the data but was never *selected* in that window — so the FTX
+  event did not actually stress the book here; only LUNA's did, via the forced worst-case.)
 
 ## 4. How it changes the deployable Sharpe range
 

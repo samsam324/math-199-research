@@ -1,0 +1,46 @@
+C:\Users\jackw\Desktop\math-199-research\scratch\h1_test.py:136: ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.
+  rr, pp = stats.spearmanr(g["X_inst_over_leg_W60"], g["target_spread_change"])
+========================================================================================
+H1 LOCKED ONE-SHOT TEST  (audit-corrected HAC: per-pair combine, lags 60/120/240, bootstrap)
+held-out boundary: 2024-10-19 19:12:00+00:00 | pairs=10 | pooled |z|>=2 obs=1026923
+per-pair obs:
+pair
+AAVEUSDT_NMRUSDT       68315
+ADAUSDT_POLYXUSDT     146380
+ALGOUSDT_EGLDUSDT     116334
+DOTUSDT_EGLDUSDT      133060
+EGLDUSDT_SANDUSDT     119900
+FILUSDT_NMRUSDT        54595
+GRTUSDT_ZILUSDT        69615
+VETUSDT_HBARUSDT      233337
+VTHOUSDT_IMXUSDT       44753
+VTHOUSDT_POLYXUSDT     40634
+
+X diagnostics (tie/sparsity): frac X==0 = 0.993 | unique X / n = 220/1026923 = 0.000
+========================================================================================
+
+[per-pair Spearman breakdown — the raw within-pair signal]
+  AAVEUSDT_NMRUSDT       n= 68315  rho=+0.0053 (iid two-sided p=0.164)
+  ADAUSDT_POLYXUSDT      n=146380  rho=+0.0112 (iid two-sided p=1.71e-05)
+  ALGOUSDT_EGLDUSDT      n=116334  rho=+0.0065 (iid two-sided p=0.0272)
+  DOTUSDT_EGLDUSDT       n=133060  rho=+0.0041 (iid two-sided p=0.138)
+  EGLDUSDT_SANDUSDT      n=119900  rho=+0.0017 (iid two-sided p=0.567)
+  FILUSDT_NMRUSDT        n= 54595  rho=+0.0141 (iid two-sided p=0.000966)
+  GRTUSDT_ZILUSDT        n= 69615  rho=-0.0084 (iid two-sided p=0.0268)
+  VETUSDT_HBARUSDT       n=233337  rho=+0.0184 (iid two-sided p=7.54e-19)
+  VTHOUSDT_IMXUSDT       n= 44753  rho=-0.0164 (iid two-sided p=0.00054)
+  VTHOUSDT_POLYXUSDT     n= 40634  rho=+nan (iid two-sided p=nan)
+
+----- PRIMARY: over-leg via spread_z  (X = X_inst_over_leg_W60) -----
+  WITHIN-pair ranks (primary)        rho=+0.00705 | HAC one-sided p @lag: L60=0.947(t+1.61) L120=0.941(t+1.57) L240=0.937(t+1.53) | block-boot p=0.939
+  pooled ranks (pre-reg literal)     rho=+0.00919 | HAC one-sided p @lag: L60=0.967(t+1.84) L120=0.961(t+1.76) L240=0.956(t+1.70) | block-boot p=0.957
+
+----- ROBUSTNESS: over-leg via raw spread (collaborator's code, proper alpha)  (X = X_rawspread_W60) -----
+  WITHIN-pair ranks (primary)        rho=+0.00333 | HAC one-sided p @lag: L60=0.791(t+0.81) L120=0.788(t+0.80) L240=0.784(t+0.78) | block-boot p=0.784
+  pooled ranks (pre-reg literal)     rho=+0.00205 | HAC one-sided p @lag: L60=0.66(t+0.41) L120=0.655(t+0.40) L240=0.652(t+0.39) | block-boot p=0.652
+
+========================================================================================
+VERDICT (honest = within-pair, conservative lag 240 + bootstrap; pre-reg = pooled lag 60):
+  HONEST  : rho=+0.00705  within-pair HAC lag240 p=0.9366  block-boot p=0.9395  -> FAIL
+  PRE-REG : pooled HAC lag60 one-sided p=0.9673  -> FAIL (lag 60 understates SE; treat as optimistic lower bound on p)
+========================================================================================
