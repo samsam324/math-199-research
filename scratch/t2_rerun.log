@@ -1,0 +1,60 @@
+====================================================================================
+TASK 2: no-stop reversion alpha WITH vs WITHOUT fully-delisted coins in the pool
+====================================================================================
+
+##### 204-symbol on-disk universe (baseline)  (cols=199) #####
+  no-stop 40p:  hourly Sharpe=+5.29  monthly Sharpe=+3.76  maxDD=-23.2%  netPnL=+1323%
+  DELISTED-coin pairs selected: NONE (the OU selection never picked a delisted-coin pair)
+
+##### 204 + {LUNA, UST, FTT, LUNC} (survivorship-worst added)  (cols=203) #####
+  no-stop 40p:  hourly Sharpe=+5.17  monthly Sharpe=+3.56  maxDD=-28.0%  netPnL=+1294%
+  DELISTED-coin pairs selected: 45
+    window 2021-07-01..2021-09-30: BATUSDT_FTTUSDT        pair net PnL = -12.2%
+    window 2021-07-01..2021-09-30: BATUSDT_LUNAUSDT       pair net PnL = -141.6%
+    window 2021-07-01..2021-09-30: VTHOUSDT_FTTUSDT       pair net PnL = +38.7%
+    window 2021-07-01..2021-09-30: KNCUSDT_FTTUSDT        pair net PnL = -49.0%
+    window 2021-07-01..2021-09-30: ATOMUSDT_LUNAUSDT      pair net PnL = -44.0%
+    window 2021-07-01..2021-09-30: KNCUSDT_LUNAUSDT       pair net PnL = -145.5%
+    window 2021-07-01..2021-09-30: VTHOUSDT_LUNAUSDT      pair net PnL = -62.1%
+    window 2021-07-01..2021-09-30: XLMUSDT_LUNAUSDT       pair net PnL = -135.6%
+    window 2021-07-01..2021-09-30: XLMUSDT_FTTUSDT        pair net PnL = -56.2%
+    window 2021-10-01..2021-12-31: ONEUSDT_FTTUSDT        pair net PnL = -59.5%
+    window 2022-01-01..2022-03-31: ZRXUSDT_FTTUSDT        pair net PnL = -13.2%
+    window 2022-07-01..2022-09-30: AVAXUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: ONTUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: LUNAUSDT_FTTUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: NEOUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: SHIBUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: BCHUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: BANDUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: DOGEUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: LTCUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: EGLDUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: ATOMUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: ETHUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: FILUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: SOLUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: BNBUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: QTUMUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: DOTUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: BTCUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: YFIUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: ZENUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: COMPUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: VTHOUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: VETUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: BATUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: ZRXUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: AXSUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: 1INCHUSDT_LUNAUSDT     pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: ONEUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: XLMUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: ADAUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: AAVEUSDT_LUNAUSDT      pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: ETCUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2022-07-01..2022-09-30: CRVUSDT_LUNAUSDT       pair net PnL = +0.0%
+    window 2025-01-01..2025-03-31: ONGUSDT_LUNCUSDT       pair net PnL = +191.3%
+
+====================================================================================
+VERDICT: monthly Sharpe +3.76 -> +3.56 | maxDD -23.2% -> -28.0% | delisted pairs ever selected: 45
+====================================================================================
