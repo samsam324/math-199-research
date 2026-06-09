@@ -83,9 +83,10 @@ mechanical floor and validated against placebos.
   ~1.5 monthly Sharpe** (Coinbase), with the Binance ~2.3–2.5 ~40% optimistic. Around it: (i) **selection-
   sensitive** — a deflated-Sharpe correction *survives* the no-stop-family trial set but *fails* the whole
   stop-vs-no-stop search; (ii) **survivorship robustness rests on the selector *avoiding* dead coins, not
-  withstanding them** (a held LUNA pair through May-2022 = −100%/leg) — a live book needs a delisting/
-  structural-break control; (iii) the within-Binance supports (t=3.65, ρ=0.46, market-neutrality) are
-  **correlated** (same data/selection); drawdowns are leverage-equivalent.
+  withstanding them** (a held LUNA pair = −100%/leg) — but this is **controllable**: a structural-break
+  circuit breaker (halt a pair after a >50% adverse leg move) caps the tail (worst −282%→−131%, maxDD
+  −40%→−30%) at ~no Sharpe cost, whereas a *spread* stop kills the effect; (iii) the within-Binance supports
+  (t=3.65, ρ=0.46, market-neutrality) are **correlated** (same data/selection); DDs leverage-equivalent.
 
 ## Suggested next steps
 

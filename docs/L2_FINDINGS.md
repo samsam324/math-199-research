@@ -377,13 +377,32 @@ participants) — so only the venue differs.
 This is the **first orthogonal evidence**: the mean-reversion effect is genuinely real and venue-robust
 *in direction*, but its *magnitude* is venue-sensitive and the Binance headline overstated it by ~40%.
 
+### Deployability — a structural-break circuit breaker caps the tail at ~no Sharpe cost *(constructive)*
+
+The one real deployment risk is the per-pair delisting/crash tail (a held LUNA-type pair = a catastrophic
+leg loss; the bare no-stop rule has no protection). Can a risk control cap it *without* the harm a spread-z
+stop does? Tested on the top-50 + delisted universe so the tail manifests (`scratch/nostop_breakstop.py`):
+- A **spread-z stop** (|z|=4) hurts (exits normal reversion) — the project's central finding.
+- A **leg-crash / either-leg / position-loss stop *alone*** preserves the Sharpe but barely caps the
+  per-pair tail (worst pair-window −282% → −239%), because the strategy **re-enters** a sustained divergence
+  (a coin in crisis stays |z|>2 all window → stop, re-enter, stop…).
+- A **break-detector + pair-level circuit breaker** (halt the pair for the rest of the window after a
+  >50%-adverse leg move) **works:** monthly Sharpe **2.28 (≈ the 2.29 no-stop baseline)**, maxDD
+  **−40%→−29.5%**, worst pair-window **−282%→−131%**. The catastrophic tail is **capped at ~no Sharpe cost.**
+
+So the no-stop effect **is deployable** with a sensible structural-break circuit breaker — the per-pair tail
+is *controllable* (unlike the spread-z stop, which kills the effect). Deployable form: a wide (40-pair)
+no-stop reversion book **+ a halt-on-break circuit breaker** (cease a pair for the window after a >50%
+adverse leg move). This constructively resolves the survivorship-tail caveat.
+
 ### Honest bottom line on tradeability
 
 Mean reversion is real, selectable (Result 2), and **market-neutral and diversified** (iterations 10–11),
 and it **replicates on an independent exchange** (Coinbase) — so it is a *genuine* effect, not Binance
 overfitting. But its honest, **venue-robust magnitude is ~1.5 monthly Sharpe** (Coinbase), not the ~2.5
 Binance figure (which the cross-exchange test shows was ~40% optimistic) — a **real but modest** effect,
-not a clean alpha. Three honest
+not a clean alpha. Its one real deployment risk — the per-pair delisting tail — is **controllable** with a
+structural-break circuit breaker (above) at ~no Sharpe cost. Three honest
 hedges, with their *non-independence* now stated:
 - **Selection-sensitive** (deflated Sharpe survives the no-stop-family trial set but fails the whole-search
   set — depends on the framing).
@@ -583,7 +602,7 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 |---|---|
 | 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
-| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `nostop_dsr.py`, `nostop_combined.py`, `nostop_pit.py`, `coinbase_pull.py`, `cross_exchange.py`, `wf_sanity.py`, `wf_diag.py` |
+| 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `nostop_dsr.py`, `nostop_combined.py`, `nostop_pit.py`, `coinbase_pull.py`, `cross_exchange.py`, `nostop_breakstop.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
 | 4b. Execution value (measured) | `scratch/exec_value.py`, `exec_value_verify.py` |
 | 4c. Hidden/iceberg liquidity | `scratch/hidden_liquidity.py` |

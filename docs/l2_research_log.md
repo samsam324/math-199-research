@@ -6,6 +6,21 @@ the next iteration.
 
 ---
 
+## Deployability — a structural-break circuit breaker caps the per-pair tail at ~no Sharpe cost (a POSITIVE)
+
+Last constructive item: can the one real deployment risk (the per-pair delisting/crash tail) be controlled without the harm
+a spread-z stop does? Tested on top-50 + delisted (`scratch/nostop_breakstop.py`). Findings:
+- A spread-z stop hurts (central finding). A **leg-crash / either-leg / position-loss stop alone** preserves the Sharpe but
+  barely caps the tail (worst pair-window −282%→−239%) — because the strategy **re-enters** a sustained crisis (|z|>2 all
+  window). The fix is a **pair-level circuit breaker** (halt the pair for the window after a break).
+- **Break-detector + HALT works:** either-leg-50%-adverse + halt → monthly Sharpe **2.28 (≈ the 2.29 baseline)**, maxDD
+  −40%→**−29.5%**, worst pair-window −282%→**−131%**. The catastrophic tail is **capped at ~no Sharpe cost** (a spread stop,
+  by contrast, kills the effect). So the no-stop effect **is deployable** with a sensible circuit breaker — this
+  *constructively resolves* the survivorship-tail caveat (the tail is controllable, not intrinsic). Documented in
+  `L2_FINDINGS.md` (new deployability subsection + bottom line) and `ADVISOR_SUMMARY.md`. A genuinely positive capstone.
+
+---
+
 ## Cross-exchange validation — the effect is REAL (not Binance overfitting), but ~40% weaker out-of-venue
 
 The red-team's sharpest open criticism (the no-stop "independent" supports all share the Binance universe/selection) is
