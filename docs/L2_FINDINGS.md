@@ -37,15 +37,17 @@ The five results:
 3. **…and its profitability hinges entirely on the stop/exit rule — the real finding.**
    With a conventional |z|=4 stop the strategy loses (net Sharpe −2.25), and the loss is
    *caused by the stop* (it realizes losses on spreads that later revert), not by costs.
-   Remove the stop and hold to convergence and it earns +2.51 net Sharpe — a
-   **genuine market-neutral, diversified** effect (β≈−0.06; factor R²=1.7%; window-level
-   t=3.65) — but a **real-but-modest** one, not a clean alpha. On a *single* combined test
-   (no-stop 40-pair on the top-50 **+ delisted coins**, point-in-time, monthly — the honest
-   "all-hits-at-once" run) it is **ann ≈ 2.3 Sharpe** on Binance — but it **replicates on an
-   independent exchange (Coinbase) at only ~1.0–1.2** (raw 0.88/1.19; the real-time circuit breaker
-   caps the drawdown but not the Sharpe; the 1.4–1.6 "ex-ACH" figure needs *hindsight*), confirming the
-   effect is *real* (not Binance overfitting) yet **~50–60% weaker out-of-venue** — so ~1.0–1.2 is the
-   honest venue-robust figure and the Binance ~2.5 was substantially optimistic.
+   Remove the stop and hold to convergence and it is a **genuine market-neutral, diversified** effect
+   (β≈−0.06; factor R²=1.7%) — but a **real-but-modest** one whose magnitude was repeatedly *over-stated*
+   and is now pinned down by a from-zero independent verification (4 clean-room re-implementations + an
+   adversarial skeptic; §3 *Independent verification*). The honest number is **~1.0 monthly Sharpe**, not
+   the ~2.5 first reported: (a) four independent implementations put naive Binance at **~2.0–2.2** (not 2.5);
+   (b) even the *monthly* Sharpe is **serial-correlation-inflated** on Binance (AC(1)=+0.48 — the ~35-day
+   holds span months), so a Newey–West **HAC correction drops Binance 2.18→~1.4**; (c) on the **independent
+   exchange (Coinbase)** it is **~0.85–0.90** (HAC-stable — the genuine venue-robust floor). So the
+   HAC-and-venue-honest deployable figure is **~0.85 (Coinbase) to ~1.4 (Binance), centered ~1.0**, and it is
+   recency/pump-concentrated. The effect is *real* (independently reproduced, no look-ahead, stop-loses
+   robustly, both methodological artifacts confirmed) but **modest (~1), not a ~2.5 alpha.**
    Survivorship: the *aggregate* is stable, but
    only because the selector **avoids** the about-to-collapse coins; the in-position delisting
    tail (a held LUNA pair = −100%/leg) is the real risk — but it is **controllable** with a
@@ -54,8 +56,8 @@ The five results:
    deflated Sharpe survives the no-stop-family trial set but fails the whole stop-vs-no-stop
    search), and its "independent" supports are actually correlated (same universe/selection/
    windows). Diversifying 10→40 pairs cuts the drawdown
-   −41%→−29% at a **frequency-honest deployable Sharpe ~2–2.5** (the hourly +3.2 is autocorrelation-
-   inflated by the month-long holds; iteration 13). But it is only capturable as a slow,
+   −41%→−29% (the hourly +3.2 and even the monthly ~2.5 are autocorrelation-inflated by the month-long
+   holds — the HAC-honest figure is ~1.4 on Binance, ~0.9 venue-robust). But it is only capturable as a slow,
    multi-month, never-stop, ~30%-drawdown book (median ~35-day holds; 78% never converge in
    a quarter; ~⅓ generic survivor co-movement) — **not** the hourly, stop-managed stat-arb
    the project specified, which loses (the stop, at any width, is what destroys it).
@@ -402,22 +404,42 @@ is *controllable* (unlike the spread-z stop, which kills the effect). Deployable
 no-stop reversion book **+ a halt-on-break circuit breaker** (cease a pair for the window after a >50%
 adverse leg move). This constructively resolves the survivorship-tail caveat.
 
+### Independent from-zero verification — qualitative claims validated, magnitude pinned to ~1 *(audit)*
+
+To "make absolutely sure," the whole result was re-derived **clean-room** — four independent implementations
+(one mine, three by separate subagents) that import *none* of the pipeline and re-write OLS hedge / AR(1)
+selection / walk-forward / trading / costs from the raw parquets (`scratch/independent_verify.py`), plus an
+adversarial skeptic and a methodology verifier.
+- **Validated (the effect is real, not a code artifact):** all four put **Binance no-stop ~2.0–2.2** (1.95 /
+  2.15 / 2.16 / 2.18) and **Coinbase no-stop ~0.6–0.9** (0.61 / 0.61 / 0.63 / 0.90), with **|z|≥4 stop losing
+  on both venues** in every run; **no look-ahead** found by anyone; and both **methodological artifacts
+  independently reproduced** (Kalman screen passes independent random walks at **100%** vs 5% clean; rolling-z
+  mechanically reverts and makes +0.19/path on pure RWs). The qualitative skeleton is solid.
+- **But the magnitude was over-stated** on two counts the verification exposed: (i) the independent naive
+  Binance is ~2.0–2.2, *not* 2.5; (ii) the skeptic caught that even the **monthly** Sharpe is
+  serial-correlation-inflated — Binance monthly **AC(1)=+0.48** (the ~35-day holds span months), so a
+  **Newey–West HAC correction drops Binance 2.18→~1.4** (verified). Coinbase AC(1)≈0 → **~0.85–0.90**,
+  HAC-stable. So the **HAC-and-venue-honest figure is ~0.85 (Coinbase) to ~1.4 (Binance), centered ~1.0**,
+  and the edge is **recency/pump-concentrated** (2025 ≫ 2021). HAC also flips the deflated Sharpe toward
+  *fail*. **Net: the headline is retracted from ~2.5 to ~1.0.**
+
 ### Honest bottom line on tradeability
 
-Mean reversion is real, selectable (Result 2), and **market-neutral and diversified** (iterations 10–11),
-and it **replicates on an independent exchange** (Coinbase) — so it is a *genuine* effect, not Binance
-overfitting. But its honest, **venue-robust magnitude is ~1.0–1.2 monthly Sharpe** (Coinbase, raw or with
-the real-time circuit breaker), not the ~2.5 Binance figure (which the cross-exchange test shows was
-~50–60% optimistic) — a **real but modest** effect, not a clean alpha. Its one real deployment risk — the
-per-pair delisting tail — is **controllable** with a structural-break circuit breaker (above), which caps
-the drawdown (e.g. Coinbase −98%→−48%) at ~no Sharpe cost. Three honest
-hedges, with their *non-independence* now stated:
+Mean reversion is real, selectable (Result 2), **market-neutral and diversified** (iterations 10–11), and it
+**replicates on an independent exchange** (Coinbase) with both methodological artifacts independently
+reproduced — so it is a *genuine* effect, not Binance overfitting or a code artifact. But its honest,
+**HAC-corrected, venue-robust magnitude is ~1.0 monthly Sharpe** (~0.85 Coinbase to ~1.4 Binance) — *not* the
+~2.5 first reported, which was serial-correlation- and venue-inflated. A **real but modest** effect, and
+recency/pump-concentrated. Its one real deployment risk — the per-pair delisting tail — is **controllable**
+with a structural-break circuit breaker (above), which caps the drawdown (e.g. Coinbase −98%→−48%) at ~no
+Sharpe cost. Four honest hedges, with their *non-independence* now stated:
+- **Magnitude is ~1, not ~2.5** (HAC + independent-venue corrected; above).
 - **Selection-sensitive** (deflated Sharpe survives the no-stop-family trial set but fails the whole-search
-  set — depends on the framing).
+  set — and the HAC-corrected Sharpe flips it toward fail).
 - **Survivorship robustness rests on *avoidance*, not resilience** — the aggregate Sharpe is stable across
   universe constructions, but the literal point-in-time test barely exercises the dead-coin tail (the OU
   selector avoids LUNA in its crash window; dead coins ~0 PnL post-death). The real risk is the *per-pair*
-  delisting tail (a held LUNA pair = −100%/leg), which the no-stop rule must control with a structural-break stop.
+  delisting tail (a held LUNA pair = −100%/leg), controllable with the structural-break circuit breaker (above).
 - **Correlated supports, not orthogonal confirmations** (red-team B2): the window-level t=3.65, the ρ=0.46
   persistence (Result 2), market-neutrality, factor-R² and break-robustness all run on the *same* top-50
   universe, OU selection and overlapping walk-forward windows — they are positively correlated views of one
@@ -429,7 +451,7 @@ hedges, with their *non-independence* now stated:
   hold-the-spread book, ~⅓ of it a generic survivor-co-movement floor; the **hourly, stop-managed stat-arb**
   the project specified **loses** (−2.25), because the stop that bounds hourly risk destroys the thin, slow
   reversion. The defensible claim is the *sensitivity itself* — report the stop/exit, selection, and
-  survivorship dependence, and the single combined-test Sharpe (~2.3), not a chained or cherry-picked one.
+  survivorship dependence, and the HAC-and-venue-honest Sharpe (**~1.0**), not a chained or cherry-picked one.
 
 ---
 

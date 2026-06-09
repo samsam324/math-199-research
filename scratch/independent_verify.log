@@ -1,0 +1,13 @@
+CLEAN-ROOM independent verify: 41 symbols on both venues
+venue     config          monthlyS   maxDD%  n_mo
+--------------------------------------------------
+Binance   no-stop 20p         2.18    -39.8    58
+Binance   stop|z|=4 20p      -2.09  -1006.0    58
+Coinbase  no-stop 20p         0.90    -67.2    58
+Coinbase  stop|z|=4 20p      -3.38  -1565.1    58
+
+INDEPENDENT VERDICT (clean-room, no wf_* imports):
+  Binance no-stop  ~2.18  (claim: ~2-2.5)
+  Coinbase no-stop ~0.90  (claim: ~1.0-1.2)
+  Coinbase/Binance ratio = 0.41  (claim: ~0.4-0.5 i.e. 50-60% weaker)
+  stop|z|=4 Binance -2.09, Coinbase -3.38  (claim: both lose)

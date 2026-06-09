@@ -6,6 +6,32 @@ the next iteration.
 
 ---
 
+## From-zero independent verification (4 clean-room impls + skeptic + methodology) — headline drops to ~1 (HAC)
+
+"Make absolutely sure, from zero, and have subagents do the same." I re-implemented the whole backtest clean-room (no
+`wf_*` imports, own OLS/AR(1)/walk-forward/trading/cost — `scratch/independent_verify.py`) and ran a 5-agent workflow:
+3 more independent clean-room re-implementations + an adversarial skeptic + a methodology verifier. **The qualitative
+story is independently VALIDATED; the magnitudes are not.**
+- **4 independent implementations (mine + 3 subagents):** Binance no-stop **1.95 / 2.15 / 2.16 / 2.18** (consensus
+  **~2.0–2.2, NOT 2.5**); Coinbase no-stop **0.61 / 0.61 / 0.63 / 0.90** (**~0.6–0.9, NOT 1.0–1.2**); ratio 0.28–0.41
+  (Coinbase ~⅓–½ of Binance); **stop |z|≥4 loses on both venues in all 4** (robust). **No look-ahead** found by anyone.
+- **Skeptic found a NEW real flaw I'd missed:** even the *monthly* Sharpe is serial-correlation-inflated. Monthly PnL has
+  **AC(1)=+0.48** on Binance (holds ~35 days span month boundaries), and the headline scripts use naive iid
+  `mean/std*√12`. **Newey-West HAC drops Binance no-stop 2.18→~1.49 (lag3)/1.30 (lag6)** — verified myself in
+  `independent_verify.py`. Coinbase AC(1)≈0 → ~0.85–0.90 HAC-stable. This also flips the DSR toward **fail**. Plus the
+  edge is **recency/pump-concentrated** (2025 monthly Sharpe ~5.8, ACH-pump-driven; skew +2.4).
+- **Methodology verifier independently CONFIRMED both contributions** (clean-room, `scratch/subagent_independent_check.py`):
+  Kalman screen passes *independent random walks* at **100%** p<0.05 vs clean Engle-Granger **5.0%** / static **3.3%**
+  (whitening artifact confirmed); rolling-z mechanically reverts +0.59/+1.0/+1.3z and makes **+0.19/path PnL (t=4.25)** on
+  pure random walks (artifact confirmed). These two methodological results are SOLID.
+- **→ Honest headline retracted to ~1:** the no-stop effect is **real but modest** — HAC-and-venue-honest **~0.85
+  (Coinbase) to ~1.4 (Binance), centered ~1.0**, recency/pump-dependent, selection/survivorship/tail-fragile, deployable
+  only with the circuit breaker. The ~2.5 (and even ~2.0–2.2 naive) was serial-correlation- and venue-inflated. Updated
+  L2_FINDINGS + ADVISOR. The qualitative skeleton (reversion real, stop destroys it, two methodological artifacts) is the
+  durable result; the magnitude is ~1, not ~2.5.
+
+---
+
 ## Verification pass ("make absolutely sure") — corrected the cross-exchange headline DOWN to ~1.0–1.2
 
 Final reproduce-everything check + a fresh adversarial subagent (9th audit). Re-ran all four constructive scripts
