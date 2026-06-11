@@ -68,8 +68,39 @@ near $5$ on micro-cap moves no one could trade. Even the survivor illustrates th
 
 The methodological lesson is narrow and reusable: a cointegration or mean-reversion screen should
 not be believed until it has been shown to fail on a matched placebo. This pushes the
-backtest-overfitting literature~\cite{bailey2014, harvey2016} one step earlier, from the strategy
+backtest-overfitting literature~\cite{bailey2014dsr, harvey2016crosssection} one step earlier, from the strategy
 that gets selected to the screen that builds the spread it is selected on.
+
+% =====================================================================
+\section{Related work}
+\label{sec:related}
+
+Our screens come from the pairs-trading and statistical-arbitrage literature. The distance and
+cointegration approaches of Gatev et al.~\cite{gatev2006pairs} and
+Vidyamurthy~\cite{vidyamurthy2004pairs}, the residual mean-reversion framework of Avellaneda and
+Lee~\cite{avellaneda2010statistical}, and the taxonomy in Krauss~\cite{krauss2017review} define
+what we test. Our dynamic hedge is the state-space pairs model of Elliott et
+al.~\cite{elliott2005pairs}, built on the cointegration of Engle and
+Granger~\cite{engle1987cointegration}. The contribution here is not a new screen but a placebo that
+two standard ones fail.
+
+For cryptocurrency the efficiency question is unsettled. Urquhart~\cite{urquhart2016inefficiency}
+finds early Bitcoin weak-form inefficient, while adaptive-markets
+evidence~\cite{noda2021evolution, khuntia2018adaptive, lo2004amh} finds efficiency time-varying and
+trending up. The closest prior on crypto pairs trading, Fil and
+Kristoufek~\cite{fil2020pairs}, reports strategies that underperform benchmarks and are highly
+cost-sensitive. Our results agree and sharpen the mechanism: the apparent edge is either a
+screening artifact or priced within seconds.
+
+The microstructure tests use standard tools: Kyle's $\lambda$~\cite{kyle1985}, order-flow
+imbalance~\cite{cont2014ofi}, VPIN~\cite{easleyVPIN2012}, PIN~\cite{ekop1996pin}, and information
+shares~\cite{hasbrouck1995}. The placebo logic is the backtest-overfitting literature applied one
+level earlier. Bailey and coauthors show a handful of trials manufacture spurious in-sample
+performance~\cite{bailey2014dsr, bailey2014pseudomath}; Harvey et
+al.~\cite{harvey2016crosssection} and Hou et al.~\cite{hou2020replicating} show most published
+factors fail multiple-testing correction; and Gelman and Loken~\cite{gelman2013garden} show
+data-contingent choices inflate error even without explicit fishing. We apply that skepticism to
+the screens that build the spread, not only to the strategy selected on it.
 
 % =====================================================================
 \section{Data and market setting}
@@ -98,7 +129,7 @@ six-month train and three-month test, with hedge ratios and pair selection fit o
 window only. And every positive claim is checked against a matched placebo, a random-walk,
 phase-randomized, block-shuffled, or random-pair null built to reproduce the claim if it is
 mechanical. Selection across many configurations is corrected with a deflated Sharpe
-ratio~\cite{bailey2014}.
+ratio~\cite{bailey2014dsr}.
 
 For the one trading result that survives (Section~\ref{sec:survivor}) we pre-registered a single
 configuration: the parameters and the held-out evaluation window were written to a file and
@@ -142,7 +173,7 @@ A placebo settles it. We ran the identical screen on series that cannot be coint
 (a) independent simulated random walks, (b) each coin paired with a phase-randomized surrogate
 of another coin, and (c) real pairs with one leg block-shuffled. All three pass at the same
 near-$100\%$ rate as the real pairs (Table~\ref{tab:kalman-placebo}). A clean, non-circular
-test tells the opposite story. Engle--Granger~\cite{engle1987} on the test window, and a
+test tells the opposite story. Engle--Granger~\cite{engle1987cointegration} on the test window, and a
 static-OLS ADF, put genuine out-of-sample cointegration at $2$--$3\%$ of pairs on the matched
 window, at or below the $5\%$ null floor. The screen carries no cointegration information. That
 is not a claim that no pair ever co-moves; it is that the screen cannot tell. Its $100\%$ is
@@ -442,28 +473,99 @@ and impact-aware cost model, and a single pre-registered configuration evaluated
 search never saw. Until then, the honest reading of crypto pair trading is the efficiency reading.
 
 % =====================================================================
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 
-\bibitem{engle1987}
-Engle, R.~F., and Granger, C.~W.~J. (1987).
-Co-integration and error correction: representation, estimation, and testing.
-\textit{Econometrica}, 55(2), 251--276.
+\bibitem{avellaneda2010statistical}
+Avellaneda, M., \& Lee, J.-H. (2010). Statistical arbitrage in the US equities market.
+\textit{Quantitative Finance}, 10(7), 761--782.
 
-\bibitem{gatev2006}
-Gatev, E., Goetzmann, W.~N., and Rouwenhorst, K.~G. (2006).
-Pairs trading: performance of a relative-value arbitrage rule.
-\textit{Review of Financial Studies}, 19(3), 797--827.
+\bibitem{bailey2014dsr}
+Bailey, D.~H., \& L\'opez de Prado, M. (2014). The deflated Sharpe ratio: correcting for selection
+bias, backtest overfitting, and non-normality. \textit{Journal of Portfolio Management}, 40(5),
+94--107.
 
-\bibitem{bailey2014}
-Bailey, D.~H., and L\'opez de Prado, M. (2014).
-The deflated Sharpe ratio: correcting for selection bias, backtest overfitting, and
-non-normality.
-\textit{Journal of Portfolio Management}, 40(5), 94--107.
+\bibitem{bailey2014pseudomath}
+Bailey, D.~H., Borwein, J.~M., L\'opez de Prado, M., \& Zhu, Q.~J. (2014). Pseudo-mathematics and
+financial charlatanism: the effects of backtest overfitting on out-of-sample performance.
+\textit{Notices of the American Mathematical Society}, 61(5), 458--471.
 
-\bibitem{harvey2016}
-Harvey, C.~R., Liu, Y., and Zhu, H. (2016).
-$\ldots$ and the cross-section of expected returns.
+\bibitem{cont2014ofi}
+Cont, R., Kukanov, A., \& Stoikov, S. (2014). The price impact of order book events.
+\textit{Journal of Financial Econometrics}, 12(1), 47--88.
+
+\bibitem{ekop1996pin}
+Easley, D., Kiefer, N.~M., O'Hara, M., \& Paperman, J.~B. (1996). Liquidity, information, and
+infrequently traded stocks. \textit{Journal of Finance}, 51(4), 1405--1436.
+
+\bibitem{easleyVPIN2012}
+Easley, D., L\'opez de Prado, M., \& O'Hara, M. (2012). Flow toxicity and liquidity in a
+high-frequency world. \textit{Review of Financial Studies}, 25(5), 1457--1493.
+
+\bibitem{elliott2005pairs}
+Elliott, R.~J., van der Hoek, J., \& Malcolm, W.~P. (2005). Pairs trading. \textit{Quantitative
+Finance}, 5(3), 271--276.
+
+\bibitem{engle1987cointegration}
+Engle, R.~F., \& Granger, C.~W.~J. (1987). Co-integration and error correction: representation,
+estimation, and testing. \textit{Econometrica}, 55(2), 251--276.
+
+\bibitem{fil2020pairs}
+Fil, M., \& Kristoufek, L. (2020). Pairs trading in cryptocurrency markets. \textit{IEEE Access},
+8, 172644--172651.
+
+\bibitem{gatev2006pairs}
+Gatev, E., Goetzmann, W.~N., \& Rouwenhorst, K.~G. (2006). Pairs trading: performance of a
+relative-value arbitrage rule. \textit{Review of Financial Studies}, 19(3), 797--827.
+
+\bibitem{gelman2013garden}
+Gelman, A., \& Loken, E. (2013). \textit{The garden of forking paths: why multiple comparisons can
+be a problem, even when there is no ``fishing expedition'' or ``p-hacking'' and the research
+hypothesis was posited ahead of time}. Working paper, Department of Statistics, Columbia
+University.
+
+\bibitem{harvey2016crosssection}
+Harvey, C.~R., Liu, Y., \& Zhu, H. (2016). $\ldots$ and the cross-section of expected returns.
 \textit{Review of Financial Studies}, 29(1), 5--68.
+
+\bibitem{hasbrouck1995}
+Hasbrouck, J. (1995). One security, many markets: determining the contributions to price
+discovery. \textit{Journal of Finance}, 50(4), 1175--1199.
+
+\bibitem{hou2020replicating}
+Hou, K., Xue, C., \& Zhang, L. (2020). Replicating anomalies. \textit{Review of Financial Studies},
+33(5), 2019--2133.
+
+\bibitem{khuntia2018adaptive}
+Khuntia, S., \& Pattanayak, J.~K. (2018). Adaptive market hypothesis and evolving predictability of
+Bitcoin. \textit{Economics Letters}, 167, 26--28.
+
+\bibitem{krauss2017review}
+Krauss, C. (2017). Statistical arbitrage pairs trading strategies: review and outlook.
+\textit{Journal of Economic Surveys}, 31(2), 513--545.
+
+\bibitem{krauss2017deep}
+Krauss, C., Do, X.~A., \& Huck, N. (2017). Deep neural networks, gradient-boosted trees, random
+forests: statistical arbitrage on the S\&P~500. \textit{European Journal of Operational Research},
+259(2), 689--702.
+
+\bibitem{kyle1985}
+Kyle, A.~S. (1985). Continuous auctions and insider trading. \textit{Econometrica}, 53(6),
+1315--1335.
+
+\bibitem{lo2004amh}
+Lo, A.~W. (2004). The adaptive markets hypothesis: market efficiency from an evolutionary
+perspective. \textit{Journal of Portfolio Management}, 30(5), 15--29.
+
+\bibitem{noda2021evolution}
+Noda, A. (2021). On the evolution of cryptocurrency market efficiency. \textit{Applied Economics
+Letters}, 28(6), 433--439.
+
+\bibitem{urquhart2016inefficiency}
+Urquhart, A. (2016). The inefficiency of Bitcoin. \textit{Economics Letters}, 148, 80--82.
+
+\bibitem{vidyamurthy2004pairs}
+Vidyamurthy, G. (2004). \textit{Pairs trading: quantitative methods and analysis}. John Wiley \&
+Sons.
 
 \end{thebibliography}
 
