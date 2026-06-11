@@ -31,7 +31,7 @@ survives is either priced too fast to trade or too marginal to deploy: order-flo
 in the Level-2 book decays within seconds, reversion speed is a selectable property of pairs
 (Spearman $\rho = 0.46$) but selectability is not profit, and the one market-neutral
 mean-reversion book that clears honest accounting posts a HAC- and venue-adjusted monthly
-Sharpe near $1.0$, and only as a patient, never-stop, deep-drawdown hold. We read the result
+Sharpe near $1.0$, and only as a never-stop, multi-week hold. We read the result
 as a market-efficiency statement about crypto pair spreads, and as a cautionary standard: a
 cointegration or $z$-score screen should not be trusted until it has been shown to fail on a
 matched placebo.
@@ -49,8 +49,7 @@ within seconds or too marginal to trade after costs and selection.
 The project began in the pairs-trading tradition of Gatev, Goetzmann, and
 Rouwenhorst~\cite{gatev2006pairs}: find two assets whose prices hold a stable relationship, trade the
 spread when it deviates, and collect the reversion. Cryptocurrency is a natural place to look,
-with a continuously traded market and a fast-changing set of listed coins. Our proposal hedged on
-profit from the start. It framed the goal as quantifying whether stable mean-reverting
+with a continuously traded market and a fast-changing set of listed coins. Our proposal was non-committal about profit from the start. It framed the goal as quantifying whether stable mean-reverting
 relationships exist in crypto, ``as a way of gaining a deeper understanding of market efficiency
 and information flow.'' This paper answers that question, and the answer is mostly negative.
 
@@ -68,9 +67,9 @@ as a patient multi-week hold, and a pre-registered held-out backtest of it infla
 near $5$ on micro-cap moves no one could trade. Even the survivor illustrates the thesis.
 
 The methodological lesson is narrow and reusable: a cointegration or mean-reversion screen should
-not be believed until it has been shown to fail on a matched placebo. This pushes the
-backtest-overfitting literature~\cite{bailey2014dsr, harvey2016crosssection} one step earlier, from the strategy
-that gets selected to the screen that builds the spread it is selected on.
+not be believed until it has been shown to fail on a matched placebo. The
+backtest-overfitting literature~\cite{bailey2014dsr, harvey2016crosssection} checks the strategy
+that gets selected; we check the screen that builds the spread.
 
 % =====================================================================
 \section{Related work}
@@ -79,8 +78,8 @@ that gets selected to the screen that builds the spread it is selected on.
 Our screens come from the pairs-trading and statistical-arbitrage literature. The distance and
 cointegration approaches of Gatev et al.~\cite{gatev2006pairs} and
 Vidyamurthy~\cite{vidyamurthy2004pairs}, the residual mean-reversion framework of Avellaneda and
-Lee~\cite{avellaneda2010statistical}, and the taxonomy in Krauss~\cite{krauss2017review} define
-what we test. Our dynamic hedge is the state-space pairs model of Elliott et
+Lee~\cite{avellaneda2010statistical}, and the taxonomy in Krauss~\cite{krauss2017review} (with
+machine-learning variants in~\cite{krauss2017deep}) define what we test. Our dynamic hedge is the state-space pairs model of Elliott et
 al.~\cite{elliott2005pairs}, built on the cointegration of Engle and
 Granger~\cite{engle1987cointegration}. The contribution here is not a new screen but a placebo that
 two standard ones fail.
@@ -196,7 +195,7 @@ Real top-50 pairs & $100.0\%$ & $96.4\%$ \\
 (b) Coin vs.\ phase-randomized surrogate & $100.0\%$ & $95.0\%$ \\
 (c) Real pair, one leg block-shuffled & $100.0\%$ & $95.0\%$ \\
 \midrule
-Clean Engle--Granger (test window) & $2$--$3\%$ & --- \\
+Clean tests (EG and static OLS, test window) & $2$--$3\%$ & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -322,7 +321,7 @@ $-0.002$. Reversion speed is a real, graded, persistent property that ranks pair
 
 One caveat belongs on that coefficient. The $\rho = 0.46$ is the strongest of four in-sample
 reversion metrics we tried, chosen after the fact, and it is not corrected for that choice. The
-qualitative result is robust; the exact number is a best case.
+direction holds across all nine splits; the exact coefficient is a best case.
 
 Selectability is not profit. Ranking pairs by reversion speed tells you where reversion lives.
 Whether it can be extracted after costs is a separate question, and the strategy built on the
@@ -391,8 +390,9 @@ bounds because they are the result.
 
 \subsection{The effect is real and market-neutral}
 
-Selecting pairs by reversion speed and holding the spread to convergence produces a positive,
-market-neutral return. It is diversified: beta to an equal-weight crypto index is about $-0.06$,
+Selecting pairs by reversion speed and holding the spread to convergence, with a static
+train-window hedge and $z$-score (not the rolling $z$ of Section~\ref{sec:rollingz}), produces a
+positive, market-neutral return. It is diversified: beta to an equal-weight crypto index is about $-0.06$,
 and the top ten principal-component portfolios explain only $1.7\%$ of its return, so it is not a
 hidden factor bet. It replicates on an independent exchange (Coinbase, USD-quoted) and under four
 from-scratch reimplementations that share none of our pipeline, none of which found look-ahead,
@@ -450,7 +450,8 @@ from above.
 \section{Limitations}
 \label{sec:limits}
 
-Several limitations bound these results.
+Five limitations bound these results, and the survivorship gap is the one most likely to change
+the conclusion.
 
 \begin{itemize}
 \item \textbf{Survivorship.} The local store holds currently listed symbols, so most delisted
@@ -476,12 +477,11 @@ Section~\ref{sec:survivor}.
 \section{Conclusion}
 \label{sec:conclusion}
 
-Crypto pair spreads contain real structure, and most of it is either an artifact of the screen
-used to find it or priced too fast to trade. A Kalman cointegration screen and a rolling $z$-score
-both pass placebos they should fail, at every frequency we tested. Order flow is informative only
-at a seconds-scale horizon. The one market-neutral reversion effect that survives is real but
-marginal, stop-sensitive, and selection-sensitive, and a literal backtest of it inflates on costs
-it does not model.
+The screens were the problem, not the market. The Kalman cointegration test and the rolling
+$z$-score both pass placebos they should fail, at every frequency we tested. Order flow forecasts
+only the next few seconds, a horizon no one can trade. The one market-neutral reversion effect
+that survives is real but marginal, stop-sensitive, and selection-sensitive, and a literal
+backtest of it inflates on costs it does not model.
 
 The practical lesson is a standard, not a strategy. A cointegration or mean-reversion screen
 should be trusted only after it has been shown to fail on a matched placebo built to reproduce the
