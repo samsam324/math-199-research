@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{graphicx}
 \usepackage{hyperref}
 
 \title{White by Construction: Two Crypto Stat-Arbitrage Screens\\
@@ -202,8 +203,8 @@ Clean Engle--Granger (test window) & $2$--$3\%$ & --- \\
 
 The artifact does not depend on the bar. We reran the screen at hourly, four-hour, and daily
 frequencies on a recent multi-year window (Table~\ref{tab:kalman-freq}). Real pairs and
-random-walk placebos pass together at every cadence: $100\%$ versus $100\%$ at hourly and
-four-hour, and $70\%$ versus $68\%$ at daily ($p<0.001$). The clean tests behave differently.
+random-walk placebos pass together at every cadence (Figure~\ref{fig:freq}): $100\%$ versus
+$100\%$ at hourly and four-hour, and $70\%$ versus $68\%$ at daily ($p<0.001$). The clean tests behave differently.
 Engle--Granger runs at $25\%$ on this long hourly window and falls to the $5\%$ null floor at
 daily; a static-OLS ADF runs higher still, from $42\%$ at hourly to $8\%$ at daily. Both are
 window-dependent. Over long hourly spans the crypto majors share a common trend, which a clean
@@ -232,6 +233,16 @@ Daily  & $100.0\%$ & $70.0\%$  & $100.0\%$ & $68.3\%$  & $5.0\%$  & $8.3\%$ \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\linewidth]{fig_freq_invariance}
+\caption{The Kalman screen carries no cointegration information at any frequency. Real pairs and
+random-walk placebos pass at the same near-$100\%$ rate at hourly, four-hour, and daily bars,
+while a clean Engle--Granger test stays far lower. Exact values in
+Tables~\ref{tab:kalman-placebo} and~\ref{tab:kalman-freq}.}
+\label{fig:freq}
+\end{figure}
+
 \subsection{The rolling $z$-score}
 \label{sec:rollingz}
 
@@ -251,7 +262,7 @@ a rolling $z$-score on one still reverts.
 We measured the mechanical floor two ways, and both are large. Per $|z|>2$ event, the signed
 reversion on pure random walks is positive at every frequency we tested: $+0.98z$ at hourly,
 $+1.61z$ at four-hour, and $+1.51z$ at daily, each many standard deviations from zero
-(Table~\ref{tab:rollingz}). As a trading rule at hourly frequency, a rolling-$z$ strategy that
+(Table~\ref{tab:rollingz}; Figure~\ref{fig:rollingz} shows the mechanism on one path). As a trading rule at hourly frequency, a rolling-$z$ strategy that
 posts a Sharpe near $4.75$ on our data still posts about $2.2$ on random pairs and $2.4$ on
 phase-randomized noise. Most of the apparent edge is the floor. For this reason every per-event
 reversion magnitude elsewhere in this paper is reported net of a per-pair, per-window
@@ -272,6 +283,15 @@ Daily  & $+1.51$ & $0.45$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.78\linewidth]{fig_rollingz_noise}
+\caption{A rolling $z$-score manufactures mean reversion on a pure random walk. Top: one
+simulated random walk and its trailing mean. Bottom: the resulting rolling $z$, which crosses
+$\pm 2$ and reverts toward zero, although the series has no mean to revert to.}
+\label{fig:rollingz}
+\end{figure}
 
 Both screens share a failure mode. They manufacture the appearance of structure that a matched
 placebo reproduces. A cointegration screen built on a
