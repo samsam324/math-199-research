@@ -1,0 +1,240 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+
+\title{White by Construction: Two Crypto Stat-Arbitrage Screens\\
+That Pass Their Own Placebos}
+\author{Jack Lutz \and Sammy Adham \and Frank Kronewitter}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We set out to build a profitable statistical-arbitrage strategy on hourly cryptocurrency
+pair spreads. We report mostly what does not work, and why that is the more useful result.
+Two screens that appear to find strong, tradable structure are statistical artifacts. A
+Kalman dynamic hedge ratio appears to produce stationary, mean-reverting spreads for nearly
+the entire liquid universe, but it runs a stationarity test on a filter's own innovations,
+which are white by construction; placebos that cannot be cointegrated pass the same screen at
+the same near-$100\%$ rate, while a clean test finds genuine out-of-sample cointegration in
+only a few percent of pairs. A rolling $z$-score appears to generate a large reversion edge,
+but it reverts mechanically even on a pure random walk. Both artifacts hold at hourly,
+four-hour, and daily frequencies. Once we benchmark against placebos, the structure that
+survives is either priced too fast to trade or too marginal to deploy: order-flow information
+in the Level-2 book decays within seconds, reversion speed is a selectable property of pairs
+(Spearman $\rho = 0.46$) but selectability is not profit, and the one market-neutral
+mean-reversion book that clears honest accounting posts a HAC- and venue-adjusted monthly
+Sharpe near $1.0$, and only as a patient, never-stop, deep-drawdown hold. We read the result
+as a market-efficiency statement about crypto pair spreads, and as a cautionary standard: a
+cointegration or $z$-score screen should not be trusted until it has been shown to fail on a
+matched placebo.
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}
+% TODO (write after Sections 3--5 lock): open on the contribution; state the original
+% profit question and the changed conclusion in paragraph one; anchor to the proposal's
+% market-efficiency framing; list contributions (two artifacts, one efficiency null, one
+% bounded effect). Use the Jensen-Kelly-Pedersen hinge sentence.
+
+% =====================================================================
+\section{Data and market setting}
+% TODO: venues (Binance.US hourly klines for the spread work; Coinbase hourly for the
+% cross-exchange check; Tardis Level-2 book + trades, Binance spot, 2024, top-50, for the
+% microstructure work), frequencies, costs/slippage stated up front, universe construction,
+% and the inference discipline (HAC everywhere, strict walk-forward, a placebo for every
+% positive claim).
+
+% =====================================================================
+\section{Two screening artifacts}
+\label{sec:artifacts}
+
+Two screens drove our early results, and both are artifacts. The first, a Kalman dynamic
+hedge ratio, appeared to find out-of-sample cointegration in almost every liquid pair. The
+second, a rolling $z$-score, appeared to find strong mean reversion. We show that each passes
+a placebo it should fail, and that neither carries the information it seems to. This is the
+paper's main methodological contribution. Both screens are in common use, and a careful
+analyst is easily fooled by either one.
+
+\subsection{The Kalman dynamic-hedge cointegration screen}
+\label{sec:kalman}
+
+A static hedge ratio fits one $\beta$ for the whole sample. A Kalman dynamic hedge lets
+$\beta$ drift as a random walk and updates it each step from the data. We fit the process and
+observation noise by maximum likelihood on the training window, froze them, and rolled the
+filter forward on the test window. The test-period innovations, the filter's one-step
+prediction errors, became the spread, and we ran an augmented Dickey--Fuller (ADF) test on
+them. Under this screen $100\%$ of the top-50 pairs rejected the unit root out of sample at
+$p<0.05$, and $96.4\%$ at $p<0.001$. A static-OLS spread over the same window passed only
+about $5\%$ of pairs. The contrast looked decisive.
+
+It is decisive about the filter, not the pair. A Kalman filter with non-zero process noise
+adapts its hedge ratio to track whatever relationship is present, so its innovations are white
+by construction. An ADF test on a white series rejects the unit root almost always, whether or
+not the two assets are cointegrated. Testing the stationarity of a filter's own innovations is
+circular. An earlier draft of this project defended the result on the grounds that the
+parameters were fit on training data only and never refit on test. That defense misses the
+mechanism. The whitening holds out of sample too, because the filter keeps adapting on the
+test window from its frozen dynamics.
+
+A placebo settles it. We ran the identical screen on series that cannot be cointegrated:
+(a) independent simulated random walks, (b) each coin paired with a phase-randomized surrogate
+of another coin, and (c) real pairs with one leg block-shuffled. All three pass at the same
+near-$100\%$ rate as the real pairs (Table~\ref{tab:kalman-placebo}). A clean, non-circular
+test tells the opposite story. Engle--Granger~\citep{engle1987} on the test window, and a
+static-OLS ADF, put genuine out-of-sample cointegration at the null floor, roughly $2$--$5\%$
+of pairs on the matched window. Essentially none of the universe is cointegrated out of
+sample. The screen's $100\%$ is noise dressed as signal, and the placebo result is, to our
+knowledge, the cleanest way to see it~\citep{bailey2014}.
+
+\begin{table}[h]
+\centering
+\caption{The Kalman screen passes placebos that cannot be cointegrated at the same rate as
+real pairs. Out-of-sample ADF on the Kalman innovations, top-50 USDT universe, $t_0 =$
+2024-01-01, 90-day train / 30-day test.}
+\label{tab:kalman-placebo}
+\begin{tabular}{lrr}
+\toprule
+Series tested & ADF $p<0.05$ & ADF $p<0.001$ \\
+\midrule
+Real top-50 pairs & $100.0\%$ & $96.4\%$ \\
+(a) Independent random walks & $100.0\%$ & $98.3\%$ \\
+(b) Coin vs.\ phase-randomized surrogate & $100.0\%$ & $95.0\%$ \\
+(c) Real pair, one leg block-shuffled & $100.0\%$ & $95.0\%$ \\
+\midrule
+Clean Engle--Granger (test window) & $2$--$3\%$ & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The artifact does not depend on the bar. We reran the screen at four-hour and daily
+frequencies (Table~\ref{tab:kalman-freq}). Real pairs and random-walk placebos pass together
+at every cadence: $100\%$ versus $100\%$ at hourly and four-hour, and $70\%$ versus $68\%$ at
+daily ($p<0.001$). The clean Engle--Granger rate behaves differently. It is a small,
+window-dependent fraction that rises over long hourly windows, where crypto majors share a
+common trend, and falls to the $5\%$ null floor at daily. It never approaches the screen's
+$100\%$. The Kalman screen is uninformative about cointegration at every frequency we tested.
+
+\begin{table}[h]
+\centering
+\caption{Frequency robustness of the Kalman artifact. Real pairs and random-walk placebos pass
+the screen together at every cadence; the clean Engle--Granger benchmark does not. Top-50
+universe, 60 pairs per cell, recent multi-year window.}
+\label{tab:kalman-freq}
+\begin{tabular}{lrrrrr}
+\toprule
+& \multicolumn{2}{c}{Real pairs} & \multicolumn{2}{c}{RW placebo} & Clean EG \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-6}
+Frequency & $p<0.05$ & $p<0.001$ & $p<0.05$ & $p<0.001$ & $p<0.05$ \\
+\midrule
+Hourly & $100.0\%$ & $100.0\%$ & $100.0\%$ & $100.0\%$ & $25.0\%$ \\
+4-hour & $100.0\%$ & $100.0\%$ & $100.0\%$ & $100.0\%$ & $11.7\%$ \\
+Daily  & $100.0\%$ & $70.0\%$  & $100.0\%$ & $68.3\%$  & $5.0\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The rolling $z$-score}
+\label{sec:rollingz}
+
+The second screen is a rolling $z$-score, the standard entry signal for pair trades. For a
+spread $s_t$ it subtracts a trailing mean and divides by a trailing standard deviation,
+\[
+z_t = \frac{s_t - \bar{s}_{t-1}}{\sigma_{t-1}},
+\]
+and it trades when $|z_t|$ is large, betting the spread returns to its mean. On our spreads it
+produced a large reversion edge.
+
+The edge is mechanical. Subtracting a trailing mean from any series, including a pure random
+walk, manufactures mean reversion, because the trailing mean chases the level and the deviation
+from it cannot wander as freely as the raw series. A random walk has no mean to revert to, yet
+a rolling $z$-score on one still reverts.
+
+We measured the mechanical floor directly. On pure random walks, the same rolling-$z$ rule
+produces strong positive reversion at every frequency we tested: $+0.98z$ per event at hourly,
+$+1.61z$ at four-hour, and $+1.51z$ at daily, each far outside its sampling noise
+(Table~\ref{tab:rollingz}). As a trading rule the floor is large. A rolling-$z$ strategy that
+posts a Sharpe near $4.75$ on our data still posts about $2.2$ on random pairs and $2.4$ on
+phase-randomized noise. Most of the apparent edge is the floor. For this reason every reversion
+number elsewhere in this paper is reported net of a per-pair, per-window random-walk floor.
+
+\begin{table}[h]
+\centering
+\caption{The rolling $z$-score manufactures mean reversion on pure random walks, at every
+frequency. Mean signed reversion per $|z|>2$ event, 200 random-walk surrogates per cell.}
+\label{tab:rollingz}
+\begin{tabular}{lrr}
+\toprule
+Frequency & Mean event reversion ($z$) & s.d. \\
+\midrule
+Hourly & $+0.98$ & $0.26$ \\
+4-hour & $+1.61$ & $0.39$ \\
+Daily  & $+1.51$ & $0.45$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Both screens share a failure mode. They manufacture the appearance of structure that a matched
+placebo reproduces. The lesson is narrow and practical. A cointegration screen built on a
+filter's own innovations must be checked against a white-noise placebo before it is believed,
+and a rolling-$z$ reversion claim must be checked against a random-walk null. Neither check is
+standard practice, and without them both screens report a signal that is not there.
+
+% =====================================================================
+\section{What is real but not tradable}
+% TODO: reversion selectability (Spearman rho=0.46, positive in all 9 splits, clean placebos;
+% selectability is not profit) and the microstructure efficiency null (order-flow information
+% with a seconds-scale half-life; the execution null). One exhibit: order-flow half-life decay.
+
+% =====================================================================
+\section{The marginal survivor}
+% TODO: the never-stop mean-reversion book at a HAC- and venue-honest monthly Sharpe ~1.0,
+% market-neutral, selection-sensitive, patient-only. Lead with the bound, not the point
+% estimate. Period-partitioned table, not a single headline Sharpe. Guardrail: do not
+% over-claim.
+
+% =====================================================================
+\section{Limitations}
+% TODO: dedicated threats-to-validity. Point-in-time dead-coin universe still open;
+% selection-bias mitigated not closed (no single pre-registered config evaluated once);
+% single venue / quote; microstructure is 2024-only and <=4 symbols for event-level work.
+
+% =====================================================================
+\section{Conclusion}
+% TODO: modest, market-efficiency framed. End on a standard the field should meet (any
+% cointegration or z-score screen must pass a matched placebo before it is believed). Extend,
+% do not restate.
+
+% =====================================================================
+\begin{thebibliography}{9}
+
+\bibitem{engle1987}
+Engle, R.~F., and Granger, C.~W.~J. (1987).
+Co-integration and error correction: representation, estimation, and testing.
+\textit{Econometrica}, 55(2), 251--276.
+
+\bibitem{gatev2006}
+Gatev, E., Goetzmann, W.~N., and Rouwenhorst, K.~G. (2006).
+Pairs trading: performance of a relative-value arbitrage rule.
+\textit{Review of Financial Studies}, 19(3), 797--827.
+
+\bibitem{bailey2014}
+Bailey, D.~H., and L\'opez de Prado, M. (2014).
+The deflated Sharpe ratio: correcting for selection bias, backtest overfitting, and
+non-normality.
+\textit{Journal of Portfolio Management}, 40(5), 94--107.
+
+\bibitem{harvey2016}
+Harvey, C.~R., Liu, Y., and Zhu, H. (2016).
+$\ldots$ and the cross-section of expected returns.
+\textit{Review of Financial Studies}, 29(1), 5--68.
+
+\end{thebibliography}
+
+\end{document}
