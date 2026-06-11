@@ -5,6 +5,11 @@ configuration below is fixed. We will run it once on the held-out window, report
 metric comes out to, and not retune after seeing the result. This is the credibility capstone
 for Section 5.
 
+> **Correction before running (2026-06-10).** The initial lock specified a rolling 240h
+> z-score. That conflates with the rolling-z artifact of Section 3 and is not the configuration
+> that produces the effect; the validated never-stop book uses a static train-window z. Corrected
+> below before any evaluation run. No result had been observed at the time of this edit.
+
 ## Why
 
 The honest ~1.0 monthly Sharpe of the never-stop book is the product of a long search across
@@ -21,8 +26,10 @@ Section 6 — but it pins the headline to one pre-specified number.
 - **Selection:** rank candidate pairs by in-sample OU half-life (faster reversion = better) on
   the selection window only; take the top 40. Static OLS hedge ratio, fit on the selection
   window and frozen.
-- **Spread / signal:** static-OLS log-price spread; rolling z-score, lookback 240h (10 days);
-  every reversion magnitude reported net of a per-pair matched random-walk floor.
+- **Spread / signal:** static-OLS log-price spread with a **static train-window z-score** --
+  the spread mean and standard deviation are estimated on the selection window and frozen,
+  $z = (s - \mu_{\text{train}})/\sigma_{\text{train}}$. No rolling re-centering, which would
+  invoke the mechanical artifact of Section 3.
 - **Entry:** open when flat and $|z| \ge 2$.
 - **Exit:** close on convergence ($|z| \le 0.5$) or sign flip. **No stop-loss.**
 - **Risk control:** structural-break circuit breaker — halt a pair permanently after any single
