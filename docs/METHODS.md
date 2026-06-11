@@ -1,6 +1,11 @@
 # Methods
 
-Every methodological choice and why. Pair with `docs/RESULTS.md`.
+> **Pre-pivot methodology notes.** The data, universe, and backtest mechanics here are still
+> accurate, but the framing predates the pivot to the negative-results thesis. See `paper/main.tex`
+> (Section 2) for the current methods and `docs/claims_ledger.md` for sourced numbers.
+
+Every methodological choice and why. Pair with the paper (`paper/main.tex`); `docs/RESULTS.md` is
+the quarantined pre-pivot record.
 
 ## Data
 

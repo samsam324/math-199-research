@@ -1,5 +1,9 @@
 # Notes
 
+> **Pre-pivot scratchpad.** Written during the profit-hunt phase, when the Kalman cointegration
+> result was treated as the central finding. The project later showed that result is a screening
+> artifact, and the paper (`paper/main.tex`) supersedes these notes. Kept for provenance.
+
 Running scratchpad of questions, concerns, open threads, and things that
 should land in the discussion section but haven't yet.
 
