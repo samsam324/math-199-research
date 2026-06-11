@@ -200,6 +200,37 @@ Clean tests (EG and static OLS, test window) & $2$--$3\%$ & --- \\
 \end{tabular}
 \end{table}
 
+We also ran a positive control: sixty constructed pairs that are genuinely cointegrated,
+$y_t = x_t + e_t$ with $x_t$ a random walk and $e_t$ a tight stationary AR(1). The Kalman screen
+passes them at $100\%$, the same rate it passes the random-walk negatives, so it does not separate
+true cointegration from none (Table~\ref{tab:poscontrol}). The mechanism is measurable: the
+test-window innovations are white, with a Ljung--Box test failing to reject whiteness for $87\%$ of
+the cointegrated pairs and $95\%$ of the random-walk pairs, while the static-OLS residual stays
+autocorrelated for both. The fitted hedge barely moves (median process variance
+$q_\beta \approx 2\times 10^{-9}$), so the whitening is the filter fitting noise, not tracking a
+real relationship. The clean tests do separate the two, passing the positive control more often
+than the negative ($17\%$ versus $2\%$ for Engle--Granger, $27\%$ versus $8\%$ for static-OLS),
+though genuine out-of-sample cointegration is hard to detect on a short window.
+
+\begin{table}[ht]
+\centering
+\caption{Positive versus negative control. The Kalman screen passes both at the same rate and its
+innovations are white in both, so it carries no cointegration information; the clean tests separate
+them. 60 constructed pairs per group, 1500-bar train, 500-bar test.}
+\label{tab:poscontrol}
+\begin{tabular}{lrr}
+\toprule
+& Positive (cointegrated) & Negative (random walks) \\
+\midrule
+Kalman innovation ADF passes ($p<0.05$) & $100.0\%$ & $98.3\%$ \\
+Kalman innovations white (Ljung--Box $p>0.05$) & $86.7\%$ & $95.0\%$ \\
+Static-OLS residual white & $0.0\%$ & $0.0\%$ \\
+Clean Engle--Granger passes & $16.7\%$ & $1.7\%$ \\
+Clean static-OLS ADF passes & $26.7\%$ & $8.3\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 The artifact does not depend on the bar. We reran the screen at hourly, four-hour, and daily
 frequencies on a recent multi-year window (Table~\ref{tab:kalman-freq}). Real pairs and
 random-walk placebos pass together at every cadence (Figure~\ref{fig:freq}): $100\%$ versus

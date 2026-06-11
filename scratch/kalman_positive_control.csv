@@ -1,0 +1,3 @@
+group,n,kalman_adf_pass,kalman_innov_white,q_beta_median,clean_eg_pass,static_adf_pass,static_resid_white
+POSITIVE control (truly cointegrated),60,100.0,86.66666666666667,2.061153622438558e-09,16.666666666666664,26.666666666666668,0.0
+NEGATIVE control (independent random walks),60,98.33333333333333,95.0,9.087934880310725e-09,1.6666666666666667,8.333333333333332,0.0

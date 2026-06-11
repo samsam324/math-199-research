@@ -1,0 +1,15 @@
+positive control + whiteness diagnostic  (train 1500, test 500, 60 pairs/group, LB lags 24)
+
+[POSITIVE control (truly cointegrated)]  n=60
+  Kalman ADF pass (p<.05): 100.0%   innovations white (LB p>.05): 86.7%   median q_beta: 2.06e-09
+  clean EG pass: 16.7%   static-OLS ADF pass: 26.7%   static resid white: 0.0%
+
+[NEGATIVE control (independent random walks)]  n=60
+  Kalman ADF pass (p<.05): 98.3%   innovations white (LB p>.05): 95.0%   median q_beta: 9.09e-09
+  clean EG pass: 1.7%   static-OLS ADF pass: 8.3%   static resid white: 0.0%
+
+saved -> scratch/kalman_positive_control.csv
+
+Reading: the Kalman ADF passes BOTH groups at ~the same high rate (no discrimination; its innovations
+are white in both), while the clean EG/static tests pass the positive control and stay near the null
+floor on the negatives. So the Kalman screen carries ~zero cointegration information; the clean tests carry it.
