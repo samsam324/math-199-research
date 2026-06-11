@@ -1,5 +1,10 @@
 # Results
 
+> **PRE-PIVOT RECORD — quarantined 2026-06-10. Do not source paper numbers from this file.**
+> The headline below (Kalman "99.7% out-of-sample cointegration") was later shown to be a
+> Kalman-innovation whitening artifact. Source of truth is now `docs/L2_FINDINGS.md` and
+> `docs/CORRECTION_kalman_cointegration.md`. Kept for the record only. See `paper/BUILD_PLAN.md`.
+
 Long Kalman pipeline. 27 walk-forward splits. 424k samples. 20 top-liquidity
 USDT pairs. t0 = 2024-01-01. 180d train, 750d test. Walk-forward 90/30/30.
 
