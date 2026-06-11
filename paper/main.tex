@@ -38,10 +38,38 @@ matched placebo.
 
 % =====================================================================
 \section{Introduction}
-% TODO (write after Sections 3--5 lock): open on the contribution; state the original
-% profit question and the changed conclusion in paragraph one; anchor to the proposal's
-% market-efficiency framing; list contributions (two artifacts, one efficiency null, one
-% bounded effect). Use the Jensen-Kelly-Pedersen hinge sentence.
+\label{sec:intro}
+
+We set out to build a profitable statistical-arbitrage strategy on hourly cryptocurrency pair
+spreads. We did not. The more useful finding is why: the two screens that made the strategy look
+best are statistical artifacts, and the structure that is genuinely present is either priced
+within seconds or too marginal to trade after costs and selection.
+
+The project began in the pairs-trading tradition of Gatev, Goetzmann, and
+Rouwenhorst~\cite{gatev2006}: find two assets whose prices hold a stable relationship, trade the
+spread when it deviates, and collect the reversion. Cryptocurrency is a natural place to look,
+with a continuously traded market and a fast-changing set of listed coins. Our proposal hedged on
+profit from the start. It framed the goal as quantifying whether stable mean-reverting
+relationships exist in crypto, ``as a way of gaining a deeper understanding of market efficiency
+and information flow.'' This paper answers that question, and the answer is mostly negative.
+
+We make three contributions. First, two screens in common use manufacture the appearance of
+structure. A Kalman dynamic-hedge cointegration test reports out-of-sample cointegration in almost
+every liquid pair, but it tests a filter's own innovations, which are near-white by construction;
+placebos that cannot be cointegrated pass at the same near-$100\%$ rate, at hourly, four-hour, and
+daily frequencies. A rolling $z$-score reports strong mean reversion, yet it reverts mechanically
+even on a pure random walk. Each is exposed by a single matched placebo, and the placebo is the
+deliverable. Second, the structure that survives is not tradable: order flow in the Level-2 book
+carries real information with a seconds-scale half-life, and reversion speed is a selectable
+property of pairs that does not convert into profit. Third, one market-neutral mean-reversion
+strategy clears honest accounting at a monthly Sharpe near $1.0$, but only without a stop and only
+as a patient multi-week hold, and a pre-registered held-out backtest of it inflates to a Sharpe
+near $5$ on micro-cap moves no one could trade. Even the survivor illustrates the thesis.
+
+The methodological lesson is narrow and reusable: a cointegration or mean-reversion screen should
+not be believed until it has been shown to fail on a matched placebo. This pushes the
+backtest-overfitting literature~\cite{bailey2014, harvey2016} one step earlier, from the strategy
+that gets selected to the screen that builds the spread it is selected on.
 
 % =====================================================================
 \section{Data and market setting}
@@ -370,15 +398,48 @@ from above.
 % =====================================================================
 \section{Limitations}
 \label{sec:limits}
-% TODO: dedicated threats-to-validity. Point-in-time dead-coin universe still open;
-% selection-bias mitigated not closed (no single pre-registered config evaluated once);
-% single venue / quote; microstructure is 2024-only and <=4 symbols for event-level work.
+
+Several limitations bound these results.
+
+\begin{itemize}
+\item \textbf{Survivorship.} The local store holds currently listed symbols, so most delisted
+coins are absent. The surviving strategy's robustness rests on the selector avoiding coins that
+later delist, not on surviving a held collapse; a truly point-in-time universe that forces a held
+delisting is the one test we have not run.
+\item \textbf{Selection.} No single configuration was fixed before the search and evaluated once
+across the whole project. The pre-registered test of Section~\ref{sec:survivor} covers one
+configuration but cannot undo the selection that produced it, so the deflated-Sharpe caution
+stands.
+\item \textbf{Microstructure coverage.} The event-level Level-2 tests use four symbols (BTC, ETH,
+SOL, AVAX) over days sampled across 2024, not a continuous year on the full universe. The
+aggregate book metrics use the top-50; the execution and impact results are four-symbol.
+\item \textbf{Single venue and quote.} The spread results are Binance.US, USDT-quoted, with a
+Coinbase cross-check; the microstructure is Binance spot. We have not tested other quote
+currencies or a broader set of venues.
+\item \textbf{Costs and capacity.} Costs are a flat per-leg charge. We do not model market impact
+or capacity, which is exactly what inflates the held-out micro-cap backtest of
+Section~\ref{sec:survivor}.
+\end{itemize}
 
 % =====================================================================
 \section{Conclusion}
-% TODO: modest, market-efficiency framed. End on a standard the field should meet (any
-% cointegration or z-score screen must pass a matched placebo before it is believed). Extend,
-% do not restate.
+\label{sec:conclusion}
+
+Crypto pair spreads contain real structure, and most of it is either an artifact of the screen
+used to find it or priced too fast to trade. A Kalman cointegration screen and a rolling $z$-score
+both pass placebos they should fail, at every frequency we tested. Order flow is informative only
+at a seconds-scale horizon. The one market-neutral reversion effect that survives is real but
+marginal, stop-sensitive, and selection-sensitive, and a literal backtest of it inflates on costs
+it does not model.
+
+The practical lesson is a standard, not a strategy. A cointegration or mean-reversion screen
+should be trusted only after it has been shown to fail on a matched placebo built to reproduce the
+claim if the claim is mechanical. For crypto the evidence points to microstructure efficiency at
+tradeable horizons: the information is real, and the market has already priced it.
+
+What would move the result is a genuinely point-in-time universe with delisted coins, a capacity-
+and impact-aware cost model, and a single pre-registered configuration evaluated once on data the
+search never saw. Until then, the honest reading of crypto pair trading is the efficiency reading.
 
 % =====================================================================
 \begin{thebibliography}{9}
