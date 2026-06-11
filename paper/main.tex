@@ -109,9 +109,11 @@ the screens that build the spread, not only to the strategy selected on it.
 The spread work uses hourly OHLCV for USDT spot pairs from the Binance.US API, stored locally,
 spanning 2021 through May 2026. The cross-exchange check pulls the same hours from Coinbase
 (USD-quoted) for the overlapping majors. The microstructure work uses event-level Level-2 data
-from Tardis: top-25 book snapshots and the trade tape for Binance spot, the 50 most liquid USDT
-symbols, over 2024. We keep these separate on purpose. The spread and reversion results are
-Binance.US and Coinbase hourly klines; only the microstructure results use the Tardis book.
+from Tardis: top-25 book snapshots and the trade tape for Binance.com (global) spot, the 50 most liquid USDT
+symbols, over 2024. We keep these separate on purpose, and note the venue gap: the spread strategy trades Binance.US, a
+much thinner venue, while the order-flow null is measured on the deeper global book. The spread and
+reversion results are Binance.US and Coinbase hourly klines; only the microstructure results use
+the Tardis book.
 
 The investable universe is the 50 most liquid USDT symbols, $\binom{50}{2}=1{,}225$ candidate
 pairs, constructed as of each analysis time. A
@@ -411,6 +413,12 @@ The one useful byproduct is a cost number. Walking the real book puts execution 
 to $23\%$ below the flat 5 bps slippage component the earlier backtests assumed. Cheaper costs do
 not rescue the strategy.
 
+The efficiency reading is scoped to the liquid core. The Level-2 tests cover top-50 aggregate book
+metrics and four megacap symbols on the global venue; the thin Binance.US micro-caps where the
+marginal reversion edge of Section~\ref{sec:survivor} lives are not in this sample. So the two
+findings fit together: the majors are efficient, and the names with an apparent edge are too thin
+to trade.
+
 % =====================================================================
 \section{The marginal survivor}
 \label{sec:survivor}
@@ -531,7 +539,7 @@ backtest of it inflates on costs it does not model.
 
 The practical lesson is a standard, not a strategy. A cointegration or mean-reversion screen
 should be trusted only after it has been shown to fail on a matched placebo built to reproduce the
-claim if the claim is mechanical. For crypto the evidence points to microstructure efficiency at
+claim if the claim is mechanical. For crypto the evidence points to microstructure efficiency in the liquid majors at
 tradeable horizons: the information is real, and the market has already priced it.
 
 What would move the result is a genuinely point-in-time universe with delisted coins, a capacity-
