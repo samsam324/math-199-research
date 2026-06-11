@@ -1,0 +1,15 @@
+Survivorship-adjusted monthly Sharpe (deployable no-stop + circuit breaker)
+universe=49 syms (current top-50) | 19 splits | 40 pairs | break mag ~86% leg | seeds=6
+
+ break p/qtr  ~annual   monthlyS no-breaker   monthlyS +breaker
+----------------------------------------------------------------
+          0%       0%                  2.54                2.41
+          2%       8%                  2.26                2.30
+          5%      19%                  1.69                2.11
+         10%      34%                  0.80                1.86
+         20%      59%                 -0.46                1.23
+
+saved -> scratch/survivorship_adjusted_sharpe.csv
+Reading: the deployable (monthly, breaker) Sharpe degrades with delisting attrition; the rate
+at which it reaches ~0 is the survivorship breakeven, to be compared with realized delisting
+frequencies for liquid top-50 names (low single-digit %/yr).

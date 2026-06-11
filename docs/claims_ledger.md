@@ -40,7 +40,7 @@ or unsourced numbers found. One acknowledged cross-table nuance is noted at the 
 | Four clean-room reimplementations, no look-ahead | yes | L2_FINDINGS.md:418 |
 | Costs | 15 bps/leg (10 fee + 5 slippage), ~30 bps round-trip | prereg_result.md:9 |
 | HAC example (spurious 5-min reversal) | t=-22.8 -> -1.4 | L2_FINDINGS.md:115 |
-| Survivorship break-injection (gross no-stop) | erased only near ~20%/qtr (~80%/yr) attrition | L2_FINDINGS.md:232-242 |
+| Survivorship-adjusted Sharpe (deployable no-stop+breaker) | retains ~95%/88% at 8%/19%/yr attrition, positive at 59%/yr; no-breaker turns negative | survivorship_adjusted_sharpe.csv |
 | Rolling-z trailing-demean bias (analytic) | negative autocorrelation of order 1/L (known) | textbook/analytic |
 
 Nuance (acknowledged in the paper): the real-pair p<.001 rate is 96.4% in Table 1 (matched 2024
