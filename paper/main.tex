@@ -499,15 +499,19 @@ three real collapses (LUNA, UST, FTT, each paired with BTC, with the selector's 
 overridden). Without a stop the loss runs $-117\%$ to $-258\%$ per pair, with intra-collapse
 drawdowns to $-1{,}300\%$; the structural-break circuit breaker (halt after a single leg moves more
 than $50\%$ against the position) caps the loss to about $-65\%$ to $-91\%$ and the worst drawdown
-to $-117\%$. The breaker blunts the tail but does not remove it, and at the book level it is what makes the
-no-stop rule survivorship-robust. Injecting permanent delisting-scale breaks ($\sim$$86\%$ leg
-blowup, never reverting) into a fraction of the 40 pairs each quarter, the deployable
-no-stop-plus-breaker book keeps about $95\%$ of its monthly Sharpe at an $8\%$-per-year attrition
-rate and $88\%$ at $19\%$/yr, and stays positive even at $59\%$/yr; the same book without the breaker
-turns negative by that rate. Realized delisting among liquid top-50 names runs far below even the
-$8\%$/yr stress, so the survivorship haircut on the $\sim$$1.0$ figure is small. A fully
-point-in-time universe of every delisted coin is still beyond our data, but the tail is bounded,
-not unmodeled.
+to $-117\%$. The breaker blunts the tail but does not remove it, and at the book level it is what separates a
+bounded delisting risk from an unbounded one. Injecting permanent delisting-scale breaks into a
+fraction of the 40 pairs each quarter, the no-stop book \emph{without} the breaker has its monthly
+Sharpe driven to zero and then negative as the break rate rises; the same book \emph{with} the
+breaker stays positive across the whole range, keeping about $96\%$ of its monthly Sharpe at an
+$8\%$/yr break rate and $88\%$ at $19\%$/yr. Those retentions are an upper bound: the injected breaks
+ramp smoothly, so the breaker exits near its $50\%$ threshold, whereas the real gapping collapses
+above cost it $-65\%$ to $-91\%$ per pair; the figures sit on the gross book, not the HAC- and
+venue-honest $\sim$$1.0$, against which an additive delisting drag would bite proportionally harder;
+and the breaks are drawn independently, understating clustered risk-off waves. The robust finding is
+qualitative: a leg-crash breaker, not diversification alone, bounds the delisting tail, and at the
+low single-digit yearly attrition that liquid top-50 names actually see the haircut is modest. A
+fully point-in-time universe of every delisted coin is still beyond our data.
 
 The defensible claim is therefore the sensitivity itself. There is a real, market-neutral
 reversion signal in crypto pair spreads that can be selected by reversion speed. Whether it is

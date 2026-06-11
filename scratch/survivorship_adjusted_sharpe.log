@@ -1,15 +1,15 @@
 Survivorship-adjusted monthly Sharpe (deployable no-stop + circuit breaker)
-universe=49 syms (current top-50) | 19 splits | 40 pairs | break mag ~86% leg | seeds=6
+universe=49 syms (current top-50) | 19 splits | 40 pairs | break mag ~86% leg | seeds=6 | paired draws
 
- break p/qtr  ~annual   monthlyS no-breaker   monthlyS +breaker
-----------------------------------------------------------------
-          0%       0%                  2.54                2.41
-          2%       8%                  2.26                2.30
-          5%      19%                  1.69                2.11
-         10%      34%                  0.80                1.86
-         20%      59%                 -0.46                1.23
+ break p/qtr  ~annual   S no-breaker   S +breaker   breaker retain
+------------------------------------------------------------------
+          0%       0%           2.54         2.41            100%
+          2%       8%           2.26         2.32             96%
+          5%      19%           1.69         2.12             88%
+         10%      34%           0.80         1.80             75%
+         20%      59%          -0.46         1.21             50%
 
 saved -> scratch/survivorship_adjusted_sharpe.csv
-Reading: the deployable (monthly, breaker) Sharpe degrades with delisting attrition; the rate
-at which it reaches ~0 is the survivorship breakeven, to be compared with realized delisting
-frequencies for liquid top-50 names (low single-digit %/yr).
+Reading (UPPER bound; smooth ramp lets the breaker exit near 50% -- real gaps cost -65% to -91%):
+the breaker keeps the book positive across the range while the no-breaker book turns negative;
+the qualitative result is the breaker, not diversification alone, bounds the delisting tail.
