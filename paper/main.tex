@@ -466,10 +466,13 @@ the supports we might cite for it (the $t$-statistic, the $\rho = 0.46$ of
 Section~\ref{sec:real}, the market neutrality) share the same universe, selection, and windows,
 so they are correlated rather than independent confirmations. Its survivorship robustness rests
 on the selector avoiding coins that later delist, not on surviving them: a held position in a
-coin that collapses is a $-100\%$ leg. A structural-break circuit breaker that halts a pair
-for the rest of the window after a single leg moves more than $50\%$ against the position caps
-that tail at little cost to the Sharpe; the genuinely point-in-time test, on a universe that
-forces a held collapse, remains open.
+coin that collapses is a $-100\%$ leg. We tested this directly by forcing the book to hold through
+three real collapses (LUNA, UST, FTT, each paired with BTC, with the selector's avoidance
+overridden). Without a stop the loss runs $-120\%$ to $-260\%$ per pair, with intra-collapse
+drawdowns to $-1{,}300\%$; the structural-break circuit breaker (halt after a single leg moves more
+than $50\%$ against the position) caps the loss to about $-65\%$ to $-90\%$ and the worst drawdown
+to $-120\%$. The breaker blunts the tail but does not remove it, and a fully point-in-time universe
+of every delisted coin is still beyond our data.
 
 The defensible claim is therefore the sensitivity itself. There is a real, market-neutral
 reversion signal in crypto pair spreads that can be selected by reversion speed. Whether it is
@@ -487,8 +490,9 @@ the conclusion.
 \begin{itemize}
 \item \textbf{Survivorship.} The local store holds currently listed symbols, so most delisted
 coins are absent. The surviving strategy's robustness rests on the selector avoiding coins that
-later delist, not on surviving a held collapse; a truly point-in-time universe that forces a held
-delisting is the one test we have not run.
+later delist; forced to hold through three real collapses (Section~\ref{sec:survivor}) the no-stop
+loss runs $-120\%$ to $-260\%$ per pair and the circuit breaker caps it near $-65\%$ to $-90\%$. A
+complete point-in-time universe of every delisted coin is still beyond our data.
 \item \textbf{Selection.} No single configuration was fixed before the search and evaluated once
 across the whole project. The pre-registered test of Section~\ref{sec:survivor} covers one
 configuration but cannot undo the selection that produced it, so the deflated-Sharpe caution

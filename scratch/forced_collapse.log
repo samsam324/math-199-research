@@ -1,0 +1,13 @@
+Forced-held-collapse stress: long the collapsing leg, no stop vs structural-break circuit breaker
+coin        worst7d%  nostop PnL%  nostop DD%   +CB PnL%   +CB DD%
+------------------------------------------------------------------
+LUNAUSDT        -100         -201       -1336        -91      -117
+USTUSDT          -75         -116        -132        -78       -94
+FTTUSDT          -94         -258        -276        -65       -73
+LUNCUSDT    (no data)
+
+mean held-collapse P&L: no-stop -192%  vs  circuit breaker -78%
+saved -> scratch/forced_collapse.csv
+
+Reading: forced to hold a collapsing leg, the no-stop book takes a catastrophic per-pair loss;
+the >50%-adverse circuit breaker halts the pair partway down and caps the tail.
