@@ -72,12 +72,13 @@ filter forward on the test window. The test-period innovations, the filter's one
 prediction errors, became the spread, and we ran an augmented Dickey--Fuller (ADF) test on
 them. Under this screen $100\%$ of the top-50 pairs rejected the unit root out of sample at
 $p<0.05$, and $96.4\%$ at $p<0.001$. A static-OLS spread over the same window passed only
-about $5\%$ of pairs. The contrast looked decisive.
+about $3\%$ of pairs. The contrast looked decisive.
 
 It is decisive about the filter, not the pair. A Kalman filter with non-zero process noise
-adapts its hedge ratio to track whatever relationship is present, so its innovations are white
-by construction. An ADF test on a white series rejects the unit root almost always, whether or
-not the two assets are cointegrated. Testing the stationarity of a filter's own innovations is
+adapts its hedge ratio to track whatever relationship is present. Its innovations are then
+driven toward whiteness, exactly white only for a correctly specified filter at steady state,
+and approximately so here on the frozen-parameter test window. An ADF test on a near-white
+series rejects the unit root almost always, whether or not the two assets are cointegrated. Testing the stationarity of a filter's own innovations is
 circular. An earlier draft of this project defended the result on the grounds that the
 parameters were fit on training data only and never refit on test. That defense misses the
 mechanism. The whitening holds out of sample too, because the filter keeps adapting on the
@@ -87,16 +88,17 @@ A placebo settles it. We ran the identical screen on series that cannot be coint
 (a) independent simulated random walks, (b) each coin paired with a phase-randomized surrogate
 of another coin, and (c) real pairs with one leg block-shuffled. All three pass at the same
 near-$100\%$ rate as the real pairs (Table~\ref{tab:kalman-placebo}). A clean, non-circular
-test tells the opposite story. Engle--Granger~\citep{engle1987} on the test window, and a
-static-OLS ADF, put genuine out-of-sample cointegration at the null floor, roughly $2$--$5\%$
-of pairs on the matched window. Essentially none of the universe is cointegrated out of
-sample. The screen's $100\%$ is noise dressed as signal, and the placebo result is, to our
-knowledge, the cleanest way to see it~\citep{bailey2014}.
+test tells the opposite story. Engle--Granger~\cite{engle1987} on the test window, and a
+static-OLS ADF, put genuine out-of-sample cointegration at $2$--$3\%$ of pairs on the matched
+window, at or below the $5\%$ null floor. The screen carries no cointegration information. That
+is not a claim that no pair ever co-moves; it is that the screen cannot tell. Its $100\%$ is
+noise dressed as signal.
 
 \begin{table}[h]
 \centering
 \caption{The Kalman screen passes placebos that cannot be cointegrated at the same rate as
-real pairs. Out-of-sample ADF on the Kalman innovations, top-50 USDT universe, $t_0 =$
+real pairs. Out-of-sample ADF on the Kalman innovations, top-50 USDT universe (250-pair
+subsample), $t_0 =$
 2024-01-01, 90-day train / 30-day test.}
 \label{tab:kalman-placebo}
 \begin{tabular}{lrr}
@@ -113,29 +115,34 @@ Clean Engle--Granger (test window) & $2$--$3\%$ & --- \\
 \end{tabular}
 \end{table}
 
-The artifact does not depend on the bar. We reran the screen at four-hour and daily
-frequencies (Table~\ref{tab:kalman-freq}). Real pairs and random-walk placebos pass together
-at every cadence: $100\%$ versus $100\%$ at hourly and four-hour, and $70\%$ versus $68\%$ at
-daily ($p<0.001$). The clean Engle--Granger rate behaves differently. It is a small,
-window-dependent fraction that rises over long hourly windows, where crypto majors share a
-common trend, and falls to the $5\%$ null floor at daily. It never approaches the screen's
-$100\%$. The Kalman screen is uninformative about cointegration at every frequency we tested.
+The artifact does not depend on the bar. We reran the screen at hourly, four-hour, and daily
+frequencies on a recent multi-year window (Table~\ref{tab:kalman-freq}). Real pairs and
+random-walk placebos pass together at every cadence: $100\%$ versus $100\%$ at hourly and
+four-hour, and $70\%$ versus $68\%$ at daily ($p<0.001$). The clean tests behave differently.
+Engle--Granger runs at $25\%$ on this long hourly window and falls to the $5\%$ null floor at
+daily; a static-OLS ADF runs higher still, from $42\%$ at hourly to $8\%$ at daily. Both are
+window-dependent. Over long hourly spans the crypto majors share a common trend, which a clean
+test reads as broad co-movement, and which the matched short window of
+Table~\ref{tab:kalman-placebo} puts back at the $2$--$3\%$ floor. Neither clean test approaches
+the screen's $100\%$, and the small difference between the two tables' real $p<0.001$ rates
+($96\%$ versus $100\%$) is window and sample size, not a contradiction. The Kalman screen
+carries no cointegration information at any frequency we tested.
 
 \begin{table}[h]
 \centering
 \caption{Frequency robustness of the Kalman artifact. Real pairs and random-walk placebos pass
-the screen together at every cadence; the clean Engle--Granger benchmark does not. Top-50
-universe, 60 pairs per cell, recent multi-year window.}
+the screen together at every cadence; the clean Engle--Granger and static-OLS benchmarks do
+not. Top-50 universe, 60 pairs per cell, recent multi-year window.}
 \label{tab:kalman-freq}
-\begin{tabular}{lrrrrr}
+\begin{tabular}{lrrrrrr}
 \toprule
-& \multicolumn{2}{c}{Real pairs} & \multicolumn{2}{c}{RW placebo} & Clean EG \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-6}
-Frequency & $p<0.05$ & $p<0.001$ & $p<0.05$ & $p<0.001$ & $p<0.05$ \\
+& \multicolumn{2}{c}{Real pairs} & \multicolumn{2}{c}{RW placebo} & \multicolumn{2}{c}{Clean tests $p<0.05$} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Frequency & $p<0.05$ & $p<0.001$ & $p<0.05$ & $p<0.001$ & Engle--Granger & static OLS \\
 \midrule
-Hourly & $100.0\%$ & $100.0\%$ & $100.0\%$ & $100.0\%$ & $25.0\%$ \\
-4-hour & $100.0\%$ & $100.0\%$ & $100.0\%$ & $100.0\%$ & $11.7\%$ \\
-Daily  & $100.0\%$ & $70.0\%$  & $100.0\%$ & $68.3\%$  & $5.0\%$ \\
+Hourly & $100.0\%$ & $100.0\%$ & $100.0\%$ & $100.0\%$ & $25.0\%$ & $41.7\%$ \\
+4-hour & $100.0\%$ & $100.0\%$ & $100.0\%$ & $100.0\%$ & $11.7\%$ & $20.0\%$ \\
+Daily  & $100.0\%$ & $70.0\%$  & $100.0\%$ & $68.3\%$  & $5.0\%$  & $8.3\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -156,13 +163,14 @@ walk, manufactures mean reversion, because the trailing mean chases the level an
 from it cannot wander as freely as the raw series. A random walk has no mean to revert to, yet
 a rolling $z$-score on one still reverts.
 
-We measured the mechanical floor directly. On pure random walks, the same rolling-$z$ rule
-produces strong positive reversion at every frequency we tested: $+0.98z$ per event at hourly,
-$+1.61z$ at four-hour, and $+1.51z$ at daily, each far outside its sampling noise
-(Table~\ref{tab:rollingz}). As a trading rule the floor is large. A rolling-$z$ strategy that
+We measured the mechanical floor two ways, and both are large. Per $|z|>2$ event, the signed
+reversion on pure random walks is positive at every frequency we tested: $+0.98z$ at hourly,
+$+1.61z$ at four-hour, and $+1.51z$ at daily, each many standard deviations from zero
+(Table~\ref{tab:rollingz}). As a trading rule at hourly frequency, a rolling-$z$ strategy that
 posts a Sharpe near $4.75$ on our data still posts about $2.2$ on random pairs and $2.4$ on
-phase-randomized noise. Most of the apparent edge is the floor. For this reason every reversion
-number elsewhere in this paper is reported net of a per-pair, per-window random-walk floor.
+phase-randomized noise. Most of the apparent edge is the floor. For this reason every per-event
+reversion magnitude elsewhere in this paper is reported net of a per-pair, per-window
+random-walk floor.
 
 \begin{table}[h]
 \centering
@@ -181,10 +189,12 @@ Daily  & $+1.51$ & $0.45$ \\
 \end{table}
 
 Both screens share a failure mode. They manufacture the appearance of structure that a matched
-placebo reproduces. The lesson is narrow and practical. A cointegration screen built on a
+placebo reproduces. A cointegration screen built on a
 filter's own innovations must be checked against a white-noise placebo before it is believed,
 and a rolling-$z$ reversion claim must be checked against a random-walk null. Neither check is
-standard practice, and without them both screens report a signal that is not there.
+standard practice, and without them both screens report a signal that is not there. This is the
+lesson the backtest-overfitting literature draws for strategy selection~\cite{bailey2014,
+harvey2016}, applied one level earlier, to the screens that build the spread.
 
 % =====================================================================
 \section{What is real but not tradable}
