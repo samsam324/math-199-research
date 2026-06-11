@@ -1,0 +1,29 @@
+Part A: rolling-z mechanical floor on random walks, across choices (should be positive everywhere)
+ lookback horizon z-thresh  floor(z)
+       60      24      1.5      1.24
+       60      24      2.0      1.59
+       60      24      2.5      1.96
+       60      48      1.5      1.69
+       60      48      2.0      2.16
+       60      48      2.5      2.61
+      120      24      1.5      0.75
+      120      24      2.0      1.05
+      120      24      2.5      1.31
+      120      48      1.5      1.22
+      120      48      2.0      1.53
+      120      48      2.5      1.93
+      240      24      1.5      0.45
+      240      24      2.0      0.60
+      240      24      2.5      0.84
+      240      48      1.5      0.78
+      240      48      2.0      1.00
+      240      48      2.5      1.18
+  -> floor ranges 0.45 to 2.61, positive in all 18 cells
+
+Part B: Kalman negative-control ADF pass rate, across ADF maxlag (fit once, test many lags)
+ maxlag  pass p<.05
+      6      100.0%
+     12      100.0%
+     24      100.0%
+     36       85.0%
+  -> the placebo passes at ~100% regardless of ADF lag; the artifact is not a lag choice

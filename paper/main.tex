@@ -327,7 +327,9 @@ $\pm 2$ and reverts toward zero, although the series has no mean to revert to.}
 \end{figure}
 
 Both screens share a failure mode. They manufacture the appearance of structure that a matched
-placebo reproduces. A cointegration screen built on a
+placebo reproduces. Both are robust to the analysis choices: the rolling-$z$ floor stays positive
+($+0.5$ to $+2.6z$) across lookback, horizon, and threshold, and the Kalman placebo passes at
+$85\%$ or more across the ADF lag, so neither is an artifact of the parameters we picked. A cointegration screen built on a
 filter's own innovations must be checked against a white-noise placebo before it is believed,
 and a rolling-$z$ reversion claim must be checked against a random-walk null. Neither check is
 standard practice, and without them both screens report a signal that is not there. This is the
