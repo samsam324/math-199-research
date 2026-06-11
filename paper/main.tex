@@ -230,13 +230,14 @@ Strip the two artifacts and some genuine structure remains. None of it is tradab
 two reasons: it is priced faster than anyone could act, or it is a statistical property that does
 not convert into profit. We take the two clearest cases.
 
-\subsection{Reversion is a selectable property, which is not the same as profit}
+\subsection{Reversion speed ranks pairs but does not pay}
 
 Mean reversion persists out of sample even though cointegration does not. Across nine disjoint
 walk-forward splits (six-month train, three-month test), a pair's in-sample OU reversion speed
-predicts its out-of-sample reversion: Spearman $\rho = 0.46$ (95\% CI $[0.37, 0.54]$,
-$p<0.001$), positive in every one of the nine splits. The top quintile reverts about $0.69z$
-more than the bottom out of sample ($[0.58, 0.81]$, $p<0.001$). The placebos are clean: a random
+predicts its out-of-sample \emph{excess} reversion, net of the rolling-$z$ floor of
+Section~\ref{sec:rollingz}: Spearman $\rho = 0.46$ (95\% CI $[0.37, 0.54]$, $p<0.001$), positive
+in every one of the nine splits. The top quintile shows about $0.69z$ more excess reversion than
+the bottom out of sample ($[0.58, 0.81]$, $p<0.001$). The placebos are clean: a random
 quintile split gives $+0.0001z$, and shuffling the train-to-test link collapses $\rho$ to
 $-0.002$. Reversion speed is a real, graded, persistent property that ranks pairs.
 
@@ -244,21 +245,22 @@ One caveat belongs on that coefficient. The $\rho = 0.46$ is the strongest of fo
 reversion metrics we tried, chosen after the fact, and it is not corrected for that choice. The
 qualitative result is robust; the exact number is a best case.
 
-Selectability is not profit. Ranking pairs by how fast their spread reverts says where reversion
-lives, not that it can be extracted after costs. The strategy built on the property is the
-subject of Section~\ref{sec:survivor}, and it is marginal at best.
+Selectability is not profit. Ranking pairs by reversion speed tells you where reversion lives.
+Whether it can be extracted after costs is a separate question, and the strategy built on the
+property (Section~\ref{sec:survivor}) is marginal at best.
 
 \subsection{Order flow is informative, but priced within seconds}
 
-The Level-2 book carries real information about price, and the market prices it before any
-horizon you could trade against. We tested the order-flow ideas on a year of Binance Level-2 book
-and trade data (50 USDT majors, event-level, from Tardis), and the result is a broad efficiency
-null.
+We tested the order-flow ideas on a 2024 sample of Binance Level-2 book and trade data: aggregate
+book metrics on the top-50 USDT majors, and event-level tests on four majors (BTC, ETH, SOL,
+AVAX) across days drawn from all twelve months, from Tardis. The book carries real,
+contemporaneous information about price formation. It carries none at any horizon you could trade
+against, an efficiency null for both forecasting and execution.
 
-Trade size does proxy information. Large trades carry about twice the permanent price impact of
+Trade size does proxy information. Large trades carry about twice the one-second price impact of
 small ones, and the ranking replicates across all of 2024 on four coins (one-second impact for
 BTC of $0.33/0.23/0.13$ bps for institutional, mid, and retail, with institutional $2.0$ to
-$2.6\times$ retail). Book-side flow describes price formation well: book-side order-flow
+$2.6\times$ retail; the longer-horizon permanent estimate is noisier). Book-side order-flow
 imbalance explains within-second mid-price moves better than trade flow does (incremental $R^2$
 of $+0.12$ to $+0.16$ for BTC and ETH), and $81$ to $85\%$ of the liquidity that leaves the best
 quote is cancellations, invisible to trade-only analysis.
@@ -266,16 +268,16 @@ quote is cancellations, invisible to trade-only analysis.
 All of it decays within seconds. The predictive content of order flow falls to near zero by 30
 seconds, and at a 15-minute to one-hour horizon institutional flow predicts a mild reversal, not
 continuation, with an incremental $R^2$ near $0.03\%$. Hidden and iceberg liquidity is measurable
-(2 to $3.5\%$ of at-best volume) but carries no edge.
+(about 1 to $4\%$ of at-best volume, with iceberg-episode rates higher) but carries no edge.
 
 We then measured whether the signal helps execution, the usual fallback when a signal does not
 forecast returns. It does not (Table~\ref{tab:exec}). Across 18{,}432 simulated parent orders
 over event-level book and tape, aggressive crossing is the cheapest method for these majors, a
 signal-timed passive rule does worse than a random one at the same posting rate, and the signal's
 correlation with the per-order advantage of posting over crossing is $+0.06$, noise. A
-perfect-foresight oracle would save 1.6 bps, so the opportunity is real, but no contemporaneous
-book feature forecasts it. The null holds across all twelve months of 2024, including the August
-5 crash.
+perfect-foresight oracle would save 1.6 bps. The opportunity is real. No contemporaneous book
+feature forecasts it. The null holds across all twelve months of 2024, including the August 5
+crash.
 
 \begin{table}[h]
 \centering
@@ -295,18 +297,18 @@ Oracle (perfect foresight) & $-0.23$ \\
 \end{tabular}
 \end{table}
 
-The one byproduct of value is a cost number, not a signal. Walking the real book puts execution
-costs about $17$ to $23\%$ below the flat 5 bps the earlier backtests assumed. Cheaper costs do
+The one useful byproduct is a cost number. Walking the real book puts execution costs about $17$
+to $23\%$ below the flat 5 bps slippage component the earlier backtests assumed. Cheaper costs do
 not rescue the strategy.
 
 % =====================================================================
 \section{The marginal survivor}
 \label{sec:survivor}
 
-One strategy survives, and the honest account of it is a story about its bounds. There is a real,
-market-neutral, diversified mean-reversion effect in crypto pair spreads. Its tradable magnitude
-is uncertain, it exists only without a stop, and a literal backtest of it inflates
-spectacularly. We lead with the bounds because they are the result.
+One strategy survives, and its honest account is its bounds. There is a real, market-neutral,
+diversified mean-reversion effect in crypto pair spreads. Its tradable magnitude is uncertain, it
+exists only without a stop, and a literal backtest of it inflates spectacularly. We lead with the
+bounds because they are the result.
 
 \subsection{The effect is real and market-neutral}
 
@@ -314,52 +316,56 @@ Selecting pairs by reversion speed and holding the spread to convergence produce
 market-neutral return. It is diversified: beta to an equal-weight crypto index is about $-0.06$,
 and the top ten principal-component portfolios explain only $1.7\%$ of its return, so it is not a
 hidden factor bet. It replicates on an independent exchange (Coinbase, USD-quoted) and under four
-from-scratch reimplementations that share none of our pipeline, none of which found look-ahead.
-The effect is not a coding artifact.
+from-scratch reimplementations that share none of our pipeline, none of which found look-ahead,
+so the effect is not a coding artifact.
 
 \subsection{It exists only without a stop}
 
-The effect lives and dies on the exit rule. With a conventional $|z| = 4$ stop the strategy loses
+The exit rule decides the sign of the P\&L. With a conventional $|z| = 4$ stop the strategy loses
 (Sharpe $-2.25$), and the stop is the cause: it realizes losses on spreads that then revert.
-Remove the stop and hold to convergence and the strategy turns positive. This is not the tightly
-risk-managed hourly strategy the project set out to build. It is a patient, never-stop book with
-a median hold near 35 days, in which $78\%$ of positions do not converge within a quarter and
+Remove the stop and hold to convergence and the strategy turns positive. The project set out to
+build a tightly risk-managed hourly strategy; this is the opposite, a patient never-stop book
+with a median hold near 35 days, in which $78\%$ of positions do not converge within a quarter and
 about a third of the return is a generic survivor co-movement floor.
 
 \subsection{The magnitude is uncertain, and a literal backtest inflates it}
 
-The naive Binance Sharpe was first reported near $2.5$. It is not $2.5$. Month-long holds make
-hourly returns heavily autocorrelated, so a Newey--West correction drops the monthly Binance
-figure to about $1.4$, and on the independent Coinbase venue it is about $0.85$ to $0.90$. The
-HAC- and venue-honest figure is near $1.0$, and the edge is concentrated in recent,
-high-volatility periods.
+The naive Binance Sharpe was first reported near $2.5$, and four independent reimplementations put
+it at $2.0$ to $2.2$. Neither is the honest figure. Month-long holds make hourly returns heavily
+autocorrelated, so a Newey--West correction drops the monthly Binance number to about $1.4$, and
+on the independent Coinbase venue it is about $0.85$ to $0.90$. The HAC- and venue-honest figure
+is near $1.0$, and the edge concentrates in recent, high-volatility periods.
 
 A pre-registered, held-out test makes the fragility concrete. We locked the configuration before
 running (Section~\ref{sec:methods} records the lock) and evaluated it once on held-out data,
 2025-06 to 2026-05. The literal result was a monthly Sharpe near $5$, \emph{higher} than the
-in-sample figure. It is not a tradable edge. It is broad-based inflation across high-volatility
-micro-cap alts: individual pair-windows post $+300$ to $+500\%$ in three months under a flat 15
-bps cost that badly understates the true cost of trading those names, with unit-notional
-accounting that ignores capacity. The same machinery on a venue without those micro-caps returns
-the $\sim$$1.0$ figure. The held-out test does not confirm an alpha. It shows the raw backtest is
-not trustworthy, which is the paper's thesis turned on our own surviving result.
+in-sample figure, and it is not a tradable edge. It is broad-based inflation across
+high-volatility micro-cap alts: individual pair-windows post $+300$ to $+520\%$ in three months
+under a flat 15 bps cost that badly understates the true cost of trading those names, with
+unit-notional accounting that ignores capacity. A $+517\%$ three-month leg implies roughly a
+$150\times$ gross return, not realizable at any size. The same machinery on a venue without those
+micro-caps returns the $\sim$$1.0$ figure. So the held-out test does not confirm an alpha; it
+shows the raw backtest is untrustworthy, the paper's thesis turned on our own surviving result.
 
 \subsection{What would have to be true}
 
 The effect is also selection-sensitive and survivorship-fragile. A deflated-Sharpe correction
-survives the no-stop family of configurations but fails the whole stop-versus-no-stop search, and
+(Section~\ref{sec:methods}) survives the no-stop family of configurations but fails the whole
+stop-versus-no-stop search, and
 the supports we might cite for it (the $t$-statistic, the $\rho = 0.46$ of
 Section~\ref{sec:real}, the market neutrality) share the same universe, selection, and windows,
 so they are correlated rather than independent confirmations. Its survivorship robustness rests
 on the selector avoiding coins that later delist, not on surviving them: a held position in a
-coin that collapses is a $-100\%$ leg. A structural-break circuit breaker that halts a pair after
-a $50\%$ adverse move caps that tail at little cost to the Sharpe, but the genuinely
-point-in-time test, on a universe that forces a held collapse, remains open.
+coin that collapses is a $-100\%$ leg. A structural-break circuit breaker that halts a pair
+for the rest of the window after a single leg moves more than $50\%$ against the position caps
+that tail at little cost to the Sharpe; the genuinely point-in-time test, on a universe that
+forces a held collapse, remains open.
 
-The defensible claim is therefore the sensitivity itself. There is a real, selectable,
-market-neutral reversion signal in crypto pair spreads. Whether it is worth anything after
-realistic costs, capacity, and selection is unresolved, and the most honest single number, a
-monthly Sharpe near $1.0$, is an estimate a literal backtest does not bound from above.
+The defensible claim is therefore the sensitivity itself. There is a real, market-neutral
+reversion signal in crypto pair spreads that can be selected by reversion speed. Whether it is
+worth anything after realistic costs, capacity, and selection is unresolved, and the most honest
+single number, a monthly Sharpe near $1.0$, is an estimate that a literal backtest does not cap
+from above.
 
 % =====================================================================
 \section{Limitations}
