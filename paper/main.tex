@@ -31,10 +31,11 @@ survives is either priced too fast to trade or too marginal to deploy: order-flo
 in the Level-2 book decays within seconds, reversion speed is a selectable property of pairs
 (Spearman $\rho = 0.46$) but selectability is not profit, and the one market-neutral
 mean-reversion book that clears honest accounting posts a HAC- and venue-adjusted monthly
-Sharpe near $1.0$, and only without a stop and as a multi-week hold. Its one pre-registered arm
-gives a confidence interval that spans zero, so we read $1.0$ as an exploratory best estimate, not
-a significant edge. We read the result
-as a market-efficiency statement about crypto pair spreads, and as a cautionary standard: a
+Sharpe near $1.0$, but only without a stop and only as a multi-week hold. That $1.0$ is an
+exploratory, post-hoc estimate that was never pre-registered, and our pre-registered test gives a
+confidence interval spanning zero, so we claim no significant tradable edge. We read the result
+as a market-efficiency statement about the liquid core of crypto pair spreads, and as a cautionary
+standard: a
 cointegration or $z$-score screen should not be trusted until it has been shown to fail on a
 matched placebo.
 \end{abstract}
@@ -374,8 +375,8 @@ property (Section~\ref{sec:survivor}) is marginal at best.
 We tested the order-flow ideas on a 2024 sample of Binance Level-2 book and trade data: aggregate
 book metrics on the top-50 USDT majors, and event-level tests on four majors (BTC, ETH, SOL,
 AVAX) across days drawn from all twelve months, from Tardis. The book carries real,
-contemporaneous information about price formation. It carries none at any horizon you could trade
-against, an efficiency null for both forecasting and execution.
+contemporaneous information about price formation, but none of it survives to a horizon you could
+trade against. That null holds for both forecasting and execution.
 
 Trade size does proxy information. Large trades carry about twice the one-second price impact of
 small ones, and the ranking replicates across all of 2024 on four coins (one-second impact for
@@ -395,7 +396,7 @@ forecast returns. It does not (Table~\ref{tab:exec}). Across 18{,}432 simulated 
 over event-level book and tape, aggressive crossing is the cheapest method for these majors, a
 signal-timed passive rule does worse than a random one at the same posting rate, and the signal's
 correlation with the per-order advantage of posting over crossing is $+0.06$, noise. A
-perfect-foresight oracle would save 1.6 bps. The opportunity is real. No contemporaneous book
+perfect-foresight oracle would save 1.6 bps, so the opportunity is real, but no contemporaneous book
 feature forecasts it. The null holds across all twelve months of 2024, including the August 5
 crash.
 
@@ -500,17 +501,17 @@ overridden). Without a stop the loss runs $-117\%$ to $-258\%$ per pair, with in
 drawdowns to $-1{,}300\%$; the structural-break circuit breaker (halt after a single leg moves more
 than $50\%$ against the position) caps the loss to about $-65\%$ to $-91\%$ and the worst drawdown
 to $-117\%$. The breaker blunts the tail but does not remove it, and at the book level it is what separates a
-bounded delisting risk from an unbounded one. Injecting permanent delisting-scale breaks into a
-fraction of the 40 pairs each quarter, the no-stop book \emph{without} the breaker has its monthly
-Sharpe driven to zero and then negative as the break rate rises; the same book \emph{with} the
-breaker stays positive across the whole range, keeping about $96\%$ of its monthly Sharpe at an
-$8\%$/yr break rate and $88\%$ at $19\%$/yr. Those retentions are an upper bound: the injected breaks
-ramp smoothly, so the breaker exits near its $50\%$ threshold, whereas the real gapping collapses
-above cost it $-65\%$ to $-91\%$ per pair; the figures sit on the gross book, not the HAC- and
-venue-honest $\sim$$1.0$, against which an additive delisting drag would bite proportionally harder;
-and the breaks are drawn independently, understating clustered risk-off waves. The robust finding is
-qualitative: a leg-crash breaker, not diversification alone, bounds the delisting tail, and at the
-low single-digit yearly attrition that liquid top-50 names actually see the haircut is modest. A
+bounded delisting risk from an unbounded one. We also inject permanent delisting-scale breaks into a
+fraction of the 40 pairs each quarter. Without the breaker the no-stop book's monthly Sharpe falls
+to zero and then negative as the break rate rises; with the breaker it stays positive across the
+whole range, keeping about $96\%$ of its monthly Sharpe at an $8\%$/yr break rate and $88\%$ at
+$19\%$/yr. Three things make those retention figures optimistic. First, the injected breaks ramp
+smoothly, so the breaker exits near its $50\%$ threshold, whereas the real gapping collapses above
+cost it $-65\%$ to $-91\%$ per pair. Second, the figures sit on the gross book, not the HAC- and
+venue-honest $\sim$$1.0$, against which a delisting drag would bite proportionally harder. Third, the
+breaks are drawn independently, which understates clustered risk-off waves. The robust finding is the
+qualitative one: a leg-crash breaker, not diversification alone, bounds the delisting tail, and at
+the low single-digit yearly attrition that liquid top-50 names actually see the haircut is modest. A
 fully point-in-time universe of every delisted coin is still beyond our data.
 
 The defensible claim is therefore the sensitivity itself. There is a real, market-neutral
@@ -564,8 +565,8 @@ tradeable horizons: the information is real, and the market has already priced i
 
 What would move the result is a genuinely point-in-time universe with delisted coins, a capacity-
 and impact-aware cost model, and a single pre-registered configuration evaluated once on data the
-search never saw. Until then, the efficiency reading holds for the liquid core we can measure; for the thin tail
-where delisting risk lives, we say undetermined, not efficient.
+search never saw. Until then, the efficiency reading holds only for the liquid core we can measure. For the thin tail,
+where delisting risk concentrates, we cannot yet say.
 
 % =====================================================================
 \begin{thebibliography}{99}
