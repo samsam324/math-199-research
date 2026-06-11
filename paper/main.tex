@@ -227,7 +227,7 @@ them. 60 constructed pairs per group, 1500-bar train, 500-bar test.}
 \label{tab:poscontrol}
 \begin{tabular}{lrr}
 \toprule
-& Positive (cointegrated) & Negative (random walks) \\
+& Cointegrated & Random walks \\
 \midrule
 Kalman innovation ADF passes ($p<0.05$) & $100.0\%$ & $98.3\%$ \\
 Kalman innovations white (Ljung--Box $p>0.05$) & $86.7\%$ & $95.0\%$ \\
@@ -476,14 +476,14 @@ $150\times$ gross return, not realizable at any size. Those names are barely tra
 the held-out micro-caps (WAXP, ZIL, VTHO, ACH, EGLD) turn over a median of a few hundred to a few
 thousand dollars a day, roughly three to four thousand times less than the majors, so the
 deployable notional is negligible and a flat, size-independent cost is indefensible. The same
-machinery on a venue without those micro-caps returns the $\sim$$1.0$ figure. So the held-out test does not confirm an alpha; it
-shows the raw backtest is untrustworthy, the paper's thesis turned on our own surviving result.
+machinery on a venue without those micro-caps returns the $\sim 1.0$ figure. So the held-out test does not confirm an alpha; it
+shows the raw backtest is untrustworthy. The paper's thesis has turned on our own surviving result.
 
 The pre-registration had a second arm, which we report in full. A single selection over the whole
-pre-2025-06 history qualified only two pairs (long-horizon reversion in the tradeable band is
+pre-2025-06 history qualified only two pairs (long-horizon reversion in the tradable band is
 rare), and they posted a monthly Sharpe of $1.60$ with a HAC confidence interval of $[-0.21,
 1.89]$ that spans zero. So the pre-registered test confirms the inflation and gives no significant
-evidence for a deployable edge. The $\sim$$1.0$ figure is itself exploratory, adjusted for HAC and
+evidence for a deployable edge. The $\sim 1.0$ figure is itself exploratory, adjusted for HAC and
 venue after the search, and was never pre-registered.
 
 \subsection{What would have to be true}
@@ -508,7 +508,7 @@ whole range, keeping about $96\%$ of its monthly Sharpe at an $8\%$/yr break rat
 $19\%$/yr. Three things make those retention figures optimistic. First, the injected breaks ramp
 smoothly, so the breaker exits near its $50\%$ threshold, whereas the real gapping collapses above
 cost it $-65\%$ to $-91\%$ per pair. Second, the figures sit on the gross book, not the HAC- and
-venue-honest $\sim$$1.0$, against which a delisting drag would bite proportionally harder. Third, the
+venue-honest $\sim 1.0$, against which a delisting drag would bite proportionally harder. Third, the
 breaks are drawn independently, which understates clustered risk-off waves. The robust finding is the
 qualitative one: a leg-crash breaker, not diversification alone, bounds the delisting tail, and at
 the low single-digit yearly attrition that liquid top-50 names actually see the haircut is modest. A
@@ -561,7 +561,7 @@ backtest of it inflates on costs it does not model.
 The practical lesson is a standard, not a strategy. A cointegration or mean-reversion screen
 should be trusted only after it has been shown to fail on a matched placebo built to reproduce the
 claim if the claim is mechanical. For crypto the evidence points to microstructure efficiency in the liquid majors at
-tradeable horizons: the information is real, and the market has already priced it.
+tradable horizons: the information is real, and the market has already priced it.
 
 What would move the result is a genuinely point-in-time universe with delisted coins, a capacity-
 and impact-aware cost model, and a single pre-registered configuration evaluated once on data the
