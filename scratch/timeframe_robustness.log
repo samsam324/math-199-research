@@ -1,0 +1,17 @@
+hourly panel: 58262 bars x 50 syms, 2019-09-23 08:00:00+00:00 .. 2026-05-18 18:00:00+00:00
+
+#### KALMAN COINTEGRATION ARTIFACT across timeframes ####
+ freq |  real<.05 real<.001 |  RWplac<.05 RWplac<.001 |  EG<.05  staticOLS<.05 | n
+   1H |     100.0     100.0 |       100.0       100.0 |    25.0           41.7 | 60
+   4H |     100.0     100.0 |       100.0       100.0 |    11.7           20.0 | 60
+   1D |     100.0      70.0 |       100.0        68.3 |     5.0            8.3 | 60
+saved -> scratch/timeframe_kalman_artifact.csv
+
+#### ROLLING-Z MECHANICAL REVERSION FLOOR across timeframes ####
+ freq | testbars lookback horizon | mean floor(z)      sd  nsurr
+   1H |     2160      240      48 |        0.9819  0.2645    200
+   4H |      540       60      24 |        1.6063  0.3942    200
+   1D |      220       30      10 |        1.5068  0.4472    200
+saved -> scratch/timeframe_rollingz_floor.csv
+
+DONE in 839s
