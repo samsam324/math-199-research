@@ -31,7 +31,9 @@ survives is either priced too fast to trade or too marginal to deploy: order-flo
 in the Level-2 book decays within seconds, reversion speed is a selectable property of pairs
 (Spearman $\rho = 0.46$) but selectability is not profit, and the one market-neutral
 mean-reversion book that clears honest accounting posts a HAC- and venue-adjusted monthly
-Sharpe near $1.0$, and only as a never-stop, multi-week hold. We read the result
+Sharpe near $1.0$, and only as a never-stop, multi-week hold; its one pre-registered arm gives a
+confidence interval that spans zero, so we read $1.0$ as an exploratory best estimate, not a
+significant edge. We read the result
 as a market-efficiency statement about crypto pair spreads, and as a cautionary standard: a
 cointegration or $z$-score screen should not be trusted until it has been shown to fail on a
 matched placebo.
@@ -53,18 +55,18 @@ with a continuously traded market and a fast-changing set of listed coins. Our p
 relationships exist in crypto, ``as a way of gaining a deeper understanding of market efficiency
 and information flow.'' This paper answers that question, and the answer is mostly negative.
 
-We make three contributions. First, two screens in common use manufacture the appearance of
+We make three contributions. First, two natural-looking screens manufacture the appearance of
 structure. A Kalman dynamic-hedge cointegration test reports out-of-sample cointegration in almost
 every liquid pair, but it tests a filter's own innovations, which are near-white by construction;
-placebos that cannot be cointegrated pass at the same near-$100\%$ rate, at hourly, four-hour, and
-daily frequencies. A rolling $z$-score reports strong mean reversion, yet it reverts mechanically
+placebos that cannot be cointegrated pass at the same rate the real pairs do, at hourly,
+four-hour, and daily frequencies. A rolling $z$-score reports strong mean reversion, yet it reverts mechanically
 even on a pure random walk. Each is exposed by a single matched placebo, and the placebo is the
 deliverable. Second, the structure that survives is not tradable: order flow in the Level-2 book
 carries real information with a seconds-scale half-life, and reversion speed is a selectable
 property of pairs that does not convert into profit. Third, one market-neutral mean-reversion
 strategy clears honest accounting at a monthly Sharpe near $1.0$, but only without a stop and only
 as a patient multi-week hold, and a pre-registered held-out backtest of it inflates to a Sharpe
-near $5$ on micro-cap moves no one could trade. Even the survivor illustrates the thesis.
+near $5$ on micro-cap moves no one could trade, so even the strategy that survives makes our point.
 
 The methodological lesson is narrow and reusable: a cointegration or mean-reversion screen should
 not be believed until it has been shown to fail on a matched placebo. The
@@ -147,8 +149,9 @@ Two screens drove our early results, and both are artifacts. The first, a Kalman
 hedge ratio, appeared to find out-of-sample cointegration in almost every liquid pair. The
 second, a rolling $z$-score, appeared to find strong mean reversion. We show that each passes
 a placebo it should fail, and that neither carries the information it seems to. This is the
-paper's main methodological contribution. Both screens are in common use, and a careful
-analyst is easily fooled by either one.
+paper's main methodological contribution. The rolling $z$-score is a standard entry signal and the
+Kalman screen a natural way to test a drifting hedge, so both are easy to reach for and easy to be
+fooled by.
 
 \subsection{The Kalman dynamic-hedge cointegration screen}
 \label{sec:kalman}
@@ -167,7 +170,9 @@ adapts its hedge ratio to track whatever relationship is present. Its innovation
 driven toward whiteness, exactly white only for a correctly specified filter at steady state,
 and approximately so here on the frozen-parameter test window. An ADF test on a near-white
 series rejects the unit root almost always, whether or not the two assets are cointegrated. Testing the stationarity of a filter's own innovations is
-circular. An earlier draft of this project defended the result on the grounds that the
+close to circular by construction, so the contribution is not that observation but the controls
+below, which show that even genuinely cointegrated pairs are indistinguishable from random walks
+under the screen. An earlier draft of this project defended the result on the grounds that the
 parameters were fit on training data only and never refit on test. That defense misses the
 mechanism. The whitening holds out of sample too, because the filter keeps adapting on the
 test window from its frozen dynamics.
@@ -178,9 +183,8 @@ of another coin, and (c) real pairs with one leg block-shuffled. All three pass 
 near-$100\%$ rate as the real pairs (Table~\ref{tab:kalman-placebo}). A clean, non-circular
 test tells the opposite story. Engle--Granger~\cite{engle1987cointegration} on the test window, and a
 static-OLS ADF, put genuine out-of-sample cointegration at $2$--$3\%$ of pairs on the matched
-window, at or below the $5\%$ null floor. The screen carries no cointegration information. That
-is not a claim that no pair ever co-moves; it is that the screen cannot tell. Its $100\%$ is
-noise dressed as signal.
+window, at or below the $5\%$ null floor. The screen carries no cointegration information. We are not
+claiming that no pair ever co-moves, only that this screen cannot detect it.
 
 \begin{table}[h]
 \centering
@@ -270,8 +274,9 @@ Daily  & $100.0\%$ & $70.0\%$  & $100.0\%$ & $68.3\%$  & $5.0\%$  & $8.3\%$ \\
 \centering
 \includegraphics[width=0.72\linewidth]{fig_freq_invariance}
 \caption{The Kalman screen carries no cointegration information at any frequency. Real pairs and
-random-walk placebos pass at the same near-$100\%$ rate at hourly, four-hour, and daily bars,
-while a clean Engle--Granger test stays far lower. Exact values in
+random-walk placebos pass together at hourly, four-hour, and daily bars (near $100\%$ except at
+daily, where both fall to about $70\%$ under the stricter threshold), while a clean Engle--Granger
+test stays far lower. Exact values in
 Tables~\ref{tab:kalman-placebo} and~\ref{tab:kalman-freq}.}
 \label{fig:freq}
 \end{figure}
@@ -289,7 +294,9 @@ produced a large reversion edge.
 
 The edge is mechanical. Subtracting a trailing mean from any series, including a pure random
 walk, manufactures mean reversion, because the trailing mean chases the level and the deviation
-from it cannot wander as freely as the raw series. A random walk has no mean to revert to, yet
+from it cannot wander as freely as the raw series. Demeaning by a trailing window of length $L$
+induces negative autocorrelation of order $1/L$ in the result, a known bias, so the floor is
+calculable rather than fitted. A random walk has no mean to revert to, yet
 a rolling $z$-score on one still reverts.
 
 We measured the mechanical floor two ways, and both are large. Per $|z|>2$ event, the signed
@@ -417,15 +424,16 @@ not rescue the strategy.
 
 The efficiency reading is scoped to the liquid core. The Level-2 tests cover top-50 aggregate book
 metrics and four megacap symbols on the global venue; the thin Binance.US micro-caps where the
-marginal reversion edge of Section~\ref{sec:survivor} lives are not in this sample. So the two
-findings fit together: the majors are efficient, and the names with an apparent edge are too thin
-to trade.
+marginal reversion edge of Section~\ref{sec:survivor} lives are not in this sample. The two
+findings plausibly fit together, though across non-overlapping samples rather than on one venue:
+the majors we can measure are efficient, and the names with an apparent edge are too thin to trade.
+We did not measure the micro-caps' microstructure directly, so the join is an inference.
 
 % =====================================================================
 \section{The marginal survivor}
 \label{sec:survivor}
 
-One strategy survives, and its honest account is its bounds. There is a real, market-neutral,
+One strategy survives, but only barely, and its limits matter more than its headline. There is a real, market-neutral,
 diversified mean-reversion effect in crypto pair spreads. Its tradable magnitude is uncertain, it
 exists only without a stop, and a literal backtest of it inflates spectacularly. We lead with the
 bounds because they are the result.
@@ -492,8 +500,13 @@ three real collapses (LUNA, UST, FTT, each paired with BTC, with the selector's 
 overridden). Without a stop the loss runs $-117\%$ to $-258\%$ per pair, with intra-collapse
 drawdowns to $-1{,}300\%$; the structural-break circuit breaker (halt after a single leg moves more
 than $50\%$ against the position) caps the loss to about $-65\%$ to $-91\%$ and the worst drawdown
-to $-117\%$. The breaker blunts the tail but does not remove it, and a fully point-in-time universe
-of every delisted coin is still beyond our data.
+to $-117\%$. The breaker blunts the tail but does not remove it. At the book level, diversification absorbs
+individual breaks: a stress test that injects permanent breaks (one leg diverging up to $86\%$ and
+never reverting) into a fraction of the 40 pairs each quarter erases the gross no-stop edge only
+near a $20\%$-per-quarter ($\sim$$80\%$/yr) attrition rate, far above realized delisting frequencies.
+That bounds the mechanism rather than the HAC-honest Sharpe, but it shows the per-pair tail does not
+by itself drive the book. A fully point-in-time universe of every delisted coin is still beyond our
+data.
 
 The defensible claim is therefore the sensitivity itself. There is a real, market-neutral
 reversion signal in crypto pair spreads that can be selected by reversion speed. Whether it is
@@ -533,7 +546,7 @@ Section~\ref{sec:survivor}.
 \section{Conclusion}
 \label{sec:conclusion}
 
-The screens were the problem, not the market. The Kalman cointegration test and the rolling
+Our negative results come from the screens we used, not from the market. The Kalman cointegration test and the rolling
 $z$-score both pass placebos they should fail, at every frequency we tested. Order flow forecasts
 only the next few seconds, a horizon no one can trade. The one market-neutral reversion effect
 that survives is real but marginal, stop-sensitive, and selection-sensitive, and a literal
@@ -546,7 +559,8 @@ tradeable horizons: the information is real, and the market has already priced i
 
 What would move the result is a genuinely point-in-time universe with delisted coins, a capacity-
 and impact-aware cost model, and a single pre-registered configuration evaluated once on data the
-search never saw. Until then, the honest reading of crypto pair trading is the efficiency reading.
+search never saw. Until then, the efficiency reading holds for the liquid core we can measure; for the thin tail
+where delisting risk lives, we say undetermined, not efficient.
 
 % =====================================================================
 \begin{thebibliography}{99}
