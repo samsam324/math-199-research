@@ -31,9 +31,9 @@ survives is either priced too fast to trade or too marginal to deploy: order-flo
 in the Level-2 book decays within seconds, reversion speed is a selectable property of pairs
 (Spearman $\rho = 0.46$) but selectability is not profit, and the one market-neutral
 mean-reversion book that clears honest accounting posts a HAC- and venue-adjusted monthly
-Sharpe near $1.0$, and only as a never-stop, multi-week hold; its one pre-registered arm gives a
-confidence interval that spans zero, so we read $1.0$ as an exploratory best estimate, not a
-significant edge. We read the result
+Sharpe near $1.0$, and only without a stop and as a multi-week hold. Its one pre-registered arm
+gives a confidence interval that spans zero, so we read $1.0$ as an exploratory best estimate, not
+a significant edge. We read the result
 as a market-efficiency statement about crypto pair spreads, and as a cautionary standard: a
 cointegration or $z$-score screen should not be trusted until it has been shown to fail on a
 matched placebo.
@@ -170,9 +170,8 @@ adapts its hedge ratio to track whatever relationship is present. Its innovation
 driven toward whiteness, exactly white only for a correctly specified filter at steady state,
 and approximately so here on the frozen-parameter test window. An ADF test on a near-white
 series rejects the unit root almost always, whether or not the two assets are cointegrated. Testing the stationarity of a filter's own innovations is
-close to circular by construction, so the contribution is not that observation but the controls
-below, which show that even genuinely cointegrated pairs are indistinguishable from random walks
-under the screen. An earlier draft of this project defended the result on the grounds that the
+close to circular, so what matters is not that observation but the controls below, which show that
+even genuinely cointegrated pairs are indistinguishable from random walks under the screen. An earlier draft of this project defended the result on the grounds that the
 parameters were fit on training data only and never refit on test. That defense misses the
 mechanism. The whitening holds out of sample too, because the filter keeps adapting on the
 test window from its frozen dynamics.
