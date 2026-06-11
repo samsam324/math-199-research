@@ -1,0 +1,78 @@
+{
+  "single_window__no_stop": {
+    "pairs_per_window": [
+      2
+    ],
+    "n_hours": 8443,
+    "n_months": 7,
+    "sharpe_monthly": 1.595879934643246,
+    "sharpe_hourly_ann_hac": 0.9498719129993222,
+    "sharpe_hourly_se": 0.8144344350261689,
+    "hac_inflation": 0.6392674232758673,
+    "sharpe_hourly_ci": [
+      -0.20740550127662397,
+      1.893164630602557
+    ],
+    "total_pnl_pct": 76.48260976125944,
+    "maxdd_pct": -17.983170315285733,
+    "beta_to_index": 0.14752294556287357
+  },
+  "rolling_heldout__no_stop": {
+    "pairs_per_window": [
+      40,
+      40,
+      40
+    ],
+    "n_hours": 6576,
+    "n_months": 9,
+    "sharpe_monthly": 5.1658620879884465,
+    "sharpe_hourly_ann_hac": 5.847307694561698,
+    "sharpe_hourly_se": 0.9515273437283991,
+    "hac_inflation": 0.6783495270578367,
+    "sharpe_hourly_ci": [
+      4.566787143844227,
+      7.195029117942254
+    ],
+    "total_pnl_pct": 259.01456685978087,
+    "maxdd_pct": -10.81181105898853,
+    "beta_to_index": -0.11086218325387781
+  },
+  "single_window__no_stop_plus_circuit_breaker": {
+    "pairs_per_window": [
+      2
+    ],
+    "n_hours": 8443,
+    "n_months": 7,
+    "sharpe_monthly": 1.595879934643246,
+    "sharpe_hourly_ann_hac": 0.9498719129993222,
+    "sharpe_hourly_se": 0.8144344350261689,
+    "hac_inflation": 0.6392674232758673,
+    "sharpe_hourly_ci": [
+      -0.20740550127662397,
+      1.893164630602557
+    ],
+    "total_pnl_pct": 76.48260976125944,
+    "maxdd_pct": -17.983170315285733,
+    "beta_to_index": 0.14752294556287357
+  },
+  "rolling_heldout__no_stop_plus_circuit_breaker": {
+    "pairs_per_window": [
+      40,
+      40,
+      40
+    ],
+    "n_hours": 6576,
+    "n_months": 9,
+    "sharpe_monthly": 5.042525653005379,
+    "sharpe_hourly_ann_hac": 5.899024994304503,
+    "sharpe_hourly_se": 0.9881441638366049,
+    "hac_inflation": 0.7315374622433624,
+    "sharpe_hourly_ci": [
+      4.534697909895067,
+      7.396904229581125
+    ],
+    "total_pnl_pct": 248.29917536034114,
+    "maxdd_pct": -12.048750943997511,
+    "beta_to_index": -0.11466465345755826
+  }
+}

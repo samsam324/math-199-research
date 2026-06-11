@@ -1,0 +1,19 @@
+window 2025-07-01..2025-10-01: monthlyS~6.51  PnL=+22%  top pairs [('GRTUSDT/EGLDUSDT', 105), ('EGLDUSDT/POLYXUSDT', 93), ('EGLDUSDT/FILUSDT', 89)]
+window 2025-10-01..2026-01-01: monthlyS~20.99  PnL=+115%  top pairs [('WAXPUSDT/ZILUSDT', 456), ('YFIUSDT/NEOUSDT', 314), ('ACHUSDT/POLYXUSDT', 298)]
+window 2026-01-01..2026-04-01: monthlyS~7.27  PnL=+123%  top pairs [('THETAUSDT/SANDUSDT', 355), ('VTHOUSDT/WAXPUSDT', 331), ('ACHUSDT/STORJUSDT', 303)]
+
+top-10 pairs by total held-out PnL:
+  ACHUSDT/STORJUSDT          +517.5%
+  WAXPUSDT/ZILUSDT           +456.5%
+  THETAUSDT/SANDUSDT         +355.1%
+  VTHOUSDT/WAXPUSDT          +331.1%
+  YFIUSDT/NEOUSDT            +314.2%
+  WAXPUSDT/EGLDUSDT          +301.4%
+  ACHUSDT/POLYXUSDT          +298.4%
+  EGLDUSDT/STORJUSDT         +297.1%
+  WAXPUSDT/RVNUSDT           +286.0%
+  SANDUSDT/SUSHIUSDT         +280.6%
+
+total pair-PnL=10361%  top-1=517% (5% of total)  top-3=1329% (13% of total)  n_pairs=107
+
+monthly Sharpe after dropping top-3 pairs (hindsight): 5.00
