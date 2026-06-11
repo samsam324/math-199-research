@@ -113,7 +113,8 @@ from Tardis: top-25 book snapshots and the trade tape for Binance spot, the 50 m
 symbols, over 2024. We keep these separate on purpose. The spread and reversion results are
 Binance.US and Coinbase hourly klines; only the microstructure results use the Tardis book.
 
-The investable universe is the most liquid USDT symbols, constructed as of each analysis time. A
+The investable universe is the 50 most liquid USDT symbols, $\binom{50}{2}=1{,}225$ candidate
+pairs, constructed as of each analysis time. A
 symbol is eligible only if its history begins before the analysis window and reaches its start, a
 point-in-time rule added after an audit found that later listings could otherwise leak into the
 historical universe. The local store holds currently listed symbols, so delisted coins are mostly
@@ -453,9 +454,19 @@ in-sample figure, and it is not a tradable edge. It is broad-based inflation acr
 high-volatility micro-cap alts: individual pair-windows post $+300$ to $+520\%$ in three months
 under a flat 15 bps cost that badly understates the true cost of trading those names, with
 unit-notional accounting that ignores capacity. A $+517\%$ three-month leg implies roughly a
-$150\times$ gross return, not realizable at any size. The same machinery on a venue without those
-micro-caps returns the $\sim$$1.0$ figure. So the held-out test does not confirm an alpha; it
+$150\times$ gross return, not realizable at any size. Those names are barely traded: on Binance.US
+the held-out micro-caps (WAXP, ZIL, VTHO, ACH, EGLD) turn over a median of a few hundred to a few
+thousand dollars a day, roughly three to four thousand times less than the majors, so the
+deployable notional is negligible and a flat, size-independent cost is indefensible. The same
+machinery on a venue without those micro-caps returns the $\sim$$1.0$ figure. So the held-out test does not confirm an alpha; it
 shows the raw backtest is untrustworthy, the paper's thesis turned on our own surviving result.
+
+The pre-registration had a second arm, which we report in full. A single selection over the whole
+pre-2025-06 history qualified only two pairs (long-horizon reversion in the tradeable band is
+rare), and they posted a monthly Sharpe of $1.60$ with a HAC confidence interval of $[-0.21,
+1.89]$ that spans zero. So the pre-registered test confirms the inflation and gives no significant
+evidence for a deployable edge. The $\sim$$1.0$ figure is itself exploratory, adjusted for HAC and
+venue after the search, and was never pre-registered.
 
 \subsection{What would have to be true}
 

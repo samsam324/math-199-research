@@ -1,0 +1,17 @@
+median daily $ volume over the held-out window (>= 2025-06-01)
+
+  BTCUSDT              $1179891
+  ETHUSDT               $804298
+  SOLUSDT               $365871
+  WAXPUSDT                  $92
+  ZILUSDT                 $1631
+  VTHOUSDT                $3086
+  ACHUSDT                  $210
+  EGLDUSDT                 $214
+
+  median major: $804,298/day   median micro-cap: $214/day   ratio: 3,762x
+  at a 1% participation cap, deployable notional per micro-cap leg ~ $2
+  -> a flat 15bps cost is size-independent; on names trading ~$214/day it is not defensible,
+     so the held-out Sharpe is not realizable at meaningful capital.
+
+saved -> scratch/microcap_adv.csv
