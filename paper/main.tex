@@ -328,7 +328,7 @@ $\pm 2$ and reverts toward zero, although the series has no mean to revert to.}
 
 Both screens share a failure mode. They manufacture the appearance of structure that a matched
 placebo reproduces. Both are robust to the analysis choices: the rolling-$z$ floor stays positive
-($+0.5$ to $+2.6z$) across lookback, horizon, and threshold, and the Kalman placebo passes at
+($+0.45$ to $+2.6z$) across lookback, horizon, and threshold, and the Kalman placebo passes at
 $85\%$ or more across the ADF lag, so neither is an artifact of the parameters we picked. A cointegration screen built on a
 filter's own innovations must be checked against a white-noise placebo before it is believed,
 and a rolling-$z$ reversion claim must be checked against a random-walk null. Neither check is
@@ -489,10 +489,10 @@ so they are correlated rather than independent confirmations. Its survivorship r
 on the selector avoiding coins that later delist, not on surviving them: a held position in a
 coin that collapses is a $-100\%$ leg. We tested this directly by forcing the book to hold through
 three real collapses (LUNA, UST, FTT, each paired with BTC, with the selector's avoidance
-overridden). Without a stop the loss runs $-120\%$ to $-260\%$ per pair, with intra-collapse
+overridden). Without a stop the loss runs $-117\%$ to $-258\%$ per pair, with intra-collapse
 drawdowns to $-1{,}300\%$; the structural-break circuit breaker (halt after a single leg moves more
-than $50\%$ against the position) caps the loss to about $-65\%$ to $-90\%$ and the worst drawdown
-to $-120\%$. The breaker blunts the tail but does not remove it, and a fully point-in-time universe
+than $50\%$ against the position) caps the loss to about $-65\%$ to $-91\%$ and the worst drawdown
+to $-117\%$. The breaker blunts the tail but does not remove it, and a fully point-in-time universe
 of every delisted coin is still beyond our data.
 
 The defensible claim is therefore the sensitivity itself. There is a real, market-neutral
@@ -512,7 +512,7 @@ the conclusion.
 \item \textbf{Survivorship.} The local store holds currently listed symbols, so most delisted
 coins are absent. The surviving strategy's robustness rests on the selector avoiding coins that
 later delist; forced to hold through three real collapses (Section~\ref{sec:survivor}) the no-stop
-loss runs $-120\%$ to $-260\%$ per pair and the circuit breaker caps it near $-65\%$ to $-90\%$. A
+loss runs $-117\%$ to $-258\%$ per pair and the circuit breaker caps it near $-65\%$ to $-91\%$. A
 complete point-in-time universe of every delisted coin is still beyond our data.
 \item \textbf{Selection.} No single configuration was fixed before the search and evaluated once
 across the whole project. The pre-registered test of Section~\ref{sec:survivor} covers one
