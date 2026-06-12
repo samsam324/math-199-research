@@ -37,17 +37,17 @@ rw = np.cumsum(rng.normal(0, 1, n))
 s = pd.Series(rw)
 rmean = s.rolling(lb).mean(); rstd = s.rolling(lb).std()
 z = ((s - rmean) / rstd).values
-fig, (a1, a2) = plt.subplots(2, 1, figsize=(5.4, 3.8), sharex=True)
+fig, (a1, a2) = plt.subplots(2, 1, figsize=(6.8, 3.8), sharex=True)
 a1.plot(rw, color="#2b6cb0", lw=0.9, label="random walk")
 a1.plot(rmean.values, color="#dd6b20", lw=1.0, label="trailing mean (120)")
-a1.legend(frameon=False, fontsize=8, loc="upper left"); a1.set_ylabel("level")
+a1.legend(frameon=False, fontsize=8, loc="center left", bbox_to_anchor=(1.0, 0.5)); a1.set_ylabel("level")
 a2.plot(z, color="#2b6cb0", lw=0.8)
 for lvl in (2, -2):
     a2.axhline(lvl, color="#999999", lw=0.6, ls="--")
 a2.axhline(0, color="#cccccc", lw=0.5)
 ent = np.where(np.abs(z) > 2)[0]
 a2.scatter(ent, z[ent], s=5, color="#dd6b20", zorder=3, label="$|z|>2$ entries")
-a2.legend(frameon=False, fontsize=8, loc="upper left")
+a2.legend(frameon=False, fontsize=8, loc="center left", bbox_to_anchor=(1.0, 0.5))
 a2.set_ylabel("rolling $z$"); a2.set_xlabel("time (bars)")
 fig.savefig(os.path.join(OUT, "fig_rollingz_noise.pdf")); plt.close(fig)
 
