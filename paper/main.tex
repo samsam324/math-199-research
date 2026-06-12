@@ -22,7 +22,7 @@ pair spreads. We report mostly what does not work, and why that is the more usef
 Two screens that appear to find strong, tradable structure are statistical artifacts. A
 Kalman dynamic hedge ratio appears to produce stationary, mean-reverting spreads for nearly
 the entire liquid universe, but it runs a stationarity test on a filter's own innovations,
-which are white by construction; placebos that cannot be cointegrated pass the same screen at
+which are white by construction. Placebos that cannot be cointegrated pass the same screen at
 the same near-$100\%$ rate, while a clean test finds genuine out-of-sample cointegration in
 only a few percent of pairs. A rolling $z$-score appears to generate a large reversion edge,
 but it reverts mechanically even on a pure random walk. Both artifacts hold at hourly,
@@ -58,7 +58,7 @@ and information flow.'' This paper answers that question, and the answer is most
 
 We make three contributions. First, two natural-looking screens manufacture the appearance of
 structure. A Kalman dynamic-hedge cointegration test reports out-of-sample cointegration in almost
-every liquid pair, but it tests a filter's own innovations, which are near-white by construction;
+every liquid pair, but it tests a filter's own innovations, which are near-white by construction.
 placebos that cannot be cointegrated pass at the same rate the real pairs do, at hourly,
 four-hour, and daily frequencies. A rolling $z$-score reports strong mean reversion, yet it reverts mechanically
 even on a pure random walk. Each is exposed by a single matched placebo, and the placebo is the
@@ -72,7 +72,7 @@ near $5$ on micro-cap moves no one could trade, so even the strategy that surviv
 The methodological lesson is narrow and reusable: a cointegration or mean-reversion screen should
 not be believed until it has been shown to fail on a matched placebo. The
 backtest-overfitting literature~\cite{bailey2014dsr, harvey2016crosssection} checks the strategy
-that gets selected; we check the screen that builds the spread.
+that gets selected. We check the screen that builds the spread.
 
 % =====================================================================
 \section{Related work}
@@ -99,9 +99,9 @@ The microstructure tests use standard tools: Kyle's $\lambda$~\cite{kyle1985}, o
 imbalance~\cite{cont2014ofi}, VPIN~\cite{easleyVPIN2012}, PIN~\cite{ekop1996pin}, and information
 shares~\cite{hasbrouck1995}. The placebo logic is the backtest-overfitting literature applied one
 level earlier. Bailey and coauthors show a handful of trials manufacture spurious in-sample
-performance~\cite{bailey2014dsr, bailey2014pseudomath}; Harvey et
+performance~\cite{bailey2014dsr, bailey2014pseudomath}. Harvey et
 al.~\cite{harvey2016crosssection} and Hou et al.~\cite{hou2020replicating} show most published
-factors fail multiple-testing correction; and Gelman and Loken~\cite{gelman2013garden} show
+factors fail multiple-testing correction. And Gelman and Loken~\cite{gelman2013garden} show
 data-contingent choices inflate error even without explicit fishing. We apply that skepticism to
 the screens that build the spread, not only to the strategy selected on it.
 
@@ -115,7 +115,7 @@ spanning 2021 through May 2026. The cross-exchange check pulls the same hours fr
 from Tardis: top-25 book snapshots and the trade tape for Binance.com (global) spot, the 50 most liquid USDT
 symbols, over 2024. We keep these separate on purpose, and note the venue gap: the spread strategy trades Binance.US, a
 much thinner venue, while the order-flow null is measured on the deeper global book. The spread and
-reversion results are Binance.US and Coinbase hourly klines; only the microstructure results use
+reversion results are Binance.US and Coinbase hourly klines. Only the microstructure results use
 the Tardis book.
 
 The investable universe is the 50 most liquid USDT symbols, $\binom{50}{2}=1{,}225$ candidate
@@ -123,13 +123,13 @@ pairs, constructed as of each analysis time. A
 symbol is eligible only if its history begins before the analysis window and reaches its start, a
 point-in-time rule added after an audit found that later listings could otherwise leak into the
 historical universe. The local store holds currently listed symbols, so delisted coins are mostly
-absent; we treat this as a survivorship limitation (Section~\ref{sec:limits}), not a solved
+absent. We treat this as a survivorship limitation (Section~\ref{sec:limits}), not a solved
 problem. Costs are charged on every position change at 15 bps per leg (10 bps fee, 5 bps
 slippage), about 30 bps round-trip for the two-leg spread, and stated before any performance
 number.
 
 Three rules hold throughout. Inference uses Newey--West HAC standard errors, because overlapping
-targets and month-long holds make naive errors far too small; in one case a spurious five-minute
+targets and month-long holds make naive errors far too small. In one case a spurious five-minute
 reversal collapsed from $t = -22.8$ to $t = -1.4$ under HAC. Evaluation is strict walk-forward,
 six-month train and three-month test, with hedge ratios and pair selection fit on the train
 window only. And every positive claim is checked against a matched placebo, a random-walk,
@@ -222,7 +222,7 @@ though genuine out-of-sample cointegration is hard to detect on a short window.
 \begin{table}[ht]
 \centering
 \caption{Positive versus negative control. The Kalman screen passes both at the same rate and its
-innovations are white in both, so it carries no cointegration information; the clean tests separate
+innovations are white in both, so it carries no cointegration information. The clean tests separate
 them. 60 constructed pairs per group, 1500-bar train, 500-bar test.}
 \label{tab:poscontrol}
 \begin{tabular}{lrr}
@@ -243,7 +243,7 @@ frequencies on a recent multi-year window (Table~\ref{tab:kalman-freq}). Real pa
 random-walk placebos pass together at every cadence (Figure~\ref{fig:freq}): $100\%$ versus
 $100\%$ at hourly and four-hour, and $70\%$ versus $68\%$ at daily ($p<0.001$). The clean tests behave differently.
 Engle--Granger runs at $25\%$ on this long hourly window and falls to the $5\%$ null floor at
-daily; a static-OLS ADF runs higher still, from $42\%$ at hourly to $8\%$ at daily. Both are
+daily. A static-OLS ADF runs higher still, from $42\%$ at hourly to $8\%$ at daily. Both are
 window-dependent. Over long hourly spans the crypto majors share a common trend, which a clean
 test reads as broad co-movement, and which the matched short window of
 Table~\ref{tab:kalman-placebo} puts back at the $2$--$3\%$ floor. Neither clean test approaches
@@ -254,7 +254,7 @@ carries no cointegration information at any frequency we tested.
 \begin{table}[h]
 \centering
 \caption{Frequency robustness of the Kalman artifact. Real pairs and random-walk placebos pass
-the screen together at every cadence; the clean Engle--Granger and static-OLS benchmarks do
+the screen together at every cadence. The clean Engle--Granger and static-OLS benchmarks do
 not. Top-50 universe, 60 pairs per cell, recent multi-year window.}
 \label{tab:kalman-freq}
 \begin{tabular}{lrrrrrr}
@@ -302,7 +302,7 @@ a rolling $z$-score on one still reverts.
 We measured the mechanical floor two ways, and both are large. Per $|z|>2$ event, the signed
 reversion on pure random walks is positive at every frequency we tested: $+0.98z$ at hourly,
 $+1.61z$ at four-hour, and $+1.51z$ at daily, each many standard deviations from zero
-(Table~\ref{tab:rollingz}; Figure~\ref{fig:rollingz} shows the mechanism on one path). As a trading rule at hourly frequency, a rolling-$z$ strategy that
+(Table~\ref{tab:rollingz}, Figure~\ref{fig:rollingz} shows the mechanism on one path). As a trading rule at hourly frequency, a rolling-$z$ strategy that
 posts a Sharpe near $4.75$ on our data still posts about $2.2$ on random pairs and $2.4$ on
 phase-randomized noise. Most of the apparent edge is the floor. For this reason every per-event
 reversion magnitude elsewhere in this paper is reported net of a per-pair, per-window
@@ -364,7 +364,7 @@ $-0.002$. Reversion speed is a real, graded, persistent property that ranks pair
 
 One caveat belongs on that coefficient. The $\rho = 0.46$ is the strongest of four in-sample
 reversion metrics we tried, chosen after the fact, and it is not corrected for that choice. The
-direction holds across all nine splits; the exact coefficient is a best case.
+direction holds across all nine splits. The exact coefficient is a best case.
 
 Selectability is not profit. Ranking pairs by reversion speed tells you where reversion lives.
 Whether it can be extracted after costs is a separate question, and the strategy built on the
@@ -381,7 +381,7 @@ trade against. That null holds for both forecasting and execution.
 Trade size does proxy information. Large trades carry about twice the one-second price impact of
 small ones, and the ranking replicates across all of 2024 on four coins (one-second impact for
 BTC of $0.33/0.23/0.13$ bps for institutional, mid, and retail, with institutional $2.0$ to
-$2.6\times$ retail; the longer-horizon permanent estimate is noisier). Book-side order-flow
+$2.6\times$ retail, the longer-horizon permanent estimate is noisier). Book-side order-flow
 imbalance explains within-second mid-price moves better than trade flow does (incremental $R^2$
 of $+0.12$ to $+0.16$ for BTC and ETH), and $81$ to $85\%$ of the liquidity that leaves the best
 quote is cancellations, invisible to trade-only analysis.
@@ -403,7 +403,7 @@ crash.
 \begin{table}[h]
 \centering
 \caption{Order-flow signals do not improve execution. Implementation shortfall versus arrival
-mid, pooled, 30-second horizon; lower is cheaper. 18{,}432 orders, BTC/ETH/SOL/AVAX.}
+mid, pooled, 30-second horizon. Lower is cheaper. 18{,}432 orders, BTC/ETH/SOL/AVAX.}
 \label{tab:exec}
 \begin{tabular}{lr}
 \toprule
@@ -423,7 +423,7 @@ to $23\%$ below the flat 5 bps slippage component the earlier backtests assumed.
 not rescue the strategy.
 
 The efficiency reading is scoped to the liquid core. The Level-2 tests cover top-50 aggregate book
-metrics and four megacap symbols on the global venue; the thin Binance.US micro-caps where the
+metrics and four megacap symbols on the global venue. The thin Binance.US micro-caps where the
 marginal reversion edge of Section~\ref{sec:survivor} lives are not in this sample. The two
 findings plausibly fit together, though across non-overlapping samples rather than on one venue:
 the majors we can measure are efficient, and the names with an apparent edge are too thin to trade.
@@ -453,7 +453,7 @@ so the effect is not a coding artifact.
 The exit rule decides the sign of the P\&L. With a conventional $|z| = 4$ stop the strategy loses
 (Sharpe $-2.25$), and the stop is the cause: it realizes losses on spreads that then revert.
 Remove the stop and hold to convergence and the strategy turns positive. The project set out to
-build a tightly risk-managed hourly strategy; this is the opposite, a patient never-stop book
+build a tightly risk-managed hourly strategy. This is the opposite, a patient never-stop book
 with a median hold near 35 days, in which $78\%$ of positions do not converge within a quarter and
 about a third of the return is a generic survivor co-movement floor.
 
@@ -476,7 +476,7 @@ $150\times$ gross return, not realizable at any size. Those names are barely tra
 the held-out micro-caps (WAXP, ZIL, VTHO, ACH, EGLD) turn over a median of a few hundred to a few
 thousand dollars a day, roughly three to four thousand times less than the majors, so the
 deployable notional is negligible and a flat, size-independent cost is indefensible. The same
-machinery on a venue without those micro-caps returns the $\sim 1.0$ figure. So the held-out test does not confirm an alpha; it
+machinery on a venue without those micro-caps returns the $\sim 1.0$ figure. So the held-out test does not confirm an alpha. It
 shows the raw backtest is untrustworthy. The paper's thesis has turned on our own surviving result.
 
 The pre-registration had a second arm, which we report in full. A single selection over the whole
@@ -498,12 +498,12 @@ on the selector avoiding coins that later delist, not on surviving them: a held 
 coin that collapses is a $-100\%$ leg. We tested this directly by forcing the book to hold through
 three real collapses (LUNA, UST, FTT, each paired with BTC, with the selector's avoidance
 overridden). Without a stop the loss runs $-117\%$ to $-258\%$ per pair, with intra-collapse
-drawdowns to $-1{,}300\%$; the structural-break circuit breaker (halt after a single leg moves more
+drawdowns to $-1{,}300\%$. The structural-break circuit breaker (halt after a single leg moves more
 than $50\%$ against the position) caps the loss to about $-65\%$ to $-91\%$ and the worst drawdown
 to $-117\%$. The breaker blunts the tail but does not remove it, and at the book level it is what separates a
 bounded delisting risk from an unbounded one. We also inject permanent delisting-scale breaks into a
 fraction of the 40 pairs each quarter. Without the breaker the no-stop book's monthly Sharpe falls
-to zero and then negative as the break rate rises; with the breaker it stays positive across the
+to zero and then negative as the break rate rises. With the breaker it stays positive across the
 whole range, keeping about $96\%$ of its monthly Sharpe at an $8\%$/yr break rate and $88\%$ at
 $19\%$/yr. Three things make those retention figures optimistic. First, the injected breaks ramp
 smoothly, so the breaker exits near its $50\%$ threshold, whereas the real gapping collapses above
@@ -530,7 +530,7 @@ the conclusion.
 \begin{itemize}
 \item \textbf{Survivorship.} The local store holds currently listed symbols, so most delisted
 coins are absent. The surviving strategy's robustness rests on the selector avoiding coins that
-later delist; forced to hold through three real collapses (Section~\ref{sec:survivor}) the no-stop
+later delist. Forced to hold through three real collapses (Section~\ref{sec:survivor}) the no-stop
 loss runs $-117\%$ to $-258\%$ per pair and the circuit breaker caps it near $-65\%$ to $-91\%$. A
 complete point-in-time universe of every delisted coin is still beyond our data.
 \item \textbf{Selection.} No single configuration was fixed before the search and evaluated once
@@ -539,9 +539,9 @@ configuration but cannot undo the selection that produced it, so the deflated-Sh
 stands.
 \item \textbf{Microstructure coverage.} The event-level Level-2 tests use four symbols (BTC, ETH,
 SOL, AVAX) over days sampled across 2024, not a continuous year on the full universe. The
-aggregate book metrics use the top-50; the execution and impact results are four-symbol.
+aggregate book metrics use the top-50. The execution and impact results are four-symbol.
 \item \textbf{Single venue and quote.} The spread results are Binance.US, USDT-quoted, with a
-Coinbase cross-check; the microstructure is Binance spot. We have not tested other quote
+Coinbase cross-check. The microstructure is Binance spot. We have not tested other quote
 currencies or a broader set of venues.
 \item \textbf{Costs and capacity.} Costs are a flat per-leg charge. We do not model market impact
 or capacity, which is exactly what inflates the held-out micro-cap backtest of

@@ -1,10 +1,10 @@
-# L2 / microstructure research — consolidated findings
+# L2 / microstructure research, consolidated findings
 
 **Status: paper-ready synthesis of the phase-2 L2 research loop (iterations 1–8).**
 This document distills `docs/l2_research_log.md` (8 iterations, ~20 independent tests on
 real Tardis Level-2 order-book + tick-trade data) into the results that should go in the
 paper. It supersedes the optimistic framing in `docs/RESULTS.md` and `docs/l2_analysis.md`
-where they conflict; both are kept for the record. Every headline number below is backed
+where they conflict. Both are kept for the record. Every headline number below is backed
 by a committed script in `scratch/` and was checked against a placebo or a robustness
 control before being reported.
 
@@ -12,13 +12,13 @@ control before being reported.
 
 ## Executive summary
 
-The phase-2 question was: *does real L2 data — order-book depth, signed tick volume, the
-advisor's "volume as information / retail-vs-institutional" and "infer L3 from L2" ideas —
+The phase-2 question was: *does real L2 data, order-book depth, signed tick volume, the
+advisor's "volume as information / retail-vs-institutional" and "infer L3 from L2" ideas,
 turn this crypto pairs-trading strategy into something that works?* After eight iterations
 the honest answer is a **rigorous, largely-null result with two genuine methodological
 contributions and one real statistical effect that is monetizable only outside the
-strategy's intended (hourly, stop-managed) design.** This is a more defensible — and more
-publishable — paper than the original optimistic one.
+strategy's intended (hourly, stop-managed) design.** This is a more defensible, and more
+publishable, paper than the original optimistic one.
 
 The five results:
 
@@ -34,52 +34,52 @@ The five results:
    with a clean placebo. So there *is* a real, graded, persistent statistical property to
    build on. *(A real positive result.)*
 
-3. **…and its profitability hinges entirely on the stop/exit rule — the real finding.**
+3. **…and its profitability hinges entirely on the stop/exit rule, the real finding.**
    With a conventional |z|=4 stop the strategy loses (net Sharpe −2.25), and the loss is
    *caused by the stop* (it realizes losses on spreads that later revert), not by costs.
    Remove the stop and hold to convergence and it is a **genuine market-neutral, diversified** effect
-   (β≈−0.06; factor R²=1.7%) — but a **real-but-modest** one whose magnitude was repeatedly *over-stated*
+   (β≈−0.06, factor R²=1.7%), but a **real-but-modest** one whose magnitude was repeatedly *over-stated*
    and is now pinned down by a from-zero independent verification (4 clean-room re-implementations + an
-   adversarial skeptic; §3 *Independent verification*). The honest number is **~1.0 monthly Sharpe**, not
-   the ~2.5 first reported: (a) four independent implementations put naive Binance at **~2.0–2.2** (not 2.5);
-   (b) even the *monthly* Sharpe is **serial-correlation-inflated** on Binance (AC(1)=+0.48 — the ~35-day
-   holds span months), so a Newey–West **HAC correction drops Binance 2.18→~1.4**; (c) on the **independent
-   exchange (Coinbase)** it is **~0.85–0.90** (HAC-stable — the genuine venue-robust floor). So the
+   adversarial skeptic, §3 *Independent verification*). The honest number is **~1.0 monthly Sharpe**, not
+   the ~2.5 first reported: (a) four independent implementations put naive Binance at **~2.0–2.2** (not 2.5).
+   (b) even the *monthly* Sharpe is **serial-correlation-inflated** on Binance (AC(1)=+0.48, the ~35-day
+   holds span months), so a Newey–West **HAC correction drops Binance 2.18→~1.4**. (c) on the **independent
+   exchange (Coinbase)** it is **~0.85–0.90** (HAC-stable, the genuine venue-robust floor). So the
    HAC-and-venue-honest deployable figure is **~0.85 (Coinbase) to ~1.4 (Binance), centered ~1.0**, and it is
    recency/pump-concentrated. The effect is *real* (independently reproduced, no look-ahead, stop-loses
    robustly, both methodological artifacts confirmed) but **modest (~1), not a ~2.5 alpha.**
    Survivorship: the *aggregate* is stable, but
-   only because the selector **avoids** the about-to-collapse coins; the in-position delisting
-   tail (a held LUNA pair = −100%/leg) is the real risk — but it is **controllable** with a
-   structural-break circuit breaker (caps it at ~no Sharpe cost; §3 deployability). Its
+   only because the selector **avoids** the about-to-collapse coins. The in-position delisting
+   tail (a held LUNA pair = −100%/leg) is the real risk, but it is **controllable** with a
+   structural-break circuit breaker (caps it at ~no Sharpe cost, §3 deployability). Its
    significance is also **selection-sensitive** (the
    deflated Sharpe survives the no-stop-family trial set but fails the whole stop-vs-no-stop
    search), and its "independent" supports are actually correlated (same universe/selection/
    windows). Diversifying 10→40 pairs cuts the drawdown
    −41%→−29% (the hourly +3.2 and even the monthly ~2.5 are autocorrelation-inflated by the month-long
-   holds — the HAC-honest figure is ~1.4 on Binance, ~0.9 venue-robust). But it is only capturable as a slow,
-   multi-month, never-stop, ~30%-drawdown book (median ~35-day holds; 78% never converge in
-   a quarter; ~⅓ generic survivor co-movement) — **not** the hourly, stop-managed stat-arb
+   holds, the HAC-honest figure is ~1.4 on Binance, ~0.9 venue-robust). But it is only capturable as a slow,
+   multi-month, never-stop, ~30%-drawdown book (median ~35-day holds, 78% never converge in
+   a quarter, ~⅓ generic survivor co-movement), **not** the hourly, stop-managed stat-arb
    the project specified, which loses (the stop, at any width, is what destroys it).
-   *(Iteration 7's "loses even gross" headline was stop-specific and is corrected here — §3.)*
+   *(Iteration 7's "loses even gross" headline was stop-specific and is corrected here, §3.)*
 
-4. **Microstructure / order flow is near-efficient at every tradeable horizon — and even
+4. **Microstructure / order flow is near-efficient at every tradeable horizon, and even
    the "execution value" consolation does not survive measurement.** Across OFI, VPIN,
    Kyle's-λ, book-OFI, cancellations, deep book, cross-asset lead-lag and institutional
    flow, order-flow information has a **seconds-scale half-life** and is 2–3 orders of
    magnitude below trading costs by any horizon you could act on. Book-side OFI and the
    cancellation channel (invisible to trade data) genuinely describe *contemporaneous*
-   price formation — but when I finally **measured** whether that helps execution
+   price formation, but when I finally **measured** whether that helps execution
    (iteration 9: 18,432 simulated orders, real event-level book+tape), the answer is **no**:
    aggressive crossing is cheapest for majors (spread ≈ 1 tick), and the L3-from-L2 signal
-   correlates **+0.06** (noise) with the per-order post-vs-cross advantage — it cannot time
+   correlates **+0.06** (noise) with the per-order post-vs-cross advantage, it cannot time
    placement. A perfect-foresight oracle *could* save ~1.6 bps, so the value exists, but no
    contemporaneous L2 feature forecasts it. *(The advisor's L3-from-L2 and retail/
-   institutional ideas, done concretely and measured — see §4.)*
+   institutional ideas, done concretely and measured, see §4.)*
 
 5. **Realistic L2 execution costs are ~17–23% cheaper than the flat 5 bps assumption** for
    liquid majors, computed by walking the real book (`src/l2_costs.py`). Prior flat-cost
-   backtests were conservative — but cheaper costs do not rescue the strategy.
+   backtests were conservative, but cheaper costs do not rescue the strategy.
 
 A sixth, structural finding underlies all of this: the **rolling z-score mechanically
 reverts even on a pure random walk**, which silently inflates reversion and backtest
@@ -92,14 +92,14 @@ numbers. Subtracting that mechanical floor is required for every reversion claim
 
 | RESULTS.md claim | Verdict here |
 |---|---|
-| §1 "Kalman finds cointegration on 99.7% of pairs OOS" (the self-described strongest finding) | **Retract** — Kalman-innovation whitening artifact; placebos pass at 100% (§1 below). Genuine rate 2–3%. |
-| §1 "Static OLS finds cointegration on 5.4%" | This *is* the honest number, and it ≈ the 5% null false-positive floor — i.e. it was already evidence of *no* cointegration, not a weak positive. |
-| §2 "LSTM/booster beat z-score; ML pnl_mean_to_std ~0.38" | Not re-litigated here, but §3 "ML = fancy z-score" (their own ablation: `latest_spread_z` carries 79% of PnL) is the operative truth; the model ranking also **flips by window** (`l2_analysis.md` Finding 2). Don't report a fixed ranking. |
-| §4 "5 bps break-even is retracted; 15 bps loses deterministically" | **Largely consistent.** With a conventional stop the strategy loses at every cost level (§3). Removing the stop *can* profit — but only as a multi-month, −41%-drawdown hold, not an hourly cost-managed strategy. The "no clean hourly edge after costs" conclusion stands. |
-| §4 Deflated-Sharpe caveat (pre-cost signal indistinguishable from selection-best at N≥50) | **Consistent** — the whole project's edge does not survive selection adjustment. |
+| §1 "Kalman finds cointegration on 99.7% of pairs OOS" (the self-described strongest finding) | **Retract**, Kalman-innovation whitening artifact. Placebos pass at 100% (§1 below). Genuine rate 2–3%. |
+| §1 "Static OLS finds cointegration on 5.4%" | This *is* the honest number, and it ≈ the 5% null false-positive floor, i.e. it was already evidence of *no* cointegration, not a weak positive. |
+| §2 "LSTM/booster beat z-score. ML pnl_mean_to_std ~0.38" | Not re-litigated here, but §3 "ML = fancy z-score" (their own ablation: `latest_spread_z` carries 79% of PnL) is the operative truth. The model ranking also **flips by window** (`l2_analysis.md` Finding 2). Don't report a fixed ranking. |
+| §4 "5 bps break-even is retracted. 15 bps loses deterministically" | **Largely consistent.** With a conventional stop the strategy loses at every cost level (§3). Removing the stop *can* profit, but only as a multi-month, −41%-drawdown hold, not an hourly cost-managed strategy. The "no clean hourly edge after costs" conclusion stands. |
+| §4 Deflated-Sharpe caveat (pre-cost signal indistinguishable from selection-best at N≥50) | **Consistent**, the whole project's edge does not survive selection adjustment. |
 
 Net: the original paper's *cautious* statements (cost ceiling, DSR, "ML = fancy z-score")
-all stand. Its one *optimistic* pillar — 99.7% cointegration — falls. The L2 work replaces
+all stand. Its one *optimistic* pillar, 99.7% cointegration, falls. The L2 work replaces
 it with a cleaner, placebo-validated narrative.
 
 ---
@@ -108,28 +108,28 @@ it with a cleaner, placebo-validated narrative.
 
 - **Source.** Tardis.dev historical: `book_snapshot_25` (top-25 depth, per-update) +
   `trades` (tick volume with aggressor side), Binance spot, top-50 USDT symbols
-  (`data/l2_universe_top50.txt`). ~175 GB raw cache; 170 book / 111+ trade days ingested
-  into 1s bars (`src/l2_store.py`, `src/trades_store.py`); per-trade sizes read from the
+  (`data/l2_universe_top50.txt`). ~175 GB raw cache. 170 book / 111+ trade days ingested
+  into 1s bars (`src/l2_store.py`, `src/trades_store.py`). Per-trade sizes read from the
   raw csv.gz where needed (for the size/institutional work).
 - **Inference discipline.** Every short-horizon regression uses Newey–West HAC SEs (naive
-  OLS inflates t-stats on overlapping returns — this caught a spurious "5-min reversal"
+  OLS inflates t-stats on overlapping returns, this caught a spurious "5-min reversal"
   that collapsed from t=−22.8 to t=−1.4). Reversion/backtest claims use pair-clustered and
   block bootstrap, strict out-of-sample walk-forward splits, and an explicit placebo
   (random-walk / phase-randomized / block-shuffled / random-pair) for every positive claim.
 
 ---
 
-## Result 1 — The cointegration headline is a Kalman whitening artifact (retract) *(contribution #1)*
+## Result 1, The cointegration headline is a Kalman whitening artifact (retract) *(contribution #1)*
 
 Full write-up: **`docs/CORRECTION_kalman_cointegration.md`.**
 
 The screen (`scripts/run_kalman_pair_screen.py` → `src/kalman_hedge.py`) runs the ADF test
 on the Kalman filter's **one-step prediction innovations**. With non-zero state-evolution
 variance (`q_beta>0`), the time-varying hedge ratio adapts to track *whatever* relationship
-exists, so the innovations are **white by construction** — an ADF on them rejects the unit
+exists, so the innovations are **white by construction**, an ADF on them rejects the unit
 root for almost any pair. Testing the stationarity of a filter's own innovations is circular.
 
-**Decisive placebo** — an identical screen on series that *cannot* be cointegrated:
+**Decisive placebo**, an identical screen on series that *cannot* be cointegrated:
 
 | Series tested | ADF p<0.05 | p<0.001 |
 |---|---:|---:|
@@ -138,18 +138,18 @@ root for almost any pair. Testing the stationarity of a filter's own innovations
 | Placebo (b): coin vs phase-randomized surrogate of another coin | 100.0% | 95.0% |
 | Placebo (c): real pair, one leg block-shuffled | 100.0% | 95.0% |
 
-The placebos pass at the *same* 100% rate as real pairs — reproducing the original
+The placebos pass at the *same* 100% rate as real pairs, reproducing the original
 99.7%/96.3% almost exactly. The Kalman ADF carries **zero** cointegration information.
 Clean, non-circular tests (Engle–Granger and static OLS+ADF on the test window) put genuine
-OOS cointegration at **2.1–3.2%** — at or below the 5% null floor. Essentially none of the
+OOS cointegration at **2.1–3.2%**, at or below the 5% null floor. Essentially none of the
 universe is genuinely cointegrated OOS. Scripts: `scratch/audit_part1.py`, `audit_part1b.py`.
 
 **Implication:** do not select pairs on the Kalman ADF p-value (it is noise). Select on OOS
-reversion speed / OU half-life instead — which §2 shows actually works.
+reversion speed / OU half-life instead, which §2 shows actually works.
 
 ---
 
-## Result 2 — Mean-reversion is genuinely selectable out-of-sample *(a real positive)*
+## Result 2, Mean-reversion is genuinely selectable out-of-sample *(a real positive)*
 
 Strict OOS persistence test, all 1,225 pairs, **9 disjoint walk-forward splits** (6mo train
 → next 3mo test), static OLS hedge, every number **net of the rolling-z mechanical floor**
@@ -160,30 +160,30 @@ Strict OOS persistence test, all 1,225 pairs, **9 disjoint walk-forward splits**
   Variance-ratio and in-sample-excess agree (ρ ≈ ±0.46).
 - **Top-quintile vs bottom-quintile OOS excess reversion = +0.69z** [+0.58, +0.81], p<0.001
   (top ≈ +0.88z ≈ 2× universe average, ~5× the bottom quintile).
-- **Placebos are clean:** random quintile spread = +0.0001z; shuffling the train→OOS link
-  collapses ρ to −0.002; floor-subtraction isn't manufacturing it (top/bottom mechanical
-  floors identical, 0.986/0.984); train κ even predicts OOS κ (+0.47).
+- **Placebos are clean:** random quintile spread = +0.0001z. Shuffling the train→OOS link
+  collapses ρ to −0.002. Floor-subtraction isn't manufacturing it (top/bottom mechanical
+  floors identical, 0.986/0.984). Train κ even predicts OOS κ (+0.47).
 
-So — unlike cointegration — reversion is a **graded, selectable, persistent** statistical
+So, unlike cointegration, reversion is a **graded, selectable, persistent** statistical
 property. This is the project's one genuine positive foundation. *But selectability of a
 z-units-per-48h property is not the same as profitability* (§3).
 
 ---
 
-## Result 3 — Profitability hinges entirely on the stop/exit rule *(the real bottom line)*
+## Result 3, Profitability hinges entirely on the stop/exit rule *(the real bottom line)*
 
 > **⚠️ Magnitude correction (read first).** The Sharpe figures in this section's tables (+2.51, +2.54,
 > ~2.0–2.5, etc.) are the **naive** monthly/hourly numbers each iteration produced. A from-zero independent
-> verification (four clean-room re-implementations + a skeptic; see *Independent verification* below) later
+> verification (four clean-room re-implementations + a skeptic, see *Independent verification* below) later
 > showed they are **serial-correlation- and venue-inflated**: the honest HAC-corrected, independent-venue
 > figure is **~1.0 monthly Sharpe** (~0.85 Coinbase to ~1.4 Binance), not ~2.5. The *qualitative* findings
-> in this section (stop loses, no-stop wins, market-neutral, diversified) stand; the *magnitudes* below are
+> in this section (stop loses, no-stop wins, market-neutral, diversified) stand. The *magnitudes* below are
 > superseded by the ~1.0 headline.
 
 Honest net-of-cost walk-forward backtest (`scratch/wf_backtest.py`, `wf_robustness.py`,
 `wf_nostop_stress.py`): 19 walk-forward splits, OU-half-life pair selection, static train
 hedge, z-entry |z|≥2, realistic costs, with random-pair and phase-randomized placebos. The
-headline is **not** a single Sharpe — it is that the P&L is **entirely determined by the
+headline is **not** a single Sharpe, it is that the P&L is **entirely determined by the
 exit/stop rule**, which iteration 8 isolated.
 
 ### The stop rule is the dominant P&L lever
@@ -198,36 +198,36 @@ exit/stop rule**, which iteration 8 isolated.
 
 **Correction to iteration 7.** The earlier "loses even gross (−1.15), worse than random"
 headline was **specific to the |z|=4 stop**, not a property of the strategy. A tight
-asymmetric stop is *actively harmful* to a mean-reverting position — it realizes losses
+asymmetric stop is *actively harmful* to a mean-reverting position, it realizes losses
 exactly when the spread is most stretched and most likely to revert. Removing it flips gross
 to +2.65 and net to +2.51, beating the random-pair placebo (+0.89) by ~2× the across-seed
-SD; the time-exit and hold-to-convergence variants (also static-z, artifact-free) confirm it.
+SD. The time-exit and hold-to-convergence variants (also static-z, artifact-free) confirm it.
 *(Rolling-hedge variants score even higher, +3–4, but they recompute z from a trailing window
-and their placebos run +2.1–2.6 — mostly the rolling-z mechanical artifact of §6; do not lead
+and their placebos run +2.1–2.6, mostly the rolling-z mechanical artifact of §6, do not lead
 with them. The clean evidence is the static-z no-stop / convergence cells.)*
 
 ### But the no-stop "win" is not the strategy the project specified
 
 Diagnostics on the no-stop run (`scratch/wf_nostop_stress.py`) reveal its character:
-- **Median holding time ≈ 848 bars (~35 days); 78% of positions never converge within the
+- **Median holding time ≈ 848 bars (~35 days). 78% of positions never converge within the
   3-month window.** This is a *multi-month hold-the-spread* exposure, not the hourly
   stop-managed stat-arb the project set out to build.
 - **Portfolio max drawdown −41%** (worst pair-window −77.5%). The +2.51 annualized Sharpe
   hides long, deep underwater stretches and is flattered by the autocorrelation of
   multi-week holds (the 168h-block bootstrap understates the SE because holds exceed the
-  block — the honest unit of observation is the window, not the hour).
+  block, the honest unit of observation is the window, not the hour).
 - **~⅓ of the return is generic survivor co-movement:** the random-pair placebo also earns
-  +0.89 with no stop — bounded spreads of survivor majors partially revert over a quarter
+  +0.89 with no stop, bounded spreads of survivor majors partially revert over a quarter
   regardless of selection. OU selection adds the rest (+1.62 edge over placebo).
 
-### Is the no-stop result a survivorship artifact? Stress-tested — mostly no.
+### Is the no-stop result a survivorship artifact? Stress-tested, mostly no.
 
 The universe is the *current* top-50 liquid coins (survivorship-filtered: every coin survived
-to 2026), so "hold to convergence" never meets a permanently-decoupling pair — exactly the
+to 2026), so "hold to convergence" never meets a permanently-decoupling pair, exactly the
 tail a stop exists to protect against, and which Result 1 (no cointegration) says we cannot
 certify away ex ante. I stress-tested this by injecting, in each test window, permanent
 structural breaks (a fraction p of selected pairs diverge by up to ~86% in one leg and never
-revert; selection stays on the *unbroken* train, as in live trading). Net Sharpe vs break rate:
+revert, selection stays on the *unbroken* train, as in live trading). Net Sharpe vs break rate:
 
 | break prob p (per pair / quarter) | 0% | 2% | 5% | 10% | 20% |
 |---|---:|---:|---:|---:|---:|
@@ -236,33 +236,33 @@ revert; selection stays on the *unbroken* train, as in live trading). Net Sharpe
 | **\|z\|=4 stop** (any blowup size) | −2.25 | ≈−2.3 | ≈−2.3 | ≈−2.4 | ≈−2.4 |
 
 The no-stop edge is **robust**: it only collapses to ≈0 under an *extreme* 20%-of-pairs-per-
-quarter near-delisting rate (~80%/yr attrition); at plausible rates (≤5%/quarter) it stays
+quarter near-delisting rate (~80%/yr attrition). At plausible rates (≤5%/quarter) it stays
 +1.9–2.4. Diversification across 10 pairs absorbs breaks. So the no-stop result is **not**
-primarily a delisting-tail artifact — the honest caveats are the holding horizon, the −41%
+primarily a delisting-tail artifact, the honest caveats are the holding horizon, the −41%
 drawdown, and the survivor-co-movement third, not blow-up risk.
 
 **Direct test on a 4× broader, less-survivorship-biased universe (iteration 15,
-`scratch/wf_survivorship.py`).** `data/spot_1h` holds **204 symbols**, not just the top-50 —
+`scratch/wf_survivorship.py`).** `data/spot_1h` holds **204 symbols**, not just the top-50,
 including ~154 lower-quality / pumped-and-crashed / meme names a "current top-50" filter removes
 (1000REKTUSDT, USELESSUSDT, NOBODYUSDT, TROLLUSDT, …). Re-running the identical pipeline on the
 full universe (98 vs 39 usable symbols/window, with per-window ≥90%-coverage gating so coins
-enter only once listed — genuine point-in-time *entry*: 11 names start in 2021, 73 in 2022, 53
+enter only once listed, genuine point-in-time *entry*: 11 names start in 2021, 73 in 2022, 53
 in 2025), the no-stop alpha **survives and strengthens**: monthly Sharpe **2.54 → 3.76** (40
 pairs), maxDD −29% → −23%. More symbols ⇒ a better selection pool and more diversification,
 which dominates any harm from junk names. So the alpha is **not** a survivor-majors artifact.
 *Caveats (so this is "much less" not "zero" survivorship):* the on-disk set still under-represents
-**exits** (only 3 in-sample truncations; fully-delisted coins like LUNA/FTT are absent), the
+**exits** (only 3 in-sample truncations, fully-delisted coins like LUNA/FTT are absent), the
 NaN-as-flat handling understates a sudden-delisting loss, and the broad-universe Sharpe itself is
 **not deployable** (illiquid memes can't be traded at $1/leg / 30 bps). The point is the
-*direction* — the effect is robust to dropping the survivorship filter, not the exact magnitude.
+*direction*, the effect is robust to dropping the survivorship filter, not the exact magnitude.
 A truly point-in-time universe with dead coins remains the one gold-standard check still open.
 
 And it is not an autocorrelation artifact of the multi-week holds: aggregated to the
-**conservative unit of observation — the 19 disjoint test windows** (not the autocorrelated
+**conservative unit of observation, the 19 disjoint test windows** (not the autocorrelated
 hourly series the bootstrap used), the no-stop mean window return is +41.6% with **t=+3.65**,
-**16/19 windows positive** (sign-p=0.004); the paired no-stop−stop difference is positive in
+**16/19 windows positive** (sign-p=0.004). The paired no-stop−stop difference is positive in
 **18/19 windows** (sign-p<0.001). The stop's worst single window is **−150%** vs the no-stop's
-−23% — a direct picture of the stop converting reverting positions into realized losses.
+−23%, a direct picture of the stop converting reverting positions into realized losses.
 Script: `scratch/wf_nostop_winlevel.py`.
 
 ### It IS genuine market-neutral alpha, not disguised crypto beta *(iteration 10)*
@@ -272,7 +272,7 @@ regime: is the +2.51 really reversion alpha, or just net long-market beta? Regre
 no-stop portfolio's returns on the market (`scratch/wf_nostop_factor.py`) rejects the beta
 explanation cleanly: beta to an equal-weight crypto index = **−0.06** (slightly *contrarian*,
 the correct sign for buying underperformers), beta to BTC = −0.07, and the **market-neutralized
-Sharpe is +2.62 — essentially unchanged from the raw +2.65.** It holds at daily frequency too
+Sharpe is +2.62, essentially unchanged from the raw +2.65.** It holds at daily frequency too
 (daily beta −0.04), so there is no slow-beta accumulation hiding in the multi-week holds.
 
 And it is **not a concentrated statistical-factor bet either** (iteration 11, PCA on the
@@ -280,17 +280,17 @@ universe's returns, `scratch/wf_nostop_pca.py`): the market factor PC1 explains 
 variance but only **0.35%** of the no-stop return, and the **top 10 eigenportfolios together
 (84% of universe variance) explain just 1.7%** of it (max single-factor R² 0.49%). So the
 no-stop return is **diversified idiosyncratic** mean-reversion across many ~independent pair
-bets — not one crowded basket. So the no-stop edge is a *genuine, market-neutral, diversified
-mean-reversion effect* — the market-neutrality and factor-bet confounds are rejected, and the
+bets, not one crowded basket. So the no-stop edge is a *genuine, market-neutral, diversified
+mean-reversion effect*, the market-neutrality and factor-bet confounds are rejected, and the
 failure of the *stopped* version is the risk rule and horizon, not the absence of reversion.
 (Its statistical *significance* is separately tempered by the deflated-Sharpe / selection caveat
-below — the effect is real but modest, not confidently significant.)
+below, the effect is real but modest, not confidently significant.)
 
-### The risk-rule efficient frontier — diversification helps, stops hurt *(iteration 12)*
+### The risk-rule efficient frontier, diversification helps, stops hurt *(iteration 12)*
 
 The advisor-relevant question: is the −41% drawdown fatal, or can a practical risk rule capture
 the alpha at a bearable drawdown? Mapping (Sharpe, max-drawdown) across pair-count / stop / exit /
-sizing (`scratch/wf_frontier.py`, realistic 30 bps; DD in per-unit-notional/leverage-equivalent
+sizing (`scratch/wf_frontier.py`, realistic 30 bps, DD in per-unit-notional/leverage-equivalent
 terms, so read it for *ranking*):
 
 | config | net Sharpe | max DD | Calmar |
@@ -300,16 +300,16 @@ terms, so read it for *ranking*):
 | **40-pair no-stop** | **+3.18** | **−29%** | 4.7 |
 | **40-pair no-stop, convergence exit** | **+3.44** | −31% | **5.1** |
 | 40-pair *wide* stop \|z\|=6 | +1.52 | −78% | 0.7 |
-| 40-pair *tight* stop \|z\|=4 | −1.82 | −265% | — |
+| 40-pair *tight* stop \|z\|=4 | −1.82 | −265% |, |
 
 - **Diversification cuts the drawdown *and* lifts Sharpe:** 10→40 pairs takes maxDD −41%→−29% and
-  Sharpe +2.51→+3.18 — the −41% was partly idiosyncratic and shrinks with breadth.
+  Sharpe +2.51→+3.18, the −41% was partly idiosyncratic and shrinks with breadth.
 - **Stops hurt at every width.** A tight \|z\|=4 stop is catastrophic (churn, −265% leverage-equiv
-  DD); even a *wide* \|z\|=6 stop is the worst of both worlds (−78% DD, Sharpe 1.5) — it still cuts
+  DD). Even a *wide* \|z\|=6 stop is the worst of both worlds (−78% DD, Sharpe 1.5), it still cuts
   reverting winners *and* realizes the rare blow-up the no-stop rule holds through and recovers from.
 - Vol-targeting barely moves the frontier.
 
-**Caution — those Sharpes are hourly-frequency and overstated (iteration 13 self-correction).** With
+**Caution, those Sharpes are hourly-frequency and overstated (iteration 13 self-correction).** With
 ~35-day median holds, hourly returns are heavily autocorrelated, so an annualized hourly Sharpe
 inflates the deployable number. Recomputing at lower frequencies (`scratch/wf_sharpe_freq.py`):
 
@@ -319,88 +319,88 @@ inflates the deployable number. Recomputing at lower frequencies (`scratch/wf_sh
 | 40-pair no-stop conv-exit | 3.45 | 4.01 | 3.24 | **2.06** | [1.59, 2.61] |
 | 10-pair no-stop z-exit | 2.53 | 3.29 | 2.98 | **2.41** | [1.75, 3.18] |
 
-The low-frequency value is **~2.0–2.5 (monthly), not ~3.2–3.4** — but **this monthly figure was itself
+The low-frequency value is **~2.0–2.5 (monthly), not ~3.2–3.4**, but **this monthly figure was itself
 later shown to be serial-correlation-inflated** (the ~35-day holds span months: Binance monthly AC(1)=+0.48),
 so the HAC-corrected, independent-venue-honest figure is **~1.0**, not ~2 (see *Independent verification*
-below — this supersedes the "~1.7–2.5, central ≈ 2" estimate stated here). At this point I still treated
-monthly as honest; the conservative *quarterly/window* unit already hinted lower (**~1.7** for 10 pairs,
+below, this supersedes the "~1.7–2.5, central ≈ 2" estimate stated here). At this point I still treated
+monthly as honest. The conservative *quarterly/window* unit already hinted lower (**~1.7** for 10 pairs,
 iter-9, t=3.65). And the ranking flips: at the lower frequency the **best config is 40-pair
 no-stop z-exit (Sharpe ~2.5)**, not the convergence-exit that looked best hourly. So the iteration-12
 "+3.4 / conv-exit-is-best" was itself an hourly artifact.
 
-So the alpha is capturable — but only for a **patient, well-capitalized, market-neutral book** that
+So the alpha is capturable, but only for a **patient, well-capitalized, market-neutral book** that
 diversifies wide, never stops, and can sit through a ~30% drawdown and multi-month holds, at a
 **realistic Sharpe ~2–2.5** (not 3+). A real strategy profile, just not the tight-risk-managed hourly
 one the project specified.
 
-### The one honest combined test — survivorship + frequency + selection, on a single run *(audit B1/I2)*
+### The one honest combined test, survivorship + frequency + selection, on a single run *(audit B1/I2)*
 
 A holistic red-team caught that iterations 13/15 corrected for *frequency* (monthly, top-50), *survivorship*
 (the 204-universe, Sharpe 3.76→3.56), and *selection* (deflated Sharpe, a third config set) **separately,
-never on the same run** — so the chained "~1.6–2.4, survives" number was a category error (the deployable
-top-50 book was never actually survivorship-tested; the dead coins live in the broad universe). So we ran
+never on the same run**, so the chained "~1.6–2.4, survives" number was a category error (the deployable
+top-50 book was never actually survivorship-tested, the dead coins live in the broad universe). So we ran
 **one** test (`scratch/nostop_combined.py`): the no-stop 40-pair config on the **top-50 survivors + the
 fully-delisted coins** (LUNA/UST/FTT/LUNC, point-in-time entry/delisting exit), at **monthly** frequency,
 then the deflated Sharpe from the **same** run.
 
-- **Result: ann Sharpe +2.29** (40-pair; +2.39 at 10-pair) on the fixed top-50+delisted pool. And the
-  *most faithful* version — a **literal time-varying point-in-time top-50-by-liquidity universe** rebuilt
+- **Result: ann Sharpe +2.29** (40-pair, +2.39 at 10-pair) on the fixed top-50+delisted pool. And the
+  *most faithful* version, a **literal time-varying point-in-time top-50-by-liquidity universe** rebuilt
   each window from the full 204+4 pool, so LUNA/FTT are in only while genuinely top-liquid
-  (`scratch/nostop_pit.py`) — gives monthly **+2.54** (maxDD −21%), the **top-50 baseline**. But an audit of
+  (`scratch/nostop_pit.py`), gives monthly **+2.54** (maxDD −21%), the **top-50 baseline**. But an audit of
   this run shows the **survivorship stress is near-vanishing**, so this is *not* strong evidence of
-  robustness: the truly-dead coins (LUNA/UST/FTT) are only **~5% of pair-slots**, concentrated in 2 windows;
-  they contribute **~0 PnL** (post-death they sit flat); and the one real crash (LUNA, May-2022) is **never
+  robustness: the truly-dead coins (LUNA/UST/FTT) are only **~5% of pair-slots**, concentrated in 2 windows.
+  they contribute **~0 PnL** (post-death they sit flat). And the one real crash (LUNA, May-2022) is **never
   selected** by the OU ranker even though LUNA is rank-1 liquid that window. So 2.54 ≈ the top-50 baseline
-  because the strategy **avoids** the dead coins (selection), *not* because it withstands them — **the
+  because the strategy **avoids** the dead coins (selection), *not* because it withstands them, **the
   in-position delisting tail is untested here.** That tail is the real survivorship risk: a single LUNA pair
   *held* through the collapse is a **−100% leg loss** (Task-2 forced worst case), which the bare no-stop rule
   has no protection against → but it is **controllable** with a structural-break circuit breaker (shown in the
   deployability subsection below). (Also: the 204+4 pool is the *currently-listed*
-  set plus 4 re-injected deaths — coins removed beyond those 4 are still absent, so "survivorship-free"
+  set plus 4 re-injected deaths, coins removed beyond those 4 are still absent, so "survivorship-free"
   overstates it. Net deployable figure ~2.3–2.5, with survivorship robustness resting on *selection
   avoidance*, not demonstrated tail-resilience.)
-- **Deflated Sharpe is selection-*sensitive*, not a clean verdict** — it flips on how you count the search:
-  with sr_var from **all ~10 searched configs** (incl. the catastrophic tight-stops), DSR = 0.64 (N=10) /
-  0.12 (N=25) → *fails*; with sr_var from the **no-stop family only** (the genuinely-equivalent variants,
+- **Deflated Sharpe is selection-*sensitive*, not a clean verdict**, it flips on how you count the search:
+  with sr_var from **all ~10 searched configs** (incl. The catastrophic tight-stops), DSR = 0.64 (N=10) /
+  0.12 (N=25) → *fails*. With sr_var from the **no-stop family only** (the genuinely-equivalent variants,
   which cluster tightly at ann ~1.9–2.4), DSR ≈ 1.0 → *survives*. Since "no stop" is a theory-motivated
   structural choice (a tight stop is *known* to harm mean-reversion), not a random draw, the truth is in
   between: **the effect is selection-sensitive but not cleanly killed.** (My earlier "fails DSR at N≥25"
   used only the harsh all-configs framing and over-stated the problem.)
 
-### Cross-exchange validation — the effect is real (not Binance overfitting), but ~50–60% weaker out-of-venue
+### Cross-exchange validation, the effect is real (not Binance overfitting), but ~50–60% weaker out-of-venue
 
 The red-team's sharpest criticism: the no-stop result's "independent" supports all share the *Binance*
 universe/selection (correlated, not orthogonal). The one genuinely orthogonal test is an independent
 exchange. The identical no-stop pipeline was run on **Coinbase** hourly (`scratch/coinbase_pull.py`,
-`cross_exchange.py`; all three numbers below reproduce from the committed script — log `cross_exchange.log`),
-restricted to the **41 majors on both venues** (USD vs USDT quote, different participants) — so only the
+`cross_exchange.py`, all three numbers below reproduce from the committed script, log `cross_exchange.log`),
+restricted to the **41 majors on both venues** (USD vs USDT quote, different participants), so only the
 venue differs.
 
-- **It replicates directionally — the effect is *real*, not Binance-specific overfitting:** raw Coinbase
-  no-stop monthly Sharpe is **+0.88 (10-pair) / +1.19 (20-pair)**, positive; and the stop-loses/no-stop-wins
+- **It replicates directionally, the effect is *real*, not Binance-specific overfitting:** raw Coinbase
+  no-stop monthly Sharpe is **+0.88 (10-pair) / +1.19 (20-pair)**, positive. And the stop-loses/no-stop-wins
   structure holds cleanly on **both** venues. Pair selection overlaps only 0.19 Jaccard across venues
-  (noisier Coinbase spreads pick different pairs) — so this replicates the *strategy*, not the *pairs*.
-- **…but ~50–60% weaker out-of-venue:** ~**1.0 vs ~2.5** on the same symbols on Binance — so the Binance
-  ~2.5 was **substantially optimistic**; the honest venue-robust estimate is **~1.0–1.2**.
-- **What does *not* close the gap — and what its components are:** the −98% raw Coinbase 10-pair drawdown is
-  *one* idiosyncratic thin-alt pump (ACH, +308% — identical on both venues, so not a data artifact) that the
+  (noisier Coinbase spreads pick different pairs), so this replicates the *strategy*, not the *pairs*.
+- **…but ~50–60% weaker out-of-venue:** ~**1.0 vs ~2.5** on the same symbols on Binance, so the Binance
+  ~2.5 was **substantially optimistic**. The honest venue-robust estimate is **~1.0–1.2**.
+- **What does *not* close the gap, and what its components are:** the −98% raw Coinbase 10-pair drawdown is
+  *one* idiosyncratic thin-alt pump (ACH, +308%, identical on both venues, so not a data artifact) that the
   OU selector over-concentrated on the noisier Coinbase data. Two honest framings of removing it: (i) the
   **real-time circuit breaker** (the deployable rule, §deployability) catches that pump and **caps the DD
-  (−98%→−48%, −61%→−35%) but barely moves the Sharpe (0.88→0.97, 1.19→1.14)** — because the −50% stop-loss is
-  still *realized*; (ii) deleting ACH entirely lifts the Sharpe to **1.40 / 1.62**, but that requires
+  (−98%→−48%, −61%→−35%) but barely moves the Sharpe (0.88→0.97, 1.19→1.14)**, because the −50% stop-loss is
+  still *realized*. (ii) deleting ACH entirely lifts the Sharpe to **1.40 / 1.62**, but that requires
   *hindsight* (you can't know which pump to drop ex-ante) so it is **not** a deployable figure, only a
   diagnosis. **Net: the deployable venue-robust Sharpe is ~1.0–1.2, not ~1.5.** (Data quality is *not* the
-  gap — Coinbase coverage ≤2% missing, often cleaner than Binance; cost-sensitivity mild, ~−0.1 Sharpe/+30bps.)
+  gap, Coinbase coverage ≤2% missing, often cleaner than Binance, cost-sensitivity mild, ~−0.1 Sharpe/+30bps.)
 
 This is the **first orthogonal evidence**: the mean-reversion effect is genuinely real and venue-robust
 *in direction*, but its *magnitude* is venue-sensitive and the Binance headline overstated it by ~50–60%.
 
-### Deployability — a structural-break circuit breaker caps the tail at ~no Sharpe cost *(constructive)*
+### Deployability, a structural-break circuit breaker caps the tail at ~no Sharpe cost *(constructive)*
 
 The one real deployment risk is the per-pair delisting/crash tail (a held LUNA-type pair = a catastrophic
-leg loss; the bare no-stop rule has no protection). Can a risk control cap it *without* the harm a spread-z
+leg loss, the bare no-stop rule has no protection). Can a risk control cap it *without* the harm a spread-z
 stop does? Tested on the top-50 + delisted universe so the tail manifests (`scratch/nostop_breakstop.py`):
-- A **spread-z stop** (|z|=4) hurts (exits normal reversion) — the project's central finding.
+- A **spread-z stop** (|z|=4) hurts (exits normal reversion), the project's central finding.
 - A **leg-crash / either-leg / position-loss stop *alone*** preserves the Sharpe but barely caps the
   per-pair tail (worst pair-window −282% → −239%), because the strategy **re-enters** a sustained divergence
   (a coin in crisis stays |z|>2 all window → stop, re-enter, stop…).
@@ -408,25 +408,25 @@ stop does? Tested on the top-50 + delisted universe so the tail manifests (`scra
   >50%-adverse leg move) **works:** monthly Sharpe **2.28 (≈ the 2.29 no-stop baseline)**, maxDD
   **−40%→−29.5%**, worst pair-window **−282%→−131%**. The catastrophic tail is **capped at ~no Sharpe cost.**
 
-So the no-stop effect **is deployable** with a sensible structural-break circuit breaker — the per-pair tail
+So the no-stop effect **is deployable** with a sensible structural-break circuit breaker, the per-pair tail
 is *controllable* (unlike the spread-z stop, which kills the effect). Deployable form: a wide (40-pair)
 no-stop reversion book **+ a halt-on-break circuit breaker** (cease a pair for the window after a >50%
 adverse leg move). This constructively resolves the survivorship-tail caveat.
 
-### Independent from-zero verification — qualitative claims validated, magnitude pinned to ~1 *(audit)*
+### Independent from-zero verification, qualitative claims validated, magnitude pinned to ~1 *(audit)*
 
-To "make absolutely sure," the whole result was re-derived **clean-room** — four independent implementations
+To "make absolutely sure," the whole result was re-derived **clean-room**, four independent implementations
 (one mine, three by separate subagents) that import *none* of the pipeline and re-write OLS hedge / AR(1)
 selection / walk-forward / trading / costs from the raw parquets (`scratch/independent_verify.py`), plus an
 adversarial skeptic and a methodology verifier.
 - **Validated (the effect is real, not a code artifact):** all four put **Binance no-stop ~2.0–2.2** (1.95 /
   2.15 / 2.16 / 2.18) and **Coinbase no-stop ~0.6–0.9** (0.61 / 0.61 / 0.63 / 0.90), with **|z|≥4 stop losing
-  on both venues** in every run; **no look-ahead** found by anyone; and both **methodological artifacts
-  independently reproduced** (Kalman screen passes independent random walks at **100%** vs 5% clean; rolling-z
+  on both venues** in every run. **no look-ahead** found by anyone. And both **methodological artifacts
+  independently reproduced** (Kalman screen passes independent random walks at **100%** vs 5% clean, rolling-z
   mechanically reverts and makes +0.19/path on pure RWs). The qualitative skeleton is solid.
 - **But the magnitude was over-stated** on two counts the verification exposed: (i) the independent naive
-  Binance is ~2.0–2.2, *not* 2.5; (ii) the skeptic caught that even the **monthly** Sharpe is
-  serial-correlation-inflated — Binance monthly **AC(1)=+0.48** (the ~35-day holds span months), so a
+  Binance is ~2.0–2.2, *not* 2.5. (ii) the skeptic caught that even the **monthly** Sharpe is
+  serial-correlation-inflated, Binance monthly **AC(1)=+0.48** (the ~35-day holds span months), so a
   **Newey–West HAC correction drops Binance 2.18→~1.4** (verified). Coinbase AC(1)≈0 → **~0.85–0.90**,
   HAC-stable. So the **HAC-and-venue-honest figure is ~0.85 (Coinbase) to ~1.4 (Binance), centered ~1.0**,
   and the edge is **recency/pump-concentrated** (2025 ≫ 2021). HAC also flips the deflated Sharpe toward
@@ -436,35 +436,35 @@ adversarial skeptic and a methodology verifier.
 
 Mean reversion is real, selectable (Result 2), **market-neutral and diversified** (iterations 10–11), and it
 **replicates on an independent exchange** (Coinbase) with both methodological artifacts independently
-reproduced — so it is a *genuine* effect, not Binance overfitting or a code artifact. But its honest,
-**HAC-corrected, venue-robust magnitude is ~1.0 monthly Sharpe** (~0.85 Coinbase to ~1.4 Binance) — *not* the
+reproduced, so it is a *genuine* effect, not Binance overfitting or a code artifact. But its honest,
+**HAC-corrected, venue-robust magnitude is ~1.0 monthly Sharpe** (~0.85 Coinbase to ~1.4 Binance), *not* the
 ~2.5 first reported, which was serial-correlation- and venue-inflated. A **real but modest** effect, and
-recency/pump-concentrated. Its one real deployment risk — the per-pair delisting tail — is **controllable**
+recency/pump-concentrated. Its one real deployment risk, the per-pair delisting tail, is **controllable**
 with a structural-break circuit breaker (above), which caps the drawdown (e.g. Coinbase −98%→−48%) at ~no
 Sharpe cost. Four honest hedges, with their *non-independence* now stated:
-- **Magnitude is ~1, not ~2.5** (HAC + independent-venue corrected; above).
+- **Magnitude is ~1, not ~2.5** (HAC + independent-venue corrected, above).
 - **Selection-sensitive** (deflated Sharpe survives the no-stop-family trial set but fails the whole-search
-  set — and the HAC-corrected Sharpe flips it toward fail).
-- **Survivorship robustness rests on *avoidance*, not resilience** — the aggregate Sharpe is stable across
+  set, and the HAC-corrected Sharpe flips it toward fail).
+- **Survivorship robustness rests on *avoidance*, not resilience**, the aggregate Sharpe is stable across
   universe constructions, but the literal point-in-time test barely exercises the dead-coin tail (the OU
-  selector avoids LUNA in its crash window; dead coins ~0 PnL post-death). The real risk is the *per-pair*
+  selector avoids LUNA in its crash window, dead coins ~0 PnL post-death). The real risk is the *per-pair*
   delisting tail (a held LUNA pair = −100%/leg), controllable with the structural-break circuit breaker (above).
 - **Correlated supports, not orthogonal confirmations** (red-team B2): the window-level t=3.65, the ρ=0.46
   persistence (Result 2), market-neutrality, factor-R² and break-robustness all run on the *same* top-50
-  universe, OU selection and overlapping walk-forward windows — they are positively correlated views of one
+  universe, OU selection and overlapping walk-forward windows, they are positively correlated views of one
   selection, not independent replications. Two specifics: ρ=0.46 was the best of **four** train metrics
   (kappa/half-life/variance-ratio/in-sample-excess) and is itself not multiple-comparisons-corrected
-  (report all four; metric chosen post hoc); and the 19 walk-forward windows have ~6-month *overlapping*
+  (report all four, metric chosen post hoc). And the 19 walk-forward windows have ~6-month *overlapping*
   trains, so the t=3.65 / 18-of-19 sign test slightly overstates the effective d.f.
-- **Realizable only far from the stated design** — a slow, multi-month, ~30%-drawdown, never-stop
-  hold-the-spread book, ~⅓ of it a generic survivor-co-movement floor; the **hourly, stop-managed stat-arb**
+- **Realizable only far from the stated design**, a slow, multi-month, ~30%-drawdown, never-stop
+  hold-the-spread book, ~⅓ of it a generic survivor-co-movement floor. The **hourly, stop-managed stat-arb**
   the project specified **loses** (−2.25), because the stop that bounds hourly risk destroys the thin, slow
-  reversion. The defensible claim is the *sensitivity itself* — report the stop/exit, selection, and
+  reversion. The defensible claim is the *sensitivity itself*, report the stop/exit, selection, and
   survivorship dependence, and the HAC-and-venue-honest Sharpe (**~1.0**), not a chained or cherry-picked one.
 
 ---
 
-## Result 4 — Microstructure / order flow is near-efficient at tradeable horizons *(the advisor's ideas, done)*
+## Result 4, Microstructure / order flow is near-efficient at tradeable horizons *(the advisor's ideas, done)*
 
 Across six iterations and ~ten tests, every natural "volume-as-alpha" hypothesis was
 falsified with the appropriate control, and the genuine positives are about price formation,
@@ -474,113 +474,113 @@ not signal.
 - Trade size **is** a proxy for information *per order*: per-order impact is monotone in size,
   institutional (>$10k) ≈ **2× retail**, with a transient liquidity hump (classic temporary
   impact). *Per dollar* the ranking inverts but that excess is mechanical (tick/bounce on a tiny
-  denominator), not information — institutions split/time to minimize footprint. Script:
+  denominator), not information, institutions split/time to minimize footprint. Script:
   `scratch/impact_decomp.py`. **Validated across all 2024 + 4 symbols (iteration 16,
   `impact_decomp_2024.py`):** at the robust seconds horizon the monotonic ranking replicates on
-  every symbol — 1s impact institutional > mid > retail (BTC 0.33/0.23/0.13, ETH 0.32/0.24/0.15,
+  every symbol, 1s impact institutional > mid > retail (BTC 0.33/0.23/0.13, ETH 0.32/0.24/0.15,
   SOL 0.32/0.26/0.15, AVAX 0.38/0.38/0.18 bps), institutional ≈ **2.0–2.6× retail**, separation
-  ~11 bootstrap-SEs wide; the institutional transient hump replicates on calm days (≈85–92%
-  permanent). (Caveat: the 300s "permanent" estimate is noisy on the broader sample — drift-
-  contaminated for tiny retail orders and on the Aug 5 crash — so the finding rests on the
+  ~11 bootstrap-SEs wide. The institutional transient hump replicates on calm days (≈85–92%
+  permanent). (Caveat: the 300s "permanent" estimate is noisy on the broader sample, drift-
+  contaminated for tiny retail orders and on the Aug 5 crash, so the finding rests on the
   seconds-horizon impact, consistent with the seconds half-life everywhere else.)
 - At a **tradeable** horizon (15m–1h) institutional net flow adds **+0.03% incremental R²**
   (≈ zero), and where it loads the sign is **reversal** (price-pressure mean-reversion),
   *not* informed continuation: the seconds-scale information is fully priced by 15 min.
   Script: `scratch/inst_flow_horizon2.py`.
 
-**The advisor's "infer L3 from L2" (iter 3) — the best microstructure result.**
+**The advisor's "infer L3 from L2" (iter 3), the best microstructure result.**
 - Reconstructing book-side order flow + cancellations from per-update `book_snapshot_25`:
   book-OFI explains within-second mid moves much better than trade flow (book-OFI
-  incremental over trade-OFI = +0.125/+0.164 R² for BTC/ETH — larger than the reverse).
+  incremental over trade-OFI = +0.125/+0.164 R² for BTC/ETH, larger than the reverse).
 - **The cancellation channel is genuinely new information:** **81–85% of best-level size
-  reductions are cancels, not trades** — invisible to trade-flow analysis — and trailing
+  reductions are cancels, not trades**, invisible to trade-flow analysis, and trailing
   cancel-imbalance carries directional info with the right sign (t up to −38).
 - **Hidden / iceberg liquidity** (iteration 11, the most literal "L3 from L2": detect where
-  *executed* volume exceeds *displayed* depth = hidden orders; `scratch/hidden_liquidity.py`,
+  *executed* volume exceeds *displayed* depth = hidden orders, `scratch/hidden_liquidity.py`,
   ~2.3M traded episodes). A clean novel *measurement*: hidden liquidity is **2–3.5% of at-best
-  executed volume** in crypto majors, scaling with book depth/institutionalization — **BTC
+  executed volume** in crypto majors, scaling with book depth/institutionalization, **BTC
   highest (9.8% of traded-through price levels have a hidden component), thin AVAX lowest
-  (2.3%)** — a conservative lower bound (post-update snapshots under-detect). But it carries
+  (2.3%)**, a conservative lower bound (post-update snapshots under-detect). But it carries
   **no edge**: it does not predict next-hour vol (incremental R² +0.002, HAC-insignificant) or
   next-hour direction (+0.0005), and is subsumed by OFI even contemporaneously. Real,
-  measurable, contemporaneous-only — the near-efficiency pattern once more.
-- But all of it is **contemporaneous** (predictive increment decays to ~0 by 30s); R² ≤ 2–3%.
-  This describes price formation — and the natural hope was that it has **execution** value
+  measurable, contemporaneous-only, the near-efficiency pattern once more.
+- But all of it is **contemporaneous** (predictive increment decays to ~0 by 30s). R² ≤ 2–3%.
+  This describes price formation, and the natural hope was that it has **execution** value
   even if not forecast value. Iteration 9 measured that hope directly (below) and rejects it.
   Scripts: `scratch/book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `deep_book_probe.py`.
 
-### Execution value — measured for the first time, and the signal does not capture it *(iteration 9)*
+### Execution value, measured for the first time, and the signal does not capture it *(iteration 9)*
 
 For six iterations this project *asserted* that "the microstructure payoff is in execution,"
 but never measured it. Iteration 9 did: **18,432 parent orders** ($10k & $50k, randomized
 side, every 5 min) across BTC/ETH/SOL/AVAX over 8 days of **event-level** book + trade tape,
-comparing three executions by implementation shortfall vs arrival mid — aggressive crossing,
+comparing three executions by implementation shortfall vs arrival mid, aggressive crossing,
 naive passive (post-at-best with a real queue/fill model, cross on non-fill), and an
 **L3-aware** rule that posts vs crosses on the book-OFI + cancellation signal. Scripts:
 `scratch/exec_value.py`, `exec_value_verify.py` (logs alongside).
 
 | pooled, H=30s (bps vs mid, lower=better) | cost |
 |---|---:|
-| **Aggressive** (always cross) — the baseline | **+1.34** |
+| **Aggressive** (always cross), the baseline | **+1.34** |
 | Naive passive (always post) | +2.79 |
 | L3-aware (signal post/cross) | +1.98 |
 | Random placebo at same post-rate | +1.88 |
-| **Oracle** — perfect per-order foresight | **−0.23** |
+| **Oracle**, perfect per-order foresight | **−0.23** |
 
 Findings, with the placebo/oracle controls that make them decisive:
-- **Aggressive crossing is the cheapest method** for the majors — their spread is ≈1 tick
+- **Aggressive crossing is the cheapest method** for the majors, their spread is ≈1 tick
   (BTC ≈ 0.02 bps), so there is almost no spread to capture passively, and the unfilled-tail
   chase makes naive passive *worse* (+2.79).
 - **The L3-from-L2 signal carries no execution-timing information.** It loses to a random
   post/cross at the same post-rate (z = +2–3 *worse*), **sign-flipping does not rescue it**,
-  and its correlation with the per-order post-vs-cross advantage is **+0.06** — noise. No other
+  and its correlation with the per-order post-vs-cross advantage is **+0.06**, noise. No other
   L2 feature does better (cancellation +0.03, spread −0.02, |OFI| +0.02). So this is not a
-  sign error or a weak signal; it is the absence of signal.
+  sign error or a weak signal. It is the absence of signal.
 - **The opportunity is real but unforecastable from contemporaneous L2.** A perfect-foresight
-  oracle turns +1.34 into **−0.23 bps** (a +1.57 bps swing) — execution value genuinely exists
-  — but capturing it requires predicting whether price drifts before your passive order fills,
+  oracle turns +1.34 into **−0.23 bps** (a +1.57 bps swing), execution value genuinely exists
+ , but capturing it requires predicting whether price drifts before your passive order fills,
   which a *contemporaneous* price-formation signal by construction does not forecast. This is
   the same wall as the alpha results: the signal describes the present, not the near future.
 
 **Everything else, all null with the right control:** seconds-OFI on the spread (R²≈0.001,
-~0.02 bps vs ~20 bps cost; `pair_ofi_spread.py`); VPIN regime-filter (dead and sign-inverted
-— it's a directional-consensus meter, not a toxicity meter; `vpin_spread_vol.py`);
-cross-asset BTC→alt lead-lag (the 1–5s "lead" is **stale-price** spurious — it collapses at
-30/60s sampling — and otherwise arbitraged; `leadlag_xasset.py`); deep book levels 2–10
-carry *less* than top-of-book (`deep_book_probe.py`); microstructure vs HAR-RV for vol
-forecasting (HAR already wins, OOS R²≈0.51; micro adds ~2–3% of that, not worth the churn;
+~0.02 bps vs ~20 bps cost, `pair_ofi_spread.py`). VPIN regime-filter (dead and sign-inverted
+, it's a directional-consensus meter, not a toxicity meter, `vpin_spread_vol.py`).
+cross-asset BTC→alt lead-lag (the 1–5s "lead" is **stale-price** spurious, it collapses at
+30/60s sampling, and otherwise arbitraged, `leadlag_xasset.py`). Deep book levels 2–10
+carry *less* than top-of-book (`deep_book_probe.py`). Microstructure vs HAR-RV for vol
+forecasting (HAR already wins, OOS R²≈0.51, micro adds ~2–3% of that, not worth the churn,
 `har_vol_regress.py`).
 
-### Full-2024 robustness — the "Jan 2024 only" caveat is resolved *(iteration 16)*
+### Full-2024 robustness, the "Jan 2024 only" caveat is resolved *(iteration 16)*
 
 The whole microstructure chapter originally ran on ~5–10 days of Jan 2024 (the only data then
 ingested). With the L2 download now covering all of 2024, the key findings were re-run on **13
 days sampled across all 12 months and 4 symbols (BTC/ETH/SOL/AVAX), deliberately including the
-volatile regimes** — the **Aug 5 2024 yen-carry-unwind crash**, the March BTC-ATH run, and the
+volatile regimes**, the **Aug 5 2024 yen-carry-unwind crash**, the March BTC-ATH run, and the
 Nov–Dec rally (scripts `scratch/{book_ofi,exec_value,hidden_liquidity,inst_flow}_2024.py`). Every
 finding replicates and the **near-efficiency thesis holds in every regime, including the crash**:
 
 - **Book-OFI + cancellations:** contemporaneous book-OFI incremental-over-trade R² = +0.11 to
   +0.48 (stronger in illiquid AVAX), cancel share 77–90%, predictive power still decays to ~0 by
-  30s — all four symbols, all year. On the Aug 5 crash order flow gets *less* predictive, not more.
-- **Execution:** aggressive crossing still cheapest (pooled 1.10 bps); the L3 signal still carries
+  30s, all four symbols, all year. On the Aug 5 crash order flow gets *less* predictive, not more.
+- **Execution:** aggressive crossing still cheapest (pooled 1.10 bps). The L3 signal still carries
   no execution-timing edge (corr +0.03, loses to placebo). On the crash the oracle opportunity
-  *grows* (+2.34 bps) but the signal's correlation collapses to ~0 (+0.003) — it helps least
+  *grows* (+2.34 bps) but the signal's correlation collapses to ~0 (+0.003), it helps least
   exactly where it could help most.
-- **Hidden liquidity:** prevalence replicates (1.3–4% of volume; iceberg rate BTC/ETH/SOL ~10–12%
-  ≫ AVAX ~1.9%); predictive null holds (HAC). *New observation:* hidden volume **spikes 2–3× on
-  the crash day** (BTC 5.7% vs 2.7%) — institutions hide more in stress — but it is still not
+- **Hidden liquidity:** prevalence replicates (1.3–4% of volume, iceberg rate BTC/ETH/SOL ~10–12%
+  ≫ AVAX ~1.9%). Predictive null holds (HAC). *New observation:* hidden volume **spikes 2–3× on
+  the crash day** (BTC 5.7% vs 2.7%), institutions hide more in stress, but it is still not
   predictive.
-- **Institutional flow:** reversal-not-information holds all year; ~0 incremental R²; **zero**
+- **Institutional flow:** reversal-not-information holds all year. ~0 incremental R². **zero**
   continuation regimes found across 26 day×horizon cells, including the crash.
 
-So the microstructure null is **not a Jan-2024 artifact** — it is robust across 2024's full range
+So the microstructure null is **not a Jan-2024 artifact**, it is robust across 2024's full range
 of market conditions. If anything, near-efficiency holds *more* firmly in stress.
 
 **Thesis (validated across all 2024):** crypto majors are microstructure-efficient at every
 horizon you could trade against ~10–20 bps costs. Order flow (trade + book) explains
 *contemporaneous* price formation extremely well and carries genuine **permanent**
-information, but that information has a **seconds-scale half-life** — and it is *contemporaneous*,
+information, but that information has a **seconds-scale half-life**, and it is *contemporaneous*,
 so it forecasts neither returns (the alpha results) nor the near-future fills that would give
 it **execution** value (the measured null above). The earlier "the payoff is in execution"
 hope is retracted: the signal describes how price forms, but cannot be turned into either
@@ -589,27 +589,27 @@ all of 2024, all four symbols, and the year's most violent regime (the Aug 5 cra
 
 ---
 
-## Result 5 — Realistic L2 execution costs are ~17–23% below the flat assumption
+## Result 5, Realistic L2 execution costs are ~17–23% below the flat assumption
 
 Portfolio backtest, flat 5 bps slippage vs L2 book-walk slippage (`src/l2_costs.py`,
 `--with-l2-costs`): walking the real top-of-book makes execution **~17–23% cheaper** than the
-flat assumption for these liquid majors (e.g. z-score total return −12,827 → −9,868; XGBoost
+flat assumption for these liquid majors (e.g. z-score total return −12,827 → −9,868, XGBoost
 −22,143 → −18,286). Prior flat-cost backtests were therefore *conservative*. (All strategies
-remain unprofitable after costs; turnover dominates. The `max_drawdown` column in those
+remain unprofitable after costs, turnover dominates. The `max_drawdown` column in those
 tables is percent-of-peak with a degenerate denominator and is **not** interpreted.)
 
 ---
 
-## Result 6 — The rolling-z mechanical-reversion artifact *(contribution #2)*
+## Result 6, The rolling-z mechanical-reversion artifact *(contribution #2)*
 
 A rolling z-score `(spread − rolling_mean) / rolling_std` mechanically reverts even for a
-**pure random walk**, because the rolling mean chases the level — so |z|>2 is almost always
+**pure random walk**, because the rolling mean chases the level, so |z|>2 is almost always
 followed by "reversion" toward a mean that is itself moving. This silently inflates every
 reversion statistic and, in a backtest, manufactures a spectacular fake edge: a rolling-z
 variant of the §3 strategy shows **+4.75 Sharpe**, but **random pairs reproduce +2.18 and
 phase-randomized noise +2.42** under the identical rule. It carries zero selection
 information and must never be reported as an edge. Two consequences enforced throughout this
-work: (i) every reversion magnitude is reported **net of the random-walk mechanical floor**;
+work: (i) every reversion magnitude is reported **net of the random-walk mechanical floor**.
 (ii) any rolling-window statistic is validated against a random-pair / phase-randomized
 placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 
@@ -617,29 +617,29 @@ placebo. Scripts: `scratch/wf_sanity.py`, `wf_diag.py`, `audit_part2.py`.
 
 ## Honest limitations
 
-- **No genuinely cointegrated universe to draw from** (Result 1) — pair selection falls back
+- **No genuinely cointegrated universe to draw from** (Result 1), pair selection falls back
   to reversion-speed ranking, which is selectable (Result 2) and monetizable only in the
   slow, deep-drawdown form of Result 3, not as an hourly stop-managed strategy.
 - **Survivorship** (Result 3): the main backtests use the current top-50, but the no-stop result
-  was re-tested on the full 204-symbol on-disk universe (incl. crashed/meme/late-listed names,
+  was re-tested on the full 204-symbol on-disk universe (incl. Crashed/meme/late-listed names,
   point-in-time entry) and *strengthened* (iteration 15), and is structural-break stress-robust
-  (iteration 8). The residual gap — fully-delisted coins (LUNA/FTT) and in-sample *exits* — is the
-  one gold-standard check still open; it needs a delisted-coin data pull.
-- Microstructure tests now span **all 12 months of 2024** (4 symbols, incl. the Aug 5 crash;
-  iteration 16) — the original "Jan 2024 only" caveat is resolved and every finding replicated.
-  Still 2024-specific and ≤4 symbols for the event-level work; 2023/2025–26 L2 would extend it
-  further (the download has the data; re-ingest pending).
+  (iteration 8). The residual gap, fully-delisted coins (LUNA/FTT) and in-sample *exits*, is the
+  one gold-standard check still open. It needs a delisted-coin data pull.
+- Microstructure tests now span **all 12 months of 2024** (4 symbols, incl. The Aug 5 crash,
+  iteration 16), the original "Jan 2024 only" caveat is resolved and every finding replicated.
+  Still 2024-specific and ≤4 symbols for the event-level work. 2023/2025–26 L2 would extend it
+  further (the download has the data, re-ingest pending).
 - Effective sample size is the binding constraint for small effects: few, correlated pairs
-  give statistically fragile extreme-event counts — a real limit on detecting any thin edge.
+  give statistically fragile extreme-event counts, a real limit on detecting any thin edge.
 - Single exchange / quote currency / interval, as in phase 1.
 
 ---
 
-## Reproduce — script index
+## Reproduce, script index
 
 | Result | Scripts |
 |---|---|
-| 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`; `docs/CORRECTION_kalman_cointegration.md` |
+| 1. Cointegration artifact | `scratch/audit_part1.py`, `audit_part1b.py`. `docs/CORRECTION_kalman_cointegration.md` |
 | 2. Selectable reversion | `scratch/persistence_test.py`, `persistence_robust.py` |
 | 3. Stop/exit-rule dependence | `scratch/wf_backtest.py`, `wf_robustness.py`, `wf_nostop_stress.py`, `wf_nostop_winlevel.py`, `wf_nostop_factor.py`, `wf_nostop_pca.py`, `wf_frontier.py`, `wf_sharpe_freq.py`, `wf_survivorship.py`, `nostop_dsr.py`, `nostop_combined.py`, `nostop_pit.py`, `coinbase_pull.py`, `cross_exchange.py`, `nostop_breakstop.py`, `wf_sanity.py`, `wf_diag.py` |
 | 4. Microstructure | `scratch/impact_decomp.py`, `inst_flow_horizon2.py`, `book_ofi_incremental.py`, `book_ofi_cancel_stretch.py`, `pair_ofi_spread.py`, `vpin_spread_vol.py`, `leadlag_xasset.py`, `deep_book_probe.py`, `har_vol_regress.py` |
@@ -654,18 +654,18 @@ Full chronological detail with "what am I missing" at each step: `docs/l2_resear
 
 ## Bottom line for the advisor
 
-The L2 data did its job — it let us *test* the volume-as-information and L3-from-L2 ideas
+The L2 data did its job, it let us *test* the volume-as-information and L3-from-L2 ideas
 properly, and the verdict is honest near-efficiency: the information is real but lives at
-seconds and is priced before any tradeable horizon; its value is in execution, not alpha.
+seconds and is priced before any tradeable horizon. Its value is in execution, not alpha.
 Along the way the L2 window exposed that the project's headline cointegration result was a
 filtering artifact (genuine cointegration ≈ chance), while showing that mean-reversion *is*
-a real, selectable property. That property is even monetizable — but only as a slow,
+a real, selectable property. That property is even monetizable, but only as a slow,
 multi-month, −41%-drawdown hold-the-spread exposure, *not* the hourly stop-managed stat-arb
 the project specified, which loses because the stop that bounds hourly risk is exactly what
 destroys the thin, slow reversion. The deliverable is a rigorous, largely-null paper with
 **two methodological contributions** (the Kalman-innovation and rolling-z artifacts, both
 demonstrated with placebos) and **one real effect whose tradeability is entirely a function
-of the stop/exit rule** — more honest, and more publishable, than the original optimistic
-framing. **Action items:** retract the 99.7% cointegration claim from RESULTS.md;
+of the stop/exit rule**, more honest, and more publishable, than the original optimistic
+framing. **Action items:** retract the 99.7% cointegration claim from RESULTS.md.
 independently reproduce the Kalman placebo (`CORRECTION_kalman_cointegration.md`) before any
-external use; report the stop/exit-rule sensitivity (§3), not a single Sharpe.
+external use. Report the stop/exit-rule sensitivity (§3), not a single Sharpe.

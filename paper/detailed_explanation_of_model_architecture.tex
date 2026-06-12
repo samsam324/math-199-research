@@ -66,8 +66,8 @@ The 16 per-hour feature channels are:
 
 The tabular model receives summary statistics computed from the same
 168-hour window. These include latest, mean, minimum, and maximum spread
-z-score; spread slope; latest and mean volume ratio; BTC 24-hour return;
-rolling correlation; realized volatilities; time since zero crossing; and pair
+z-score. Spread slope. Latest and mean volume ratio. BTC 24-hour return.
+rolling correlation. Realized volatilities. Time since zero crossing. And pair
 volume summaries.
 
 For learned models, features are standardized using training-window means and
@@ -109,7 +109,7 @@ The persist baseline always predicts class 1:
 \hat{y}_t = 1.
 \]
 In the trading convention, class 1 means no new spread trade. This baseline is
-important because the class distribution can be imbalanced; any learned model
+important because the class distribution can be imbalanced. Any learned model
 should improve on a no-action predictor.
 
 \subsection{Majority-Class Baseline}
@@ -285,7 +285,7 @@ The small transformer uses the same basic training loop as the LSTM:
 cross-entropy loss, Adam, learning rate \(10^{-3}\), weight decay \(10^{-5}\),
 batch size 256, and the configured walk-forward epoch count. In the current
 post-audit headline run, this small transformer underperforms the LSTM and
-booster; the later big-transformer experiment suggests that this is at least
+booster. The later big-transformer experiment suggests that this is at least
 partly a capacity and training-budget issue.
 
 \section{Big Transformer Classifier}
@@ -407,7 +407,7 @@ minimizing the Kalman negative log likelihood:
 \]
 where \(S_t\) is the innovation variance. Fitting uses L-BFGS-B in log
 parameter space. In out-of-sample evaluation, the fitted parameters and final
-training state are carried forward; the test window is not refit.
+training state are carried forward. The test window is not refit.
 
 \section{Gaussian HMM Regime Filter}
 

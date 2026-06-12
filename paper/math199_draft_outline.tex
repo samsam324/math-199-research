@@ -244,7 +244,7 @@ than isolating productive mean-reversion regimes. This remains true under
 2-state and 3-state variants and across static and Kalman pipelines.
 
 Single-split evaluation is also unreliable. An earlier single chronological
-split overstated the transformer result; the 27-split walk-forward evaluation
+split overstated the transformer result. The 27-split walk-forward evaluation
 reduced the small transformer's apparent performance until its confidence
 interval included zero. This supports treating walk-forward evaluation with
 uncertainty intervals as the minimum reporting standard for this project.
@@ -253,14 +253,14 @@ uncertainty intervals as the minimum reporting standard for this project.
 
 The project found and fixed several methodological issues during review:
 \begin{itemize}
-\item post-\(t_0\) listings could enter the historical universe;
+\item post-\(t_0\) listings could enter the historical universe.
 \item an in-sample Kalman ADF check was circular and was replaced by a
-train/test protocol;
+train/test protocol.
 \item per-pair label thresholds could use information beyond the relevant
-training boundary;
-\item the Kalman spread construction had a train/test parameter discontinuity;
+training boundary.
+\item the Kalman spread construction had a train/test parameter discontinuity.
 \item the backtest Sharpe denominator could be distorted by changing active
-capital;
+capital.
 \item \texttt{time\_since\_zero\_crossing} was confirmed as a soft leakage
 feature and removed from the post-audit interpretation.
 \end{itemize}
@@ -280,7 +280,7 @@ This draft should retain the following limitations prominently:
 local store.
 \item The backtester uses flat slippage and does not model market impact.
 \item Spot shorting and funding constraints are not fully modeled.
-\item All main results use \(t_0=\) 2024-01-01; start-date sensitivity remains
+\item All main results use \(t_0=\) 2024-01-01. Start-date sensitivity remains
 pending.
 \item Deep-learning results are mostly single-seed.
 \item No pre-registered final strategy has been evaluated exactly once.
@@ -305,13 +305,13 @@ profitable strategy.
 
 Before this becomes a final manuscript, the project should ideally complete:
 \begin{enumerate}
-\item advisor review of the Kalman OOS protocol;
+\item advisor review of the Kalman OOS protocol.
 \item a rerun of downstream pair selection using Kalman-screened pairs rather
-than correlation fallback;
-\item cross-exchange validation on Coinbase or Kraken;
-\item L2-data ingestion and market-impact modeling;
-\item multi-seed deep-learning runs;
-\item start-date sensitivity tests;
+than correlation fallback.
+\item cross-exchange validation on Coinbase or Kraken.
+\item L2-data ingestion and market-impact modeling.
+\item multi-seed deep-learning runs.
+\item start-date sensitivity tests.
 \item one pre-registered model configuration evaluated once.
 \end{enumerate}
 
