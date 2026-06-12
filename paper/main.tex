@@ -81,8 +81,7 @@ cointegration approaches of Gatev et al.~\cite{gatev2006pairs} and
 Vidyamurthy~\cite{vidyamurthy2004pairs}, the residual mean reversion framework of Avellaneda and
 Lee~\cite{avellaneda2010statistical}, and the taxonomy in Krauss~\cite{krauss2017review} (with
 machine learning variants in~\cite{krauss2017deep}) define what we test. Our dynamic hedge is the state space pairs model of Elliott et
-al.~\cite{elliott2005pairs}, built on the cointegration of Engle and
-Granger~\cite{engle1987cointegration}. The contribution is a placebo that two standard screens fail.
+al.~\cite{elliott2005pairs}, built on Engle-Granger cointegration~\cite{engle1987cointegration}. The contribution is a placebo that two standard screens fail.
 
 For cryptocurrency the efficiency question is unsettled. Urquhart~\cite{urquhart2016inefficiency}
 finds early Bitcoin weak form inefficient, while adaptive markets
@@ -124,7 +123,7 @@ problem. Costs are charged on every position change at 15 bps per leg (10 bps fe
 slippage), about 30 bps round trip for the two leg spread, and stated before any performance
 number.
 
-A few conventions hold throughout. Inference uses Newey and West HAC standard errors, because overlapping
+A few conventions hold throughout. Inference uses Newey-West HAC standard errors, because overlapping
 targets and month long holds make naive errors far too small. In one case a spurious five minute
 reversal collapsed from $t = -22.8$ to $t = -1.4$ under HAC. Evaluation is strict walk forward,
 six month train and three month test, with hedge ratios and pair selection fit on the train
@@ -157,7 +156,7 @@ A static hedge ratio fits one $\beta$ for the whole sample. A Kalman dynamic hed
 $\beta$ drift as a random walk and updates it each step from the data. We fit the process and
 observation noise by maximum likelihood on the training window, froze them, and rolled the
 filter forward on the test window. The test period innovations, the filter's one step
-prediction errors, became the spread, and we ran an augmented Dickey and Fuller (ADF) test on
+prediction errors, became the spread, and we ran an augmented Dickey-Fuller (ADF) test on
 them. Under this screen $100\%$ of the top 50 pairs rejected the unit root out of sample at
 $p<0.05$, and $96.4\%$ at $p<0.001$. A static OLS spread over the same window passed only
 about $3\%$ of pairs. The contrast looked decisive.
@@ -178,7 +177,7 @@ A placebo settles it. We ran the identical screen on series that cannot be coint
 (a) independent simulated random walks, (b) each coin paired with a phase randomized surrogate
 of another coin, and (c) real pairs with one leg block shuffled. All three pass at the same
 nearly $100\%$ rate as the real pairs (Table~\ref{tab:kalman-placebo}). A clean, noncircular
-test tells the opposite story. Engle and Granger~\cite{engle1987cointegration} on the test window, and a
+test tells the opposite story. Engle-Granger~\cite{engle1987cointegration} on the test window, and a
 static OLS ADF, put genuine out of sample cointegration at $2$ to $3\%$ of pairs on the matched
 window, at or below the $5\%$ null floor. The screen carries no cointegration information. We are not
 claiming that no pair ever comoves, only that this screen cannot detect it.
@@ -208,12 +207,12 @@ We also ran a positive control: sixty constructed pairs that are genuinely coint
 $y_t = x_t + e_t$ with $x_t$ a random walk and $e_t$ a tight stationary AR(1). The Kalman screen
 passes them at $100\%$, the same rate it passes the random walk negatives, so it does not separate
 true cointegration from none (Table~\ref{tab:poscontrol}). We can see the mechanism directly: the
-test window innovations are white, with a Ljung and Box test failing to reject whiteness for $87\%$ of
+test window innovations are white, with a Ljung-Box test failing to reject whiteness for $87\%$ of
 the cointegrated pairs and $95\%$ of the random walk pairs, while the static OLS residual stays
 autocorrelated for both. The fitted hedge barely moves (median process variance
 $q_\beta \approx 2\times 10^{-9}$), so the whitening comes from the filter fitting noise rather than tracking a
 real relationship. The clean tests do separate the two, passing the positive control more often
-than the negative ($17\%$ versus $2\%$ for Engle and Granger, $27\%$ versus $8\%$ for static OLS),
+than the negative ($17\%$ versus $2\%$ for Engle-Granger, $27\%$ versus $8\%$ for static OLS),
 though genuine out of sample cointegration is hard to detect on a short window.
 
 \begin{table}[ht]
@@ -227,9 +226,9 @@ them. 60 constructed pairs per group, 1500 bar train, 500 bar test.}
 & Cointegrated & Random walks \\
 \midrule
 Kalman innovation ADF passes ($p<0.05$) & $100.0\%$ & $98.3\%$ \\
-Kalman innovations white (Ljung and Box $p>0.05$) & $86.7\%$ & $95.0\%$ \\
+Kalman innovations white (Ljung-Box $p>0.05$) & $86.7\%$ & $95.0\%$ \\
 Static OLS residual white & $0.0\%$ & $0.0\%$ \\
-Clean Engle and Granger passes & $16.7\%$ & $1.7\%$ \\
+Clean Engle-Granger passes & $16.7\%$ & $1.7\%$ \\
 Clean static OLS ADF passes & $26.7\%$ & $8.3\%$ \\
 \bottomrule
 \end{tabular}
@@ -239,7 +238,7 @@ The artifact does not depend on the bar. We reran the screen at hourly, four hou
 frequencies on a recent multiyear window (Table~\ref{tab:kalman-freq}). Real pairs and
 random walk placebos pass together at every cadence (Figure~\ref{fig:freq}): $100\%$ versus
 $100\%$ at hourly and four hour, and $70\%$ versus $68\%$ at daily ($p<0.001$). The clean tests behave differently.
-Engle and Granger runs at $25\%$ on this long hourly window and falls to the $5\%$ null floor at
+Engle-Granger runs at $25\%$ on this long hourly window and falls to the $5\%$ null floor at
 daily. A static OLS ADF runs higher still, from $42\%$ at hourly to $8\%$ at daily. Both are
 window dependent. Over long hourly spans the crypto majors share a common trend, which a clean
 test reads as broad comovement, and which the matched short window of
@@ -251,14 +250,14 @@ carries no cointegration information at any frequency we tested.
 \begin{table}[h]
 \centering
 \caption{Frequency robustness of the Kalman artifact. Real pairs and random walk placebos pass
-the screen together at every cadence. The clean Engle and Granger and static OLS benchmarks do
+the screen together at every cadence. The clean Engle-Granger and static OLS benchmarks do
 not. Top-50 universe, 60 pairs per cell, recent multiyear window.}
 \label{tab:kalman-freq}
 \begin{tabular}{lrrrrrr}
 \toprule
 & \multicolumn{2}{c}{Real pairs} & \multicolumn{2}{c}{RW placebo} & \multicolumn{2}{c}{Clean tests $p<0.05$} \\
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
-Frequency & $p<0.05$ & $p<0.001$ & $p<0.05$ & $p<0.001$ & Engle and Granger & static OLS \\
+Frequency & $p<0.05$ & $p<0.001$ & $p<0.05$ & $p<0.001$ & Engle-Granger & static OLS \\
 \midrule
 Hourly & $100.0\%$ & $100.0\%$ & $100.0\%$ & $100.0\%$ & $25.0\%$ & $41.7\%$ \\
 4 hour & $100.0\%$ & $100.0\%$ & $100.0\%$ & $100.0\%$ & $11.7\%$ & $20.0\%$ \\
@@ -272,7 +271,7 @@ Daily  & $100.0\%$ & $70.0\%$  & $100.0\%$ & $68.3\%$  & $5.0\%$  & $8.3\%$ \\
 \includegraphics[width=0.72\linewidth]{fig_freq_invariance}
 \caption{The Kalman screen carries no cointegration information at any frequency. Real pairs and
 random walk placebos pass together at hourly, four hour, and daily bars (near $100\%$ except at
-daily, where both fall to about $70\%$ under the stricter threshold), while a clean Engle and Granger
+daily, where both fall to about $70\%$ under the stricter threshold), while a clean Engle-Granger
 test stays far lower. Exact values in
 Tables~\ref{tab:kalman-placebo} and~\ref{tab:kalman-freq}.}
 \label{fig:freq}
@@ -457,7 +456,7 @@ about a third of the return is a generic survivor comovement floor.
 
 The naive Binance Sharpe was first reported near $2.5$, and four independent reimplementations put
 it at $2.0$ to $2.2$. Neither is the honest figure. Month long holds make hourly returns heavily
-autocorrelated, so a Newey and West correction drops the monthly Binance number to about $1.4$, and
+autocorrelated, so a Newey-West correction drops the monthly Binance number to about $1.4$, and
 on the independent Coinbase venue it is about $0.85$ to $0.90$. The HAC and venue honest figure
 is near $1.0$, and the edge concentrates in recent, high volatility periods.
 

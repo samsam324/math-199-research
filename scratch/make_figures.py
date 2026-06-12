@@ -23,7 +23,7 @@ x = np.arange(len(freqs)); w = 0.26
 fig, ax = plt.subplots(figsize=(5.0, 3.0))
 ax.bar(x - w, df["real_k05"], w, label="real pairs", color="#2b6cb0")
 ax.bar(x,     df["plac_k05"], w, label="random walk placebo", color="#a0aec0")
-ax.bar(x + w, df["eg05"],     w, label="clean Engle and Granger", color="#dd6b20")
+ax.bar(x + w, df["eg05"],     w, label="clean Engle-Granger", color="#dd6b20")
 ax.set_xticks(x); ax.set_xticklabels(["hourly", "4 hour", "daily"])
 ax.set_ylabel("pairs passing at $p<0.05$  (%)"); ax.set_ylim(0, 108)
 ax.set_xlabel("bar frequency")
