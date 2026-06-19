@@ -215,14 +215,14 @@ slippage), about $30$ bps round trip for the two leg spread, and stated before a
 number.
 
 A few conventions hold throughout. Inference uses Newey-West HAC standard
-errors~\cite{newey1987hac}, because overlapping
+errors~\cite{newey1987hac} (Appendix~\ref{app:hac}), because overlapping
 targets and month long holds make naive errors far too small. In one case a spurious five minute
 reversal collapsed from $t = -22.8$ to $t = -1.4$ under HAC. Evaluation is strict walk forward,
-six month train and three month test, with hedge ratios and pair selection fit on the train
+six month train and three month test (Appendix~\ref{app:wf}), with hedge ratios and pair selection fit on the train
 window only. And every positive claim is checked against a matched placebo, a random walk,
 phase randomized, block shuffled, or random pair null built to reproduce the claim if it is
-mechanical. Selection across many configurations is corrected with a deflated Sharpe
-ratio~\cite{bailey2014dsr}.
+mechanical (Appendix~\ref{app:placebo}). Selection across many configurations is corrected with a deflated Sharpe
+ratio~\cite{bailey2014dsr} (Appendix~\ref{app:dsr}), which discounts the Sharpe ratio (a strategy's mean return divided by its return standard deviation) for the number of configurations searched. Appendix~\ref{sec:appendix} gives self-contained definitions of every method and metric used in this paper, for readers who have not met all of them.
 
 For the one trading result that survives (Section~\ref{sec:survivor}) we preregistered a single
 configuration: the parameters and the held out evaluation window were written to a file and
@@ -244,12 +244,12 @@ fooled by.
 \subsection{The Kalman dynamic hedge cointegration screen}
 \label{sec:kalman}
 
-A static hedge ratio fits one $\beta$ for the whole sample. A Kalman dynamic hedge lets
+A static hedge ratio fits one $\beta$ for the whole sample. A Kalman dynamic hedge (Appendix~\ref{app:kalman}) lets
 $\beta$ drift as a random walk and updates it each step from the data. We fit the process and
 observation noise by maximum likelihood on the training window, froze them, and rolled the
 filter forward on the test window. The test period innovations, the filter's one step
 prediction errors, became the spread, and we ran an augmented Dickey-Fuller (ADF) test on
-them~\cite{saiddickey1984}. Under this screen $100\%$ of the top 50 pairs rejected the unit root out of sample at
+them~\cite{saiddickey1984} (Appendix~\ref{app:adf}). Under this screen $100\%$ of the top 50 pairs rejected the unit root out of sample at
 $p<0.05$, and $96.4\%$ at $p<0.001$. A static OLS spread over the same window passed only
 about $3\%$ of pairs. The contrast looked decisive.
 
@@ -460,9 +460,9 @@ statistical regularity that does not turn into money. We take the clearest case 
 \subsection{Reversion speed ranks pairs but does not pay}
 
 Mean reversion persists out of sample even though cointegration does not. Across nine disjoint
-walk forward splits (six month train, three month test), a pair's in sample OU reversion speed
+walk forward splits (six month train, three month test), a pair's in sample OU reversion speed (Appendix~\ref{app:ou})
 predicts its out of sample \emph{excess} reversion, net of the rolling $z$ floor of
-Section~\ref{sec:rollingz}: Spearman $\rho = 0.46$ (95\% CI $[0.37, 0.54]$, $p<0.001$), positive
+Section~\ref{sec:rollingz}: Spearman rank correlation $\rho = 0.46$ (95\% CI $[0.37, 0.54]$, $p<0.001$), positive
 in every one of the nine splits. The top quintile shows about $0.69z$ more excess reversion than
 the bottom out of sample ($[0.58, 0.81]$, $p<0.001$). The placebos are clean: a random
 quintile split gives $+0.0001z$, and shuffling the train to test link collapses $\rho$ to
@@ -649,9 +649,9 @@ Binance.US and Coinbase for the no-stop reversion strategy. Reading: the venue g
 \label{tab:venue-comparison}
 \begin{tabular}{lrr}
 \toprule
-Series & Naive monthly Sharpe & HAC-adjusted (lag $240$) \\
+Series & Naive monthly Sharpe & HAC-adjusted (monthly) \\
 \midrule
-Binance.US, hourly returns & $2.18$ & $1.40$ \\
+Binance.US, hourly returns & $2.18$ & $\approx 1.4$ \\
 Coinbase, hourly returns   & $0.88$ & $0.88$ \\
 \midrule
 HAC- and venue-centered    & n/a & $\approx 1.0$ \\
@@ -1120,7 +1120,7 @@ of an unrelated coin. Marginal distributions, autocorrelations, volatility clust
 trends are all preserved leg by leg; only the joint cointegration is destroyed.
 
 The four nulls answer different questions. The Kalman screen of Section~\ref{sec:kalman}
-fails the random-walk null and the random-pair null at the same rate as the real data,
+fails the random-walk, phase-randomized, and block-shuffled nulls at the same rate as the real data,
 which is the diagnostic.
 
 \subsection{Microstructure terms}
@@ -1176,7 +1176,7 @@ structure that drives sampling uncertainty. The block bootstrap of
 K\"unsch~\cite{kunsch1989block} preserves it. From a series $\{z_t\}_{t=1}^{T}$, draw
 $\lceil T / L \rceil$ blocks of length $L$ with replacement, where each block is a
 contiguous slice $(z_s, z_{s+1}, \dots, z_{s+L-1})$ with $s$ uniform on
-$\{1, \dots, T - L + 1\}$, concatenate them, and truncate to length $T$. Resample $B$ times
+$\{1, \dots, T\}$ with indices taken modulo $T$ (the circular block bootstrap we use), concatenate them, and truncate to length $T$. Resample $B$ times
 to form the bootstrap distribution.
 
 The block length $L$ governs the bias-variance trade-off: $L$ must be large enough that
