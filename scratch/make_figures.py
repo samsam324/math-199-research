@@ -11,24 +11,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 ROOT = r"C:\Users\jackw\Desktop\math-199-research"
-OUT = os.path.join(ROOT, "paper")
+OUT = ROOT  # repo root
 plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False,
                      "savefig.bbox": "tight"})
 
-# ---- Figure 1: frequency-invariance of the Kalman cointegration artifact ----
-df = pd.read_csv(os.path.join(ROOT, "scratch", "timeframe_kalman_artifact.csv"))
-freqs = ["1H", "4H", "1D"]
-df = df.set_index("freq").loc[freqs].reset_index()
-x = np.arange(len(freqs)); w = 0.26
-fig, ax = plt.subplots(figsize=(6.4, 3.0))
-ax.bar(x - w, df["real_k05"], w, label="real pairs", color="#2b6cb0")
-ax.bar(x,     df["plac_k05"], w, label="random walk placebo", color="#a0aec0")
-ax.bar(x + w, df["eg05"],     w, label="clean Engle-Granger", color="#dd6b20")
-ax.set_xticks(x); ax.set_xticklabels(["hourly", "4 hour", "daily"])
-ax.set_ylabel("pairs passing at $p<0.05$  (%)"); ax.set_ylim(0, 108)
-ax.set_xlabel("bar frequency")
-ax.legend(frameon=False, fontsize=8, loc="center left", bbox_to_anchor=(1.0, 0.5))
-fig.savefig(os.path.join(OUT, "fig_freq_invariance.pdf")); plt.close(fig)
+# Figure fig_freq_invariance.pdf is now generated (reshaped) by make_figures_v2.py
 
 # ---- Figure 2: rolling-z reversion on a pure random walk ----
 rng = np.random.default_rng(3)
@@ -51,4 +38,4 @@ a2.legend(frameon=False, fontsize=8, loc="center left", bbox_to_anchor=(1.0, 0.5
 a2.set_ylabel("rolling $z$"); a2.set_xlabel("time (bars)")
 fig.savefig(os.path.join(OUT, "fig_rollingz_noise.pdf")); plt.close(fig)
 
-print("wrote paper/fig_freq_invariance.pdf and paper/fig_rollingz_noise.pdf")
+print("wrote fig_rollingz_noise.pdf")

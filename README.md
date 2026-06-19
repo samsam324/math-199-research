@@ -2,7 +2,7 @@
 
 UCLA Math 199 research project. Authors: Jack Lutz, Sammy Adham; advisor: Frank Kronewitter.
 
-**The deliverable is the paper: [`paper/main.tex`](paper/main.tex)** (12 pages, builds with `pdflatex`). Everything else in this repo is the work behind it.
+**The deliverable is the paper: [`main.tex`](main.tex)** at the repo root (compiled [`main.pdf`](main.pdf), 22 pages, builds with `pdflatex main.tex`). The figures are standalone `fig_*.pdf` files at the root. Everything else in this repo is the work behind it.
 
 ## What the project found
 
@@ -43,7 +43,7 @@ Each script prints the numbers it backs and, where relevant, writes a `.csv`/`.l
 Build the paper:
 
 ```bash
-cd paper && pdflatex main.tex && pdflatex main.tex   # two passes for refs; 12 pages, 0 warnings
+pdflatex main.tex && pdflatex main.tex   # two passes for refs; 22 pages, 0 warnings
 ```
 
 ## What still needs a human
@@ -55,10 +55,9 @@ cd paper && pdflatex main.tex && pdflatex main.tex   # two passes for refs; 12 p
 ## Repository layout
 
 ```
-paper/                     *** The deliverable ***
-  main.tex                  The paper (12 pages, pdflatex, manual thebibliography)
-  fig_freq_invariance.*     Kalman frequency-invariance figure
-  fig_rollingz_noise.*      Rolling-z-on-a-random-walk figure
+main.tex                   *** The deliverable *** (22 pages, pdflatex, manual thebibliography)
+main.pdf                   Compiled paper
+fig_*.pdf                  The 11 figures as standalone files (regenerate: scratch/make_figures_v2.py + make_figures.py)
 
 docs/
   claims_ledger.md          *** Every paper number mapped to its source ***

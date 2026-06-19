@@ -1,6 +1,6 @@
 """Generate the paper v2 figures from the committed CSVs and logs.
 
-Outputs (all into paper/, vector PDF):
+Outputs (all into the repo root, vector PDF):
   fig_kalman_innovations_white.pdf   Fig 1  live Kalman run, BTC/ETH + RW placebo
   fig_poscontrol_vs_negcontrol.pdf   Fig 2  scratch/kalman_positive_control.csv
   fig_reversion_persistence_scatter  Fig 3  scratch/persistence_pairs.csv
@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
 ROOT = r"C:\Users\jackw\Desktop\math-199-research"
-OUT = os.path.join(ROOT, "paper")
+OUT = ROOT  # repo root
 sys.path.insert(0, ROOT)
 
 plt.rcParams.update({
