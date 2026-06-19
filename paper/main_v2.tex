@@ -85,7 +85,7 @@ cointegration screen tradition~\cite{vidyamurthy2004pairs, elliott2005pairs,
 triantafyllopoulos2011dynamic} is, to our knowledge, new. Second, we measure whether L2
 order book signals improve execution placement for crypto majors with $18{,}432$ simulated
 parent orders on event-level Binance L2 data. They do not: aggressive crossing is cheapest
-across all four symbols, the signal correlates $+0.06$ with the per-order post-vs-cross
+across all four symbols, the signal correlates $+0.03$ with the per-order post-vs-cross
 advantage, and a perfect-foresight oracle would save $1.6$ bps so the opportunity exists
 but no contemporaneous feature forecasts it. Third, the candidate market-neutral reversion
 strategy that emerges from the surviving structure clears honest accounting at a venue- and
@@ -95,8 +95,7 @@ surviving result ends up cutting against itself. The takeaway is the methodologi
 trust a cointegration or mean-reversion screen only after it fails on a placebo built to
 reproduce the claim if the claim is mechanical.
 
-The lesson is narrow and reusable: before you believe a cointegration or mean reversion screen,
-check that it fails on a matched placebo. The backtest overfitting
+The backtest overfitting
 literature~\cite{bailey2014dsr} stress tests the strategy you finally pick;
 the screen you used to build the spread needs the same scrutiny.
 
@@ -104,12 +103,10 @@ the screen you used to build the spread needs the same scrutiny.
 \section{Related work}
 \label{sec:related}
 
-Our work sits at the intersection of three literatures: the cointegration branch of pairs
-trading, modern market microstructure, and empirical studies of cryptocurrency market
-efficiency. The pairs literature provides the Kalman dynamic hedge and rolling $z$-score
-screens whose artifacts we expose; the microstructure literature provides the order-flow
-machinery we apply to crypto L2 data; and the crypto-efficiency literature is the context
-in which our headline negative result lands.
+Three bodies of prior work set up this paper. The two screens we audit come from the
+cointegration branch of the pairs-trading literature. The order-flow tools we apply to crypto
+L2 data are standard market microstructure. And the crypto market-efficiency literature is
+where our headline negative result has to be read.
 
 \subsection{Pairs trading and dynamic cointegration}
 \label{sec:related-pairs}
@@ -501,8 +498,8 @@ small ones, and the ranking replicates across all of 2024 on four coins (one sec
 BTC of $0.33/0.23/0.13$ bps for institutional, mid, and retail, with institutional $2.0$ to
 $2.6\times$ retail, the longer horizon permanent estimate is noisier;
 Table~\ref{tab:institutional-impact}). Book side order flow
-imbalance~\cite{contkukanovstoikov2014} explains subsecond midprice moves better than trade flow does (incremental $R^2$
-of $+0.12$ to $+0.16$ for BTC and ETH), and $77$ to $90\%$ of the liquidity that leaves the best
+imbalance~\cite{contkukanovstoikov2014} explains subsecond midprice moves better than trade flow does (contemporaneous incremental $R^2$
+of $+0.11$ to $+0.15$ for BTC and ETH), and $77$ to $90\%$ of the liquidity that leaves the best
 quote is cancellations, invisible to trade only analysis (Figure~\ref{fig:cancel-share}).
 
 \begin{table}[h]
@@ -536,7 +533,7 @@ horizon survives.}
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.66\linewidth]{fig_cancellation_share}
-\caption{Cancellations dominate trades in best-level liquidity withdrawal: $77$ to $90\%$ (about $80\%$ for BTC, ETH, SOL; $90\%$ for AVAX) of
+\caption{Cancellations dominate trades in best-level liquidity withdrawal: $77$ to $90\%$ (about $77$ to $80\%$ for BTC, ETH, SOL; $90\%$ for AVAX) of
 best-level size reductions are cancels, invisible to trade-only microstructure analysis
 (BTC/ETH/SOL/AVAX, 2024).}
 \label{fig:cancel-share}
@@ -551,7 +548,7 @@ We then measured whether the signal helps execution, the usual fallback when a s
 forecast returns. It does not (Table~\ref{tab:exec}). Across 18{,}432 simulated parent orders
 over event level book and tape, aggressive crossing is the cheapest method for these majors, a
 signal timed passive rule does worse than a random one at the same posting rate, and the signal's
-correlation with the per order advantage of posting over crossing is $+0.06$, noise. A
+correlation with the per order advantage of posting over crossing is $+0.03$, noise. A
 perfect foresight oracle would save 1.6 bps, so the opportunity is real, but no contemporaneous book
 feature forecasts it. The null holds across all twelve months of 2024, including the August 5
 crash. Table~\ref{tab:exec-symbol-breakdown} confirms the pooled result holds per symbol and per
@@ -666,7 +663,7 @@ HAC- and venue-centered    & n/a & $\approx 1.0$ \\
 \centering
 \includegraphics[width=\linewidth]{fig_hac_inflation}
 \caption{Hourly Sharpe is heavily serial-correlation inflated by multi-week holds. Left: per-split
-IID vs Newey-West HAC ratios cluster around $1.5$--$2.5\times$ across the $27$ walk-forward
+IID vs Newey-West HAC ratios cluster around $2\times$ (median $2.0$) across the $27$ walk-forward
 splits. Right: scatter of IID vs HAC Sharpe per split, with the $\mathrm{HAC} = 0.5 \cdot
 \mathrm{IID}$ reference line.}
 \label{fig:hac-inflation}
@@ -681,7 +678,7 @@ under a flat 15 bps cost that badly understates the true cost of trading those n
 unit notional accounting that ignores capacity. A $+517\%$ three month leg implies roughly a
 $150\times$ gross return, not realizable at any size. Those names are barely traded
 (Figure~\ref{fig:microcap-adv}): on Binance.US
-the held out microcaps (WAXP, ZIL, VTHO, ACH, EGLD) turn over a median of a few hundred to a few
+the held out microcaps (WAXP, ZIL, VTHO, ACH, EGLD) turn over a median of tens to a few
 thousand dollars a day, roughly three to four thousand times less than the majors, so the
 deployable notional is negligible and a flat, size independent cost is indefensible. The same
 machinery on a venue without those microcaps returns the $\sim 1.0$ figure. So the held out test does not confirm an alpha. It
@@ -692,7 +689,7 @@ of the paper applies to everything else.
 \centering
 \includegraphics[width=0.82\linewidth]{fig_microcap_adv}
 \caption{Median daily USD volume on Binance.US, log scale. The preregistered held-out microcaps
-(WAXP, ZIL, VTHO, ACH, EGLD; red) trade at hundreds to a few thousand dollars per day, three to
+(WAXP, ZIL, VTHO, ACH, EGLD; red) trade at tens to a few thousand dollars per day, three to
 four orders of magnitude below the majors (blue) whose costs the backtest assumes. A flat,
 size-independent transaction cost is therefore indefensible on these names.}
 \label{fig:microcap-adv}
@@ -740,8 +737,8 @@ with the $50\%$ single-leg breaker, losses are capped at $-65\%$ to $-91\%$.}
 \centering
 \includegraphics[width=0.8\linewidth]{fig_circuit_breaker_retention}
 \caption{Monthly Sharpe of the no-stop reversion book as a function of injected delisting rate,
-with and without the structural-break circuit breaker. Without the breaker, the Sharpe collapses
-past a $10\%$/year break rate. With the breaker, it retains $\approx 96\%$ of its Sharpe at the
+with and without the structural-break circuit breaker. Without the breaker, the Sharpe declines steadily and crosses zero only near a $46\%$/year
+break rate. With the breaker, it retains $\approx 96\%$ of its Sharpe at the
 $8\%$/year rate consistent with historical liquid-major attrition.}
 \label{fig:circuit-breaker}
 \end{figure}
@@ -992,7 +989,7 @@ under $H_1$, $\rho < 0$ and shocks decay geometrically. Reject for sufficiently 
 $t_{\hat\rho}$. We supplement ADF with the nonparametric Phillips-Perron
 test~\cite{phillips1988testing} for robustness.
 
-The connection to the rolling-$z$ artifact (Section~\ref{sec:kalman}) is mechanical: a
+The connection to the Kalman innovation artifact (Section~\ref{sec:kalman}) is mechanical: a
 series that is close to white noise has trivially fast mean reversion, so the ADF rejects
 easily even when no economic mean-reverting relation is present. The test answers ``is this
 stationary'', not ``is this a cointegrating residual''.

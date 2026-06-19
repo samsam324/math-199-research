@@ -297,14 +297,16 @@ def fig_freq_invariance_reshaped():
     labels = ["hourly", "4 hour", "daily"]
     kalman_gap = (df["real_k05"] - df["plac_k05"]).to_numpy()          # ~0 everywhere
     eg_gap = (df["eg05"] - 5.0).to_numpy()                            # clean test vs 5% null size
-    x = np.arange(len(labels)); w = 0.36
+    x = np.arange(len(labels))
     fig, ax = plt.subplots(figsize=(6.8, 3.4))
-    ax.bar(x - w / 2, kalman_gap, w, color=GRAY, label="Kalman screen")
-    ax.bar(x + w / 2, eg_gap, w, color=BLUE, label="clean Engle-Granger")
+    ax.bar(x, eg_gap, 0.5, color=BLUE, label="clean Engle-Granger")
+    ax.plot(x, kalman_gap, "o-", color="#4a5568", lw=1.6, ms=8, zorder=5,
+            label=r"Kalman screen (gap $=0$)")
     for xi in range(len(labels)):
-        ax.text(xi - w / 2, kalman_gap[xi] + 0.6, f"{kalman_gap[xi]:.0f}", ha="center", fontsize=7.5)
-        ax.text(xi + w / 2, eg_gap[xi] + 0.6, f"{eg_gap[xi]:.0f}", ha="center", fontsize=7.5)
+        ax.text(xi, eg_gap[xi] + 0.6, f"{eg_gap[xi]:.0f}", ha="center", fontsize=8)
+        ax.text(xi, -1.4, "0", ha="center", fontsize=7.5, color="#4a5568")
     ax.axhline(0, color="#888888", lw=0.7)
+    ax.set_ylim(-2.5, 22)
     ax.set_xticks(x); ax.set_xticklabels(labels)
     ax.set_ylabel("real $-$ placebo pass-rate gap\n(percentage points, $p<0.05$)")
     ax.set_xlabel("bar frequency")
