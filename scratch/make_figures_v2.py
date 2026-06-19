@@ -188,29 +188,27 @@ def fig_forced_collapse():
 
 # ---------------------------------------------------------------- Fig 6
 def fig_ofi_decay():
-    # incremental book-OFI R^2 over trade-OFI, from book_ofi_2024.log master tables [1] (contemp) and [2] (ALL).
-    contemp = {"BTCUSDT": 0.1548, "ETHUSDT": 0.1137, "SOLUSDT": 0.1993, "AVAXUSDT": 0.4759}
-    pred = {  # horizon: per-symbol incremental book R^2 (ALL-2024)
-        1:  {"BTCUSDT": 0.00290, "ETHUSDT": 0.00126, "SOLUSDT": 0.00156, "AVAXUSDT": 0.00198},
-        5:  {"BTCUSDT": 0.00219, "ETHUSDT": 0.00084, "SOLUSDT": 0.00102, "AVAXUSDT": 0.00130},
-        10: {"BTCUSDT": 0.00141, "ETHUSDT": 0.00031, "SOLUSDT": 0.00047, "AVAXUSDT": 0.00043},
-        30: {"BTCUSDT": 0.00053, "ETHUSDT": 0.00019, "SOLUSDT": 0.00025, "AVAXUSDT": 0.00000},
-    }
+    # incremental book-OFI R^2 over trade-OFI; extended horizons re-run with book_ofi_2024.py
+    # (run_ofi_extended.py); horizons 1/5/10/30 reproduce book_ofi_2024.log exactly.
+    df = pd.read_csv(os.path.join(ROOT, "scratch", "ofi_decay_extended.csv")).set_index("sym")
     syms = ["BTCUSDT", "ETHUSDT", "SOLUSDT", "AVAXUSDT"]
-    hs = [1, 5, 10, 30]
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.4, 3.5))
-    xfull = [0, 1, 5, 10, 30]
+    hs = [1, 2, 5, 10, 30, 60, 120, 300]
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.6, 3.5))
+    xfull = [0] + hs
     for s in syms:
-        yv = [contemp[s] * 100] + [pred[h][s] * 100 for h in hs]
+        yv = [df.loc[s, "contemp_incr_book"] * 100] + [df.loc[s, f"h{h}"] * 100 for h in hs]
         a1.plot(xfull, yv, "-o", color=SYM_C[s], lw=1.5, ms=4, label=s.replace("USDT", ""))
     a1.set_title("contemporaneous vs forecast horizon", fontsize=9, loc="left")
     a1.set_xlabel("forecast horizon (s); 0 = contemporaneous")
     a1.set_ylabel(r"incremental book-OFI $R^2$ (%)")
     a1.legend(frameon=False, fontsize=8, loc="upper right")
     for s in syms:
-        yv = [pred[h][s] * 100 for h in hs]
+        yv = [df.loc[s, f"h{h}"] * 100 for h in hs]
         a2.plot(hs, yv, "-o", color=SYM_C[s], lw=1.5, ms=4, label=s.replace("USDT", ""))
-    a2.set_title("forecast horizons only (zoom)", fontsize=9, loc="left")
+    a2.set_xscale("log")
+    a2.set_xticks(hs); a2.set_xticklabels([str(h) for h in hs], fontsize=7)
+    a2.xaxis.set_minor_locator(plt.NullLocator())
+    a2.set_title("forecast horizons only (log scale)", fontsize=9, loc="left")
     a2.set_xlabel("forecast horizon (s)")
     a2.set_ylabel(r"incremental book-OFI $R^2$ (%)")
     a2.axhline(0, color="#aaaaaa", lw=0.6)
