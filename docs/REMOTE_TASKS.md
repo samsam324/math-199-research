@@ -10,24 +10,28 @@ Full revision plan is in `docs/PAPER_REVISION_TASKS.md`; this file is just the a
 
 All figures generated and wired, both stub tables filled, paper promoted. `main_v2.tex` has
 been promoted to `paper/main.tex` (old 4-ref draft preserved in git history); compiles to a
-22-page `main.pdf` with 0 undefined refs/citations, 0 overfull boxes, 0 em-dashes, and 25/25
+22-page `main.pdf` with 0 undefined refs/citations, 0 overfull boxes, 0 em-dashes, and 23/23
 bib entries cited. Generators: `scratch/make_figures_v2.py` (all 9 figures), wired by
 `scratch/wire_v2_figures.py`, with adversarial-review corrections in `scratch/review_fixes.py`.
 
 What changed vs. this list:
-- Figs 6 (OFI decay) and 9 (cancellation) were built from the existing numbers already in
-  `scratch/book_ofi_2024.log` (master tables [1]/[2]/[3]), so **no L2 rerun was needed**. The
-  OFI decay figure therefore spans horizons {contemporaneous, 1, 5, 10, 30}s (the log's range),
-  which matches the caption's "near zero by 30 seconds." Extending to 60/120/300s would need a
-  live `book_ofi_incremental.py` run against raw L2.
-- T3 (institutional impact) headline cells verified exactly against `impact_decomp_2024.log`
-  (h=1 RAW bps); no change needed.
-- Adversarial review fixed two real caption errors (circuit-breaker "collapses past 10%/yr" was
-  wrong; the no-breaker Sharpe crosses zero near 46%/yr) and one data slip (the exec-signal
-  correlation is +0.03 in the committed log, not +0.06).
-- **Open for Sammy:** T1 (`tab:venue-comparison`) Binance figures 2.18/1.40 are not in a
-  committed log (Coinbase 0.88 matches `cross_exchange.log`); confirm the source.
-- **Open for Jack:** the title is the suggested one, not `TBD`.
+- Fig 9 (cancellation) was built from `scratch/book_ofi_2024.log` table [3]. Fig 6 (OFI decay)
+  was extended to horizons {contemp, 1, 2, 5, 10, 30, 60, 120, 300}s by re-running the real
+  `scratch/book_ofi_2024.py` (via `scratch/run_ofi_extended.py`) over the full 7-date L2 data in
+  `data/l2_raw/binance/`; the overlapping horizons reproduce `book_ofi_2024.log` exactly, and the
+  new points show a 0.01-0.06% noise floor out to 300s. Output: `scratch/ofi_decay_extended.csv`.
+- A full three-agent factual audit re-derived every quantitative claim from committed data;
+  almost all checked out. Fixes applied (`scratch/review_fixes.py`, `review_fixes2.py`): the exec
+  table `tab:exec` and order count now use the all-2024 29,952-order run (was a Jan-only 18,432
+  subsample), so it agrees with the +0.03 correlation, the per-symbol table, and the twelve-month
+  claim; the no-breaker Sharpe crosses zero near 50%/yr (not 46); the institutional reversal R^2
+  is stated qualitatively (the 0.03% figure had no committed source); exec correlation +0.03.
+- Bibliography trimmed 25 -> 23: dropped `do2010simple` (peripheral) and `phillips1988testing`
+  (the appendix named a Phillips-Perron robustness check whose results the paper never reports).
+- T1 (`tab:venue-comparison`) 2.18/1.40 ARE sourced (`docs/L2_FINDINGS.md`: 2.18 is the top of
+  the 1.95-2.18 reimplementation range; HAC ~1.4). Sammy may still want to footnote that.
+- **Open for Jack:** the title is the suggested one, not `TBD`; and whether to de-dash the
+  Mac-written sections (hyphens/en-dashes remain there).
 
 ## What `main_v2.tex` already has
 
