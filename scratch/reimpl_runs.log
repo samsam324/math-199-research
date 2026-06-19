@@ -1,0 +1,43 @@
+### indep3 ###
+Universe: 41 symbols
+binance: panel shape (47131, 41), span 2021-01-01 00:00:00+00:00 -> 2026-05-18 18:00:00+00:00
+binance: no-stop monthly Sharpe = 1.9507  | stop monthly Sharpe = -0.6294  (bars=41610)
+coinbase: panel shape (47449, 41), span 2021-01-01 00:00:00+00:00 -> 2026-06-01 00:00:00+00:00
+coinbase: no-stop monthly Sharpe = 0.6258  | stop monthly Sharpe = -0.1541  (bars=41610)
+
+==== SUMMARY ====
+Binance no-stop : 1.9507
+Coinbase no-stop: 0.6258
+Binance stop    : -0.6294
+Coinbase stop   : -0.1541
+Coinbase/Binance no-stop ratio: 0.3208
+### indep_run2 ###
+Common symbols: 41
+Binance panel: (47131, 41), range 2021-01-01 00:00:00+00:00 .. 2026-05-18 18:00:00+00:00
+  Binance_nostop: monthly Sharpe = 2.1492  (months=58, total ret pts=41610)
+  Binance_stop: monthly Sharpe = -2.0623  (months=58, total ret pts=41610)
+Coinbase panel: (47449, 41), range 2021-01-01 00:00:00+00:00 .. 2026-06-01 00:00:00+00:00
+  Coinbase_nostop: monthly Sharpe = 0.6133  (months=58, total ret pts=41610)
+  Coinbase_stop: monthly Sharpe = -3.3760  (months=58, total ret pts=41610)
+
+=== SUMMARY ===
+Binance_nostop: 2.1492
+Binance_stop: -2.0623
+Coinbase_nostop: 0.6133
+Coinbase_stop: -3.3760
+Coinbase/Binance no-stop ratio: 0.2854
+JSONRESULT {"Binance_nostop": 2.1491549560142564, "Binance_stop": -2.062252241694504, "Coinbase_nostop": 0.6132925048043169, "Coinbase_stop": -3.3760093407779013}
+### my_independent_run1 ###
+Universe: 41 symbols
+
+=== BINANCE ===
+panel shape (47131, 41) from 2021-01-01 00:00:00+00:00 to 2026-05-18 18:00:00+00:00
+Binance no-stop monthly Sharpe: 2.1645854111618528
+Binance stop|z|=4 monthly Sharpe: -0.5380482562195438
+
+=== COINBASE ===
+panel shape (47449, 41) from 2021-01-01 00:00:00+00:00 to 2026-06-01 00:00:00+00:00
+Coinbase no-stop monthly Sharpe: 0.6132925048043174
+Coinbase stop|z|=4 monthly Sharpe: -0.27142186082094366
+
+Coinbase/Binance no-stop ratio: 0.2833302403507974

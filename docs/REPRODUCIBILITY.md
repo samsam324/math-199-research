@@ -56,19 +56,21 @@ correct. The block-bootstrap subsection describes the circular variant the code 
 - L2 microstructure (needs `data/l2_raw/binance/`, 7 dates x 4 symbols, present): `python scratch/book_ofi_2024.py`, `impact_decomp_2024.py`, `exec_value_2024.py`, `hidden_liquidity_2024.py`, `inst_flow_2024.py`. Extended OFI horizons: `python scratch/run_ofi_extended.py`.
 - Venue/HAC Sharpe: `python scratch/independent_verify.py`, `scratch/cross_exchange.py`.
 
-## Known provenance notes (honest disclosure)
+## Previously writeup-only numbers, now reproduced with committed logs
 
-A few descriptive numbers are recorded in the committed writeup `docs/L2_FINDINGS.md` but are not
-emitted by an isolated, committed script log. They are internally consistent and were not
-contradicted by any data check, but a reproducer should regenerate them from the no-stop backtest
-rather than treat the writeup as the primary source:
+These were recorded only in the `docs/L2_FINDINGS.md` writeup; they have since been re-run and the
+generating output is committed, so each is now one-command reproducible:
 
-- median hold ~35 days and "78% of positions do not converge within a quarter" (position-level
-  stats of the no-stop reversion book);
-- "about a third of the return is a generic survivor comovement floor";
-- the specific list of four independent-reimplementation Sharpes (1.95 / 2.15 / 2.16 / 2.18): only
-  the 2.18 value has a committed log (`independent_verify.log`); the other three reimplementation
-  scripts (`indep3_backtest.py`, `indep_run2.py`, `my_independent_run1.py`) reproduce on running but
-  their logs are not committed.
-- the "17 to 23% below the flat 5 bps" L2 cost saving is documented via `src/l2_costs.py` in
-  `docs/L2_FINDINGS.md` but not in a standalone re-runnable log.
+- **median hold ~35 days and 78% non-convergence** -> `python scratch/wf_nostop_stress.py`
+  writes `scratch/wf_nostop_stress.log`: median holding time 848 bars (= 35.3 days) and
+  148/190 = 77.9% of positions still open (never converged) at window end.
+- **four independent-reimplementation Sharpes 1.95 / 2.15 / 2.16 / 2.18** ->
+  `scratch/independent_verify.log` (2.18) and `scratch/reimpl_runs.log` (1.95, 2.15, 2.16 from
+  `indep3_backtest.py`, `indep_run2.py`, `my_independent_run1.py`), all written from scratch off the
+  raw parquet, none finding look-ahead.
+- **17 to 23% L2 cost saving** -> `python scratch/provenance_costsaving.py` from the committed
+  `docs/l2_results/portfolio_flat_costs.csv` vs `portfolio_l2_costs.csv`: zscore 23.1%, xgboost 17.4%.
+- **~1/3 generic survivor comovement floor** is the random-pair placebo no-stop Sharpe (+0.89)
+  over the total no-stop Sharpe (+2.51), recorded in `docs/L2_FINDINGS.md:219-221`. This single
+  ratio is still sourced from the writeup; the components are consistent with the reimplementation
+  runs but a dedicated random-pair placebo log is not separately committed.
