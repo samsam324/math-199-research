@@ -6,6 +6,29 @@ committed CSVs. Read `paper/main_v2.pdf` to see exactly where each new figure an
 goes (placeholders are visible bordered boxes with the data source path printed inside).
 Full revision plan is in `docs/PAPER_REVISION_TASKS.md`; this file is just the action list.
 
+## STATUS: done on the Windows side (2026-06-19)
+
+All figures generated and wired, both stub tables filled, paper promoted. `main_v2.tex` has
+been promoted to `paper/main.tex` (old 4-ref draft preserved in git history); compiles to a
+22-page `main.pdf` with 0 undefined refs/citations, 0 overfull boxes, 0 em-dashes, and 25/25
+bib entries cited. Generators: `scratch/make_figures_v2.py` (all 9 figures), wired by
+`scratch/wire_v2_figures.py`, with adversarial-review corrections in `scratch/review_fixes.py`.
+
+What changed vs. this list:
+- Figs 6 (OFI decay) and 9 (cancellation) were built from the existing numbers already in
+  `scratch/book_ofi_2024.log` (master tables [1]/[2]/[3]), so **no L2 rerun was needed**. The
+  OFI decay figure therefore spans horizons {contemporaneous, 1, 5, 10, 30}s (the log's range),
+  which matches the caption's "near zero by 30 seconds." Extending to 60/120/300s would need a
+  live `book_ofi_incremental.py` run against raw L2.
+- T3 (institutional impact) headline cells verified exactly against `impact_decomp_2024.log`
+  (h=1 RAW bps); no change needed.
+- Adversarial review fixed two real caption errors (circuit-breaker "collapses past 10%/yr" was
+  wrong; the no-breaker Sharpe crosses zero near 46%/yr) and one data slip (the exec-signal
+  correlation is +0.03 in the committed log, not +0.06).
+- **Open for Sammy:** T1 (`tab:venue-comparison`) Binance figures 2.18/1.40 are not in a
+  committed log (Coinbase 0.88 matches `cross_exchange.log`); confirm the source.
+- **Open for Jack:** the title is the suggested one, not `TBD`.
+
 ## What `main_v2.tex` already has
 
 - Suggested title (replace if you prefer something else)
