@@ -1,59 +1,74 @@
-# Remote tasks (from Mac, 2026-06-08)
+# Remote tasks for the Windows agent (updated 2026-06-19)
 
-Two analyses still needed before the paper can be written. Both require the L2 / Tardis data that lives on the Windows machine; neither can be done from the Mac. Listed in priority order.
+The Mac side has applied the bulk of the paper revision in `paper/main_v2.tex`. The
+remaining work is the parts that need either the L2 data or matplotlib runs against the
+committed CSVs. Read `paper/main_v2.pdf` to see exactly where each new figure and table
+goes (placeholders are visible bordered boxes with the data source path printed inside).
+Full revision plan is in `docs/PAPER_REVISION_TASKS.md`; this file is just the action list.
 
-## Task 1 — Run the pre-registered H1 once
+## What `main_v2.tex` already has
 
-The hypothesis is locked in `phase2_l2/docs/NOTES.md` (commit on 2026-06-03). It was never formally evaluated. The loop iterations did informal exploratory falsification of variants but the single one-shot test that the DSR-immunity argument depends on has not been run.
+- Suggested title (replace if you prefer something else)
+- Bibliography expanded from 4 to 23 entries
+- New `\section{Related work}` with four subsections + "what is new here" closer
+- Honest contributions paragraph in the intro
+- Methods appendix A.1 through A.10 before `\end{document}`
+- 8 new figure environments with `\figplaceholder` boxes (visible in the PDF, ready to
+  swap for real images)
+- 3 new tables, of which T1 (`tab:venue-comparison`) is filled with real numbers and
+  T2/T3 have row labels and `TBD` cells
 
-Spec, exactly as locked:
+## What you need to do
 
-- Universe: top 10 Kalman-cointegrated pairs by OOS ADF p-value at p < 0.05.
-  - **Caveat from loop 6**: that screen is now known to be a whitening artifact. Replace the Kalman-ADF selection with the cleanly-selected pairs from `scratch/clean_coint_pairs.csv` (top 10 by OOS reversion speed, the metric loop 7 validated with Spearman rho = 0.46). Note this substitution explicitly in the result writeup.
-- Cadence: 1-second bars
-- Window W (rolling mean): 60 bars
-- Horizon K (target): 60 bars
-- Institutional bucket: trades with notional >= $100,000 USDT
-- Entry filter: `|spread_z| >= 2` using `z_window_bars = 3600`
-- Held-out tail: LAST 20% of the available time range, defined before looking at it, no cherry-picking
-- Test: one-sided Spearman correlation between `inst_buy_imbalance_over_leg(t)` and `target_spread_change(t, t+K)` on the held-out tail, computed once, with Newey-West HAC SEs at lag K=60
-- Pass: p < 0.05 in the predicted (negative) direction
+### 1. Generate the figures (priority order)
 
-Output: a single dated note at `phase2_l2/docs/H1_RESULT.md` with:
-- The pair list used
-- The exact held-out tail boundary timestamp
-- The test statistic, HAC-corrected p-value
-- Whether it passes
-- A single sentence on interpretation
+For each one, replace the `\figplaceholder{...}{...}` line with the corresponding
+`\includegraphics[width=...]{filename}` once the file exists. The Python sketches are in
+`docs/PAPER_REVISION_TASKS.md` Section 4.
 
-Do not re-run, re-tune, or pick a different test if it fails. This is the locked one-shot.
+| Tag in main_v2 | Source data | Needs L2 data? |
+|---|---|---|
+| `fig_kalman_innovations_white.pdf` | rerun `scratch/kalman_positive_control.py` to dump per-bar innovations for one real pair + one RW placebo | no (uses hourly) |
+| `fig_poscontrol_vs_negcontrol.pdf` | `scratch/kalman_positive_control.csv` (already on disk) | no |
+| `fig_reversion_persistence_scatter.pdf` | `scratch/persistence_pairs.csv` (already on disk) | no |
+| `fig_circuit_breaker_retention.pdf` | `scratch/survivorship_adjusted_sharpe.csv` (already on disk) | no |
+| `fig_forced_collapse_perpair.pdf` | `scratch/forced_collapse.csv` (already on disk) | no |
+| `fig_hac_inflation.pdf` | `docs/hac_sharpe_per_split.csv` (already on disk) | no |
+| `fig_microcap_adv.pdf` | `scratch/microcap_adv.csv` (already on disk) | no |
+| **`fig_ofi_decay.pdf`** | rerun `scratch/book_ofi_incremental.py` with horizons `[1,2,5,10,30,60,120,300]` s | **YES (L2)** |
+| `fig_cancellation_share.pdf` (nice-to-have) | parse `scratch/book_ofi_2024.log` cancel-share fields, or rerun `scratch/book_ofi_cancel_stretch.py` | **YES (L2)** |
 
-## Task 2 — Delisted-coin survivorship re-test
+### 2. Reshape `fig_freq_invariance.pdf`
 
-The no-stop reversion alpha (Sharpe ~1.7-2.5, market-neutral, t=3.65 across 19 windows) has passed every survivorship check that uses the on-disk 204-symbol universe. The one outstanding hole is fully-delisted coins. The loop has been working on the universe of "coins that still exist on disk," which by construction excludes the survivorship-worst tail.
+Currently duplicates Table 3. Replace with a placebo-gap view (real minus random walk pass-rate,
+per frequency, for both Kalman and clean Engle-Granger). Detail in `PAPER_REVISION_TASKS.md`
+Section 4 "Existing figure: reshape" subsection.
 
-Concretely:
-- LUNAUSDT and LUNCUSDT (pre- and post-rebrand) — the May 2022 collapse
-- FTTUSDT — the November 2022 FTX collapse
-- USTUSDT — the May 2022 depeg
-- Any other USDT pair with a known delisting event in the 2023-07 → 2026-05 window
+### 3. Fill in the two stub tables
 
-Check whether Tardis has these symbols' L2 + trades for the relevant pre-collapse windows. Document what's available and what isn't.
+- **T2 (`tab:exec-symbol-breakdown`)**: data is in `scratch/exec_value_2024_summary.csv`.
+  Replace the `TBD` cells with per-symbol Aggressive and Signal-timed costs at \$10k and
+  \$50k notional.
+- **T3 (`tab:institutional-impact`)**: the headline per-symbol numbers are already in the
+  cells (BTC `0.13/0.23/0.33`, ETH `0.15/0.24/0.32`, SOL `0.15/0.26/0.32`, AVAX `0.18/0.38/0.38`)
+  but please verify against `scratch/impact_decomp_2024.log` and update if any are off.
 
-If at least the three majors above are available:
-- Pull them
-- Add to the universe with point-in-time entry (symbol enters when it would have been in the top-N liquidity universe, exits on its actual delisting date)
-- Re-run the reversion alpha test from loops 10-14
-- Report: does the alpha survive, weaken, or break?
+### 4. When satisfied, promote and recompile
 
-If Tardis doesn't have them:
-- Document the search, where they live (if anywhere), and what would be needed
-- The paper will then carry an explicit "tested on point-in-time universe of coins surviving to 2026-05; fully-delisted coins unavailable" caveat instead of being silent on it
+```
+git mv paper/main_v2.tex paper/main.tex      # overwrite old main.tex
+pdflatex main.tex && pdflatex main.tex       # second pass for refs
+```
 
-Output: `phase2_l2/docs/SURVIVORSHIP_DELISTED.md` with what was checked, what was found, and how it changes (or doesn't change) the deployable Sharpe range.
+Or keep `main_v2.tex` separate and decide later. Either is fine.
 
-## Why these two, why now
+### 5. Verify before commit
 
-The Mac side is rewriting `paper/paper.tex` around the corrected story (the Kalman 99.7% retraction, the no-stop alpha, the microstructure null). That rewrite needs the H1 result to land the pre-registration argument and the delisted-coin check to close the last survivorship caveat. Without these, the paper has to soften both claims.
+- Every `\cite{}` resolves (no "?" in the PDF)
+- Every `\ref{}` resolves
+- All figure files referenced in `\includegraphics{}` exist
+- Word count and figure count meet the three-student-project length target Mihai flagged
 
-After both land, the paper writes itself.
+That's it. The bibliography, related work, contributions, and appendix don't need any more
+work from the Mac side. Once the figures land and the tables fill in, the paper is ready
+for Mihai's review.
