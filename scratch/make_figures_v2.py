@@ -142,7 +142,8 @@ def fig_reversion_persistence():
     panel(a1, yo, rho_real, "Real pairs")
     panel(a2, yo_shuf, rho_shuf, "Rank-shuffled placebo")
     a1.set_ylabel("out-of-sample excess reversion")
-    a1.legend(frameon=False, fontsize=8, loc="upper left")
+    a1.legend(fontsize=8, loc="upper left", frameon=True, facecolor="white",
+              edgecolor="0.85", framealpha=0.9)
     fig.tight_layout()
     save(fig, "fig_reversion_persistence_scatter.pdf")
     print(f"    [persistence] rho_real={rho_real:.3f}  rho_shuf={rho_shuf:.3f}  n={len(d)}")
@@ -170,7 +171,7 @@ def fig_forced_collapse():
     df = pd.read_csv(os.path.join(ROOT, "scratch", "forced_collapse.csv"))
     coins = [c.replace("USDT", "") for c in df["coin"]]
     x = np.arange(len(coins)); w = 0.36
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.2, 3.5))
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.2, 3.7))
     a1.bar(x - w / 2, df["nostop_pnl_pct"], w, color=RED, label="no breaker")
     a1.bar(x + w / 2, df["cb_pnl_pct"], w, color=BLUE, label="with breaker")
     a1.set_title("forced-hold P&L per pair", fontsize=9, loc="left")
@@ -181,8 +182,11 @@ def fig_forced_collapse():
     a2.set_ylabel("max drawdown (%)"); a2.axhline(0, color="#888888", lw=0.7)
     for ax in (a1, a2):
         ax.set_xticks(x); ax.set_xticklabels(coins)
-    a1.legend(frameon=False, fontsize=8, loc="lower right")
-    fig.tight_layout()
+    # shared legend along the bottom, clear of the (downward) bars in both panels
+    handles, labels = a1.get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, fontsize=8.5, loc="lower center",
+               ncol=2, bbox_to_anchor=(0.5, -0.02))
+    fig.tight_layout(rect=[0, 0.06, 1, 1])
     save(fig, "fig_forced_collapse_perpair.pdf")
 
 
