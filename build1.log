@@ -1,0 +1,383 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./main.tex
+LaTeX2e <2025-06-01> patch level 1
+L3 programming layer <2025-05-26>
+(c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size11.clo)) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/geometry/geometry.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/keyval.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/ifvtex.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty))) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty)) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty)) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amssymb.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amsfonts.sty)) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/booktabs/booktabs.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/array.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphicx.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphics.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/trig.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/graphics.cfg) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def))) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty))) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/url/url.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty)) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty)) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty))) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+No file main.aux.
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg)) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd) (c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd)
+
+LaTeX Warning: Citation `gatev2006pairs' on page 1 undefined on input line 66.
+
+
+LaTeX Warning: Citation `harvey1989structural' on page 1 undefined on input line 82.
+
+
+LaTeX Warning: Citation `vidyamurthy2004pairs' on page 1 undefined on input line 85.
+
+
+LaTeX Warning: Citation `elliott2005pairs' on page 1 undefined on input line 85.
+
+
+LaTeX Warning: Citation `triantafyllopoulos2011dynamic' on page 1 undefined on input line 85.
+
+
+[1{c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+
+LaTeX Warning: Citation `bailey2014dsr' on page 2 undefined on input line 98.
+
+
+LaTeX Warning: Citation `engle1987cointegration' on page 2 undefined on input line 114.
+
+
+LaTeX Warning: Citation `vidyamurthy2004pairs' on page 2 undefined on input line 115.
+
+
+LaTeX Warning: Reference `sec:artifacts' on page 2 undefined on input line 116.
+
+
+LaTeX Warning: Citation `elliott2005pairs' on page 2 undefined on input line 118.
+
+
+LaTeX Warning: Citation `triantafyllopoulos2011dynamic' on page 2 undefined on input line 120.
+
+
+LaTeX Warning: Citation `gatev2006pairs' on page 2 undefined on input line 122.
+
+
+LaTeX Warning: Citation `harvey1989structural' on page 2 undefined on input line 124.
+
+
+LaTeX Warning: Citation `kyle1985continuous' on page 2 undefined on input line 132.
+
+
+LaTeX Warning: Citation `hasbrouck1991measuring' on page 2 undefined on input line 133.
+
+
+LaTeX Warning: Citation `contkukanovstoikov2014' on page 2 undefined on input line 136.
+
+
+LaTeX Warning: Citation `stoikov2018microprice' on page 2 undefined on input line 138.
+
+
+LaTeX Warning: Citation `easley2012vpin' on page 2 undefined on input line 139.
+
+
+LaTeX Warning: Citation `andersen2014vpin' on page 2 undefined on input line 141.
+
+
+[2]
+
+LaTeX Warning: Citation `urquhart2016inefficiency' on page 3 undefined on input line 150.
+
+
+LaTeX Warning: Citation `wei2018liquidity' on page 3 undefined on input line 152.
+
+
+LaTeX Warning: Citation `brauneis2018price' on page 3 undefined on input line 153.
+
+
+LaTeX Warning: Citation `makarov2020trading' on page 3 undefined on input line 155.
+
+
+LaTeX Warning: Citation `fil2020pairs' on page 3 undefined on input line 158.
+
+
+LaTeX Warning: Citation `krauss2017deep' on page 3 undefined on input line 165.
+
+
+LaTeX Warning: Citation `lopezdeprado2018advances' on page 3 undefined on input line 170.
+
+
+LaTeX Warning: Citation `vidyamurthy2004pairs' on page 3 undefined on input line 185.
+
+
+LaTeX Warning: Citation `elliott2005pairs' on page 3 undefined on input line 185.
+
+
+LaTeX Warning: Citation `triantafyllopoulos2011dynamic' on page 3 undefined on input line 185.
+
+
+[3]
+
+LaTeX Warning: Reference `sec:limits' on page 4 undefined on input line 211.
+
+
+LaTeX Warning: Citation `newey1987hac' on page 4 undefined on input line 217.
+
+
+LaTeX Warning: Reference `app:hac' on page 4 undefined on input line 217.
+
+
+LaTeX Warning: Reference `app:wf' on page 4 undefined on input line 220.
+
+
+LaTeX Warning: Reference `app:placebo' on page 4 undefined on input line 223.
+
+
+LaTeX Warning: Citation `bailey2014dsr' on page 4 undefined on input line 224.
+
+
+LaTeX Warning: Reference `app:dsr' on page 4 undefined on input line 224.
+
+
+LaTeX Warning: Reference `sec:appendix' on page 4 undefined on input line 224.
+
+
+LaTeX Warning: Reference `sec:survivor' on page 4 undefined on input line 226.
+
+
+LaTeX Warning: Reference `app:kalman' on page 4 undefined on input line 246.
+
+
+LaTeX Warning: Citation `saiddickey1984' on page 4 undefined on input line 251.
+
+
+LaTeX Warning: Reference `app:adf' on page 4 undefined on input line 251.
+
+
+[4]
+
+LaTeX Warning: Citation `harvey1989structural' on page 5 undefined on input line 258.
+
+
+LaTeX Warning: Reference `tab:kalman-placebo' on page 5 undefined on input line 270.
+
+
+LaTeX Warning: Citation `engle1987cointegration' on page 5 undefined on input line 271.
+
+
+LaTeX Warning: Reference `tab:kalman-placebo' on page 5 undefined on input line 282.
+
+
+LaTeX Warning: Reference `tab:kalman-placebo' on page 5 undefined on input line 282.
+
+
+LaTeX Warning: Reference `tab:poscontrol' on page 5 undefined on input line 310.
+
+
+LaTeX Warning: Reference `tab:poscontrol' on page 5 undefined on input line 324.
+
+
+LaTeX Warning: Reference `tab:poscontrol' on page 5 undefined on input line 324.
+
+
+LaTeX Warning: Reference `tab:kalman-freq' on page 5 undefined on input line 348.
+
+
+LaTeX Warning: Reference `fig:freq' on page 5 undefined on input line 349.
+
+
+LaTeX Warning: Reference `tab:kalman-placebo' on page 5 undefined on input line 355.
+
+
+[5]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Reference `tab:kalman-freq' on page 6 undefined on input line 386.
+
+
+LaTeX Warning: Reference `tab:kalman-freq' on page 6 undefined on input line 386.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 390.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 390.
+
+
+[6 <./fig_kalman_innovations_white.pdf>]
+
+LaTeX Warning: Reference `tab:rollingz' on page 7 undefined on input line 411.
+
+
+LaTeX Warning: Reference `fig:rollingz' on page 7 undefined on input line 411.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Citation `bailey2014dsr' on page 7 undefined on input line 449.
+
+
+[7 <./fig_poscontrol_vs_negcontrol.pdf>]
+
+LaTeX Warning: Reference `app:ou' on page 8 undefined on input line 462.
+
+
+LaTeX Warning: Reference `sec:rollingz' on page 8 undefined on input line 464.
+
+
+[8 <./fig_freq_invariance.pdf>]
+
+LaTeX Warning: Reference `sec:survivor' on page 9 undefined on input line 485.
+
+
+LaTeX Warning: Reference `tab:institutional-impact' on page 9 undefined on input line 499.
+
+
+LaTeX Warning: Citation `contkukanovstoikov2014' on page 9 undefined on input line 500.
+
+
+LaTeX Warning: Reference `fig:cancel-share' on page 9 undefined on input line 502.
+
+
+[9 <./fig_rollingz_noise.pdf>]
+
+LaTeX Warning: Reference `fig:ofi-decay' on page 10 undefined on input line 544.
+
+
+LaTeX Warning: Reference `tab:exec' on page 10 undefined on input line 549.
+
+
+LaTeX Warning: Reference `tab:exec-symbol-breakdown' on page 10 undefined on input line 555.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Reference `tab:exec' on page 10 undefined on input line 580.
+
+
+LaTeX Warning: Reference `tab:exec' on page 10 undefined on input line 580.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+[10 <./fig_reversion_persistence_scatter.pdf>]
+
+LaTeX Warning: Reference `sec:survivor' on page 11 undefined on input line 602.
+
+
+LaTeX Warning: Reference `sec:rollingz' on page 11 undefined on input line 619.
+
+
+[11 <./fig_ofi_decay.pdf>]
+
+LaTeX Warning: Reference `fig:hac-inflation' on page 12 undefined on input line 639.
+
+
+LaTeX Warning: Citation `newey1987hac' on page 12 undefined on input line 639.
+
+
+LaTeX Warning: Reference `tab:venue-comparison' on page 12 undefined on input line 642.
+
+
+[12 <./fig_cancellation_share.pdf>]
+
+LaTeX Warning: Reference `sec:methods' on page 13 undefined on input line 674.
+
+
+LaTeX Warning: Reference `fig:microcap-adv' on page 13 undefined on input line 681.
+
+
+[13 <./fig_hac_inflation.pdf>]
+
+LaTeX Warning: Reference `sec:methods' on page 14 undefined on input line 709.
+
+
+LaTeX Warning: Reference `sec:real' on page 14 undefined on input line 712.
+
+
+LaTeX Warning: Reference `fig:forced-collapse' on page 14 undefined on input line 717.
+
+
+LaTeX Warning: Reference `fig:circuit-breaker' on page 14 undefined on input line 722.
+
+
+[14 <./fig_microcap_adv.pdf>]
+
+LaTeX Warning: Reference `sec:survivor' on page 15 undefined on input line 773.
+
+
+LaTeX Warning: Reference `sec:survivor' on page 15 undefined on input line 777.
+
+
+[15 <./fig_forced_collapse_perpair.pdf>]
+
+LaTeX Warning: Reference `sec:survivor' on page 16 undefined on input line 788.
+
+
+[16 <./fig_circuit_breaker_retention.pdf>]
+[17]
+
+LaTeX Warning: Reference `sec:kalman' on page 18 undefined on input line 961.
+
+
+LaTeX Warning: Citation `harvey1989structural' on page 18 undefined on input line 964.
+
+
+[18]
+
+LaTeX Warning: Citation `saiddickey1984' on page 19 undefined on input line 972.
+
+
+LaTeX Warning: Reference `sec:kalman' on page 19 undefined on input line 984.
+
+
+LaTeX Warning: Citation `engle1987cointegration' on page 19 undefined on input line 994.
+
+
+LaTeX Warning: Reference `app:kalman' on page 19 undefined on input line 1004.
+
+
+LaTeX Warning: Citation `newey1987hac' on page 19 undefined on input line 1016.
+
+
+[19]
+
+LaTeX Warning: Citation `bailey2014dsr' on page 20 undefined on input line 1036.
+
+
+LaTeX Warning: Reference `sec:real' on page 20 undefined on input line 1078.
+
+
+[20]
+
+LaTeX Warning: Reference `sec:kalman' on page 21 undefined on input line 1123.
+
+
+LaTeX Warning: Citation `stoikov2018microprice' on page 21 undefined on input line 1136.
+
+
+LaTeX Warning: Citation `contkukanovstoikov2014' on page 21 undefined on input line 1150.
+
+
+[21]
+
+LaTeX Warning: Citation `easley2012vpin' on page 22 undefined on input line 1159.
+
+
+LaTeX Warning: Citation `hasbrouck1991measuring' on page 22 undefined on input line 1167.
+
+
+LaTeX Warning: Citation `kunsch1989block' on page 22 undefined on input line 1177.
+
+
+[22] (./main.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ ) <c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><c:/Users/samsa/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on main.pdf (22 pages, 781716 bytes).
+Transcript written on main.log.
