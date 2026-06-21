@@ -95,3 +95,20 @@ paper keeps Table 5 to four majors. The breadth additions were adversarially ver
 overclaim, voice, consistency) before being written into `main_proposed.tex` via the deterministic
 `scratch/apply_proposed*.py` transforms. The 114 MB intermediate `scratch/exec_broad_orders.csv` is
 gitignored; `book_exec_broad.py` rebuilds or reuses it.
+
+## Flagship Kalman artifact, multi-anchor robustness (supports `main_proposed.tex`)
+
+Table 1 reports the placebo-equality at a single anchor (t0 = 2024-01-01). `main_proposed.tex` adds
+a 5-anchor table to show it is not start-date specific. `scratch/book_kalman_anchors.py` re-runs the
+identical screen (reusing `scratch/audit_part1.py`'s exact Kalman/ADF/placebo functions) at five
+disjoint quarterly t0 (2023-07 through 2024-07), 90/30 window, with Wilson 95% CIs; output
+`scratch/kalman_anchors.csv` and `book_kalman_anchors.log`. At every anchor real pairs and all three
+placebos pass the Kalman ADF at 99-100% while clean Engle-Granger stays 1-8%. The 2024-01-01 anchor
+reproduces the committed Table 1 pattern (real ~ placebo ~ 100%, EG ~2%).
+
+## 3-year L2 dataset on S3 (analysis data, not a paper number)
+
+Independent of the paper: `s3://math199-l2-873750256216/` holds 2023-2025 x top-50 Binance L2
+(book + trades) as Hive-partitioned parquet, pulled by `scripts/tardis_to_s3.py` via the EC2
+launcher `scripts/aws/launch_ec2_pull.sh`. Query with `scripts/l2_query.py` (DuckDB over S3). See
+`docs/L2_DATASET.md`. The puller is idempotent, so the pull is re-runnable / extendable.
