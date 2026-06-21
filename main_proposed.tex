@@ -86,7 +86,7 @@ triantafyllopoulos2011dynamic} is, to our knowledge, new. Second, we measure whe
 order book signals improve execution placement for crypto majors with $29{,}952$ simulated
 parent orders on event level Binance L2 data. They do not: aggressive crossing is cheapest
 across all four symbols, the signal correlates $+0.03$ with the per order advantage of posting over crossing, and a perfect foresight oracle would save $1.4$ bps so the opportunity exists
-but no contemporaneous feature forecasts it. Third, the candidate market neutral reversion
+but no contemporaneous feature forecasts it, and the same null holds when the simulation is rerun across all fifty symbols. Third, the candidate market neutral reversion
 strategy that emerges from the surviving structure clears honest accounting at a venue- and
 HAC adjusted monthly Sharpe near $1.0$, only without a stop, and a preregistered held out
 backtest of it inflates above the in sample number on uncostable microcap moves; our one
@@ -505,7 +505,7 @@ We then extended the book-OFI test from the four event level majors to the full 
 universe over the same regime spanning days, and the null is the same across all of them. Book-OFI
 adds $3$ to $48\%$ to the contemporaneous one second $R^2$ over trade-OFI alone (median $23\%$,
 lowest on the thinnest books, where trade flow already captures what little information is there),
-yet the one second ahead predictive $R^2$ stays under $0.5\%$ for every one of the $50$ symbols
+yet the one second ahead forecast $R^2$, taking trade and book OFI together, stays under $0.5\%$ for every one of the $50$ symbols
 (highest $0.46\%$ for BTC, median $0.13\%$) and falls toward zero by thirty seconds
 (Figure~\ref{fig:ofi-breadth}). The thinnest names, where slower price formation could have left a
 tradable window, carry the least forecast power of all. Cancellations run $62$ to $97\%$ of best
@@ -524,14 +524,15 @@ impact is the one result that does not fully generalize: institutional one secon
 retail on all ten of the most liquid symbols and on $39$ of $50$ overall, but the ratio falls to a
 median $1.5\times$ from the $2.0$ to $2.6\times$ on the majors and turns noisy on the thinnest names,
 where institutional sized trades are only $0.2\%$ of orders, roughly an order of magnitude rarer than on the majors, and two
-symbols show a negative estimate. Trade size proxies information where there is enough institutional
+symbols (NMR and SAND) show a negative institutional estimate. Trade size proxies information where there is enough institutional
 flow to measure it, which is the liquid core.
 
 \begin{table}[h]
 \centering
 \caption{Per trade price impact at $1$-second horizon by trade size bucket and symbol: institutional
-($>$\$$10$k) consistently $2.0$ to $2.6\times$ retail across BTC/ETH/SOL/AVAX, validating
-size as a per order information proxy.}
+($>$\$$10$k) runs $2.0$ to $2.6\times$ retail across these four megacaps, where size
+proxies information; across the full top 50 the ratio weakens to a median $1.5\times$ and turns noisy
+on thin names (Section~\ref{sec:real}).}
 \label{tab:institutional-impact}
 \begin{tabular}{lrrr}
 \toprule
