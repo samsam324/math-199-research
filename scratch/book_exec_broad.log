@@ -1,0 +1,325 @@
+loading cached order-rows from C:\Users\jackw\Desktop\math-199-research\scratch\exec_broad_orders.csv
+
+total order-rows 374,400 across 50 symbols, 13 dates
+
+
+--- BTCUSDT  (n=7488, post-rate=35%, fill%=47, spread=0.01bps) ---
+    AGG=  0.053  NAIVE=  1.564  L3=  0.672  L3flip=  0.944  ORACLE= -0.314  ANTI=  1.931
+    placebo=  0.583(sd0.027)  L3-edge_vs_placebo=-0.089bps (z=+3.27)  oracle_saves_vs_agg=+0.367bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0671
+
+--- ETHUSDT  (n=7488, post-rate=35%, fill%=43, spread=0.04bps) ---
+    AGG=  0.166  NAIVE=  2.057  L3=  0.867  L3flip=  1.357  ORACLE= -0.336  ANTI=  2.560
+    placebo=  0.821(sd0.036)  L3-edge_vs_placebo=-0.045bps (z=+1.26)  oracle_saves_vs_agg=+0.503bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0377
+
+--- SOLUSDT  (n=7488, post-rate=33%, fill%=44, spread=0.72bps) ---
+    AGG=  0.920  NAIVE=  3.019  L3=  1.685  L3flip=  2.253  ORACLE= -0.366  ANTI=  4.305
+    placebo=  1.621(sd0.050)  L3-edge_vs_placebo=-0.064bps (z=+1.27)  oracle_saves_vs_agg=+1.286bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0242
+
+--- AVAXUSDT  (n=7488, post-rate=42%, fill%=12, spread=3.27bps) ---
+    AGG=  3.270  NAIVE=  4.137  L3=  3.694  L3flip=  3.712  ORACLE= -0.168  ANTI=  7.574
+    placebo=  3.631(sd0.069)  L3-edge_vs_placebo=-0.064bps (z=+0.93)  oracle_saves_vs_agg=+3.438bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0371
+
+--- LINKUSDT  (n=7488, post-rate=40%, fill%=10, spread=4.15bps) ---
+    AGG=  4.356  NAIVE=  5.028  L3=  4.627  L3flip=  4.757  ORACLE=  0.922  ANTI=  8.461
+    placebo=  4.626(sd0.065)  L3-edge_vs_placebo=-0.001bps (z=+0.02)  oracle_saves_vs_agg=+3.434bps
+    corr(book-OFI dir, passive-minus-agg)=-0.0309
+
+--- ADAUSDT  (n=7488, post-rate=42%, fill%=11, spread=2.22bps) ---
+    AGG=  3.039  NAIVE=  4.200  L3=  3.707  L3flip=  3.531  ORACLE=  0.091  ANTI=  7.148
+    placebo=  3.527(sd0.067)  L3-edge_vs_placebo=-0.180bps (z=+2.68)  oracle_saves_vs_agg=+2.948bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0642
+
+--- USDCUSDT  (n=7488, post-rate=48%, fill%=1, spread=1.00bps) ---
+    AGG=  0.501  NAIVE=  0.499  L3=  0.508  L3flip=  0.492  ORACLE=  0.478  ANTI=  0.522
+    placebo=  0.500(sd0.001)  L3-edge_vs_placebo=-0.008bps (z=+6.68)  oracle_saves_vs_agg=+0.023bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0405
+
+--- XRPUSDT  (n=7488, post-rate=40%, fill%=21, spread=1.74bps) ---
+    AGG=  1.467  NAIVE=  2.933  L3=  2.129  L3flip=  2.271  ORACLE= -0.296  ANTI=  4.696
+    placebo=  2.057(sd0.050)  L3-edge_vs_placebo=-0.073bps (z=+1.44)  oracle_saves_vs_agg=+1.763bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0219
+
+--- BNBUSDT  (n=7488, post-rate=39%, fill%=23, spread=1.77bps) ---
+    AGG=  1.303  NAIVE=  2.483  L3=  1.872  L3flip=  1.914  ORACLE= -0.293  ANTI=  4.079
+    placebo=  1.759(sd0.042)  L3-edge_vs_placebo=-0.113bps (z=+2.68)  oracle_saves_vs_agg=+1.596bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0323
+
+--- DOGEUSDT  (n=7488, post-rate=35%, fill%=27, spread=0.85bps) ---
+    AGG=  1.735  NAIVE=  3.565  L3=  2.526  L3flip=  2.774  ORACLE= -0.493  ANTI=  5.794
+    placebo=  2.382(sd0.065)  L3-edge_vs_placebo=-0.144bps (z=+2.22)  oracle_saves_vs_agg=+2.228bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0241
+
+--- FETUSDT  (n=7488, post-rate=43%, fill%=10, spread=5.61bps) ---
+    AGG=  8.804  NAIVE=  8.994  L3=  8.936  L3flip=  8.862  ORACLE=  3.798  ANTI= 14.000
+    placebo=  8.889(sd0.088)  L3-edge_vs_placebo=-0.047bps (z=+0.53)  oracle_saves_vs_agg=+5.006bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0220
+
+--- VETUSDT  (n=7488, post-rate=47%, fill%=3, spread=3.68bps) ---
+    AGG= 14.788  NAIVE= 15.164  L3= 15.142  L3flip= 14.811  ORACLE= 10.509  ANTI= 19.444
+    placebo= 14.966(sd0.079)  L3-edge_vs_placebo=-0.176bps (z=+2.23)  oracle_saves_vs_agg=+4.279bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0536
+
+--- GALAUSDT  (n=7488, post-rate=46%, fill%=6, spread=3.82bps) ---
+    AGG=  8.304  NAIVE=  9.018  L3=  8.892  L3flip=  8.431  ORACLE=  3.587  ANTI= 13.735
+    placebo=  8.632(sd0.085)  L3-edge_vs_placebo=-0.260bps (z=+3.06)  oracle_saves_vs_agg=+4.717bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0251
+
+--- SHIBUSDT  (n=7488, post-rate=43%, fill%=11, spread=6.04bps) ---
+    AGG=  4.431  NAIVE=  5.677  L3=  5.070  L3flip=  5.039  ORACLE=  0.880  ANTI=  9.228
+    placebo=  4.968(sd0.073)  L3-edge_vs_placebo=-0.102bps (z=+1.40)  oracle_saves_vs_agg=+3.551bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0231
+
+--- LTCUSDT  (n=7488, post-rate=42%, fill%=8, spread=1.41bps) ---
+    AGG=  3.167  NAIVE=  3.810  L3=  3.477  L3flip=  3.501  ORACLE=  0.441  ANTI=  6.536
+    placebo=  3.436(sd0.056)  L3-edge_vs_placebo=-0.040bps (z=+0.72)  oracle_saves_vs_agg=+2.726bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0168
+
+--- ATOMUSDT  (n=7488, post-rate=43%, fill%=4, spread=1.95bps) ---
+    AGG=  6.173  NAIVE=  6.568  L3=  6.578  L3flip=  6.164  ORACLE=  2.830  ANTI=  9.911
+    placebo=  6.341(sd0.066)  L3-edge_vs_placebo=-0.236bps (z=+3.58)  oracle_saves_vs_agg=+3.343bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0363
+
+--- DOTUSDT  (n=7488, post-rate=42%, fill%=8, spread=1.77bps) ---
+    AGG=  4.552  NAIVE=  5.355  L3=  5.034  L3flip=  4.872  ORACLE=  1.314  ANTI=  8.593
+    placebo=  4.891(sd0.063)  L3-edge_vs_placebo=-0.143bps (z=+2.26)  oracle_saves_vs_agg=+3.238bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0452
+
+--- XLMUSDT  (n=7488, post-rate=52%, fill%=2, spread=9.04bps) ---
+    AGG=  9.590  NAIVE=  9.779  L3=  9.852  L3flip=  9.517  ORACLE=  6.586  ANTI= 12.783
+    placebo=  9.688(sd0.063)  L3-edge_vs_placebo=-0.164bps (z=+2.63)  oracle_saves_vs_agg=+3.004bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0566
+
+--- HBARUSDT  (n=7488, post-rate=49%, fill%=3, spread=12.18bps) ---
+    AGG= 11.221  NAIVE= 11.518  L3= 11.538  L3flip= 11.201  ORACLE=  7.381  ANTI= 15.358
+    placebo= 11.367(sd0.074)  L3-edge_vs_placebo=-0.171bps (z=+2.30)  oracle_saves_vs_agg=+3.840bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0496
+
+--- ONEUSDT  (n=7488, post-rate=56%, fill%=1, spread=7.17bps) ---
+    AGG= 37.001  NAIVE= 37.363  L3= 37.439  L3flip= 36.925  ORACLE= 31.935  ANTI= 42.429
+    placebo= 37.201(sd0.102)  L3-edge_vs_placebo=-0.237bps (z=+2.32)  oracle_saves_vs_agg=+5.066bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0451
+
+--- VTHOUSDT  (n=7488, post-rate=68%, fill%=2, spread=7.78bps) ---
+    AGG= 63.381  NAIVE= 64.307  L3= 63.942  L3flip= 63.745  ORACLE= 58.786  ANTI= 68.902
+    placebo= 64.012(sd0.108)  L3-edge_vs_placebo=+0.070bps (z=-0.65)  oracle_saves_vs_agg=+4.595bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0012
+
+--- BCHUSDT  (n=7488, post-rate=45%, fill%=6, spread=2.75bps) ---
+    AGG=  5.298  NAIVE=  5.925  L3=  5.741  L3flip=  5.483  ORACLE=  1.800  ANTI=  9.424
+    placebo=  5.578(sd0.069)  L3-edge_vs_placebo=-0.163bps (z=+2.35)  oracle_saves_vs_agg=+3.498bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0171
+
+--- ALGOUSDT  (n=7488, post-rate=53%, fill%=2, spread=6.37bps) ---
+    AGG= 13.087  NAIVE= 13.159  L3= 13.450  L3flip= 12.796  ORACLE=  9.106  ANTI= 17.140
+    placebo= 13.124(sd0.074)  L3-edge_vs_placebo=-0.326bps (z=+4.42)  oracle_saves_vs_agg=+3.981bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0685
+
+--- NEARUSDT  (n=7488, post-rate=41%, fill%=15, spread=2.13bps) ---
+    AGG=  4.513  NAIVE=  5.448  L3=  5.065  L3flip=  4.896  ORACLE=  0.603  ANTI=  9.358
+    placebo=  4.892(sd0.074)  L3-edge_vs_placebo=-0.173bps (z=+2.35)  oracle_saves_vs_agg=+3.910bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0211
+
+--- AAVEUSDT  (n=7488, post-rate=42%, fill%=7, spread=2.07bps) ---
+    AGG=  8.014  NAIVE=  7.960  L3=  8.140  L3flip=  7.835  ORACLE=  3.725  ANTI= 12.249
+    placebo=  7.991(sd0.071)  L3-edge_vs_placebo=-0.149bps (z=+2.10)  oracle_saves_vs_agg=+4.289bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0374
+
+--- FLOKIUSDT  (n=7488, post-rate=38%, fill%=17, spread=1.60bps) ---
+    AGG= 10.908  NAIVE= 12.514  L3= 11.448  L3flip= 11.974  ORACLE=  6.195  ANTI= 17.227
+    placebo= 11.511(sd0.093)  L3-edge_vs_placebo=+0.063bps (z=-0.68)  oracle_saves_vs_agg=+4.713bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0009
+
+--- WAXPUSDT  (n=7488, post-rate=59%, fill%=0, spread=5.46bps) ---
+    AGG= 28.865  NAIVE= 29.034  L3= 29.308  L3flip= 28.592  ORACLE= 24.816  ANTI= 33.083
+    placebo= 28.965(sd0.077)  L3-edge_vs_placebo=-0.343bps (z=+4.44)  oracle_saves_vs_agg=+4.049bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0730
+
+--- UNIUSDT  (n=7488, post-rate=42%, fill%=7, spread=1.86bps) ---
+    AGG=  7.050  NAIVE=  7.713  L3=  7.373  L3flip=  7.390  ORACLE=  3.176  ANTI= 11.587
+    placebo=  7.331(sd0.077)  L3-edge_vs_placebo=-0.042bps (z=+0.54)  oracle_saves_vs_agg=+3.874bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0427
+
+--- ROSEUSDT  (n=7488, post-rate=49%, fill%=2, spread=3.01bps) ---
+    AGG= 16.478  NAIVE= 16.836  L3= 16.982  L3flip= 16.332  ORACLE= 11.812  ANTI= 21.502
+    placebo= 16.657(sd0.088)  L3-edge_vs_placebo=-0.325bps (z=+3.71)  oracle_saves_vs_agg=+4.666bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0368
+
+--- GRTUSDT  (n=7488, post-rate=46%, fill%=2, spread=5.27bps) ---
+    AGG= 11.467  NAIVE= 11.781  L3= 11.941  L3flip= 11.306  ORACLE=  7.001  ANTI= 16.247
+    placebo= 11.610(sd0.077)  L3-edge_vs_placebo=-0.331bps (z=+4.28)  oracle_saves_vs_agg=+4.466bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0612
+
+--- YFIUSDT  (n=7488, post-rate=55%, fill%=0, spread=4.63bps) ---
+    AGG= 18.664  NAIVE= 18.762  L3= 19.006  L3flip= 18.420  ORACLE= 15.113  ANTI= 22.314
+    placebo= 18.716(sd0.067)  L3-edge_vs_placebo=-0.290bps (z=+4.31)  oracle_saves_vs_agg=+3.552bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0721
+
+--- OPUSDT  (n=7488, post-rate=43%, fill%=5, spread=5.06bps) ---
+    AGG=  5.466  NAIVE=  6.018  L3=  5.805  L3flip=  5.679  ORACLE=  1.177  ANTI= 10.307
+    placebo=  5.702(sd0.079)  L3-edge_vs_placebo=-0.103bps (z=+1.30)  oracle_saves_vs_agg=+4.289bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0198
+
+--- EGLDUSDT  (n=7488, post-rate=51%, fill%=1, spread=3.72bps) ---
+    AGG= 16.231  NAIVE= 16.114  L3= 16.382  L3flip= 15.962  ORACLE= 12.308  ANTI= 20.036
+    placebo= 16.173(sd0.070)  L3-edge_vs_placebo=-0.210bps (z=+3.01)  oracle_saves_vs_agg=+3.922bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0593
+
+--- THETAUSDT  (n=7488, post-rate=49%, fill%=1, spread=7.47bps) ---
+    AGG= 16.235  NAIVE= 16.487  L3= 16.705  L3flip= 16.016  ORACLE= 11.677  ANTI= 21.045
+    placebo= 16.361(sd0.082)  L3-edge_vs_placebo=-0.344bps (z=+4.22)  oracle_saves_vs_agg=+4.558bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0273
+
+--- ZILUSDT  (n=7488, post-rate=56%, fill%=1, spread=7.35bps) ---
+    AGG= 20.980  NAIVE= 21.380  L3= 21.509  L3flip= 20.850  ORACLE= 17.005  ANTI= 25.355
+    placebo= 21.206(sd0.079)  L3-edge_vs_placebo=-0.303bps (z=+3.82)  oracle_saves_vs_agg=+3.975bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0592
+
+--- ACHUSDT  (n=7488, post-rate=54%, fill%=1, spread=6.04bps) ---
+    AGG= 27.935  NAIVE= 27.946  L3= 28.016  L3flip= 27.865  ORACLE= 22.655  ANTI= 33.226
+    placebo= 27.940(sd0.093)  L3-edge_vs_placebo=-0.076bps (z=+0.82)  oracle_saves_vs_agg=+5.281bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0198
+
+--- ZRXUSDT  (n=7488, post-rate=53%, fill%=1, spread=5.40bps) ---
+    AGG= 18.944  NAIVE= 19.250  L3= 19.310  L3flip= 18.884  ORACLE= 14.623  ANTI= 23.571
+    placebo= 19.107(sd0.081)  L3-edge_vs_placebo=-0.203bps (z=+2.52)  oracle_saves_vs_agg=+4.321bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0152
+
+--- LDOUSDT  (n=7488, post-rate=46%, fill%=3, spread=6.32bps) ---
+    AGG= 11.211  NAIVE= 11.330  L3= 11.648  L3flip= 10.893  ORACLE=  6.298  ANTI= 16.243
+    placebo= 11.267(sd0.085)  L3-edge_vs_placebo=-0.382bps (z=+4.51)  oracle_saves_vs_agg=+4.913bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0476
+
+--- MANAUSDT  (n=7488, post-rate=48%, fill%=1, spread=3.85bps) ---
+    AGG= 11.977  NAIVE= 11.821  L3= 12.216  L3flip= 11.581  ORACLE=  7.883  ANTI= 15.915
+    placebo= 11.900(sd0.074)  L3-edge_vs_placebo=-0.316bps (z=+4.28)  oracle_saves_vs_agg=+4.094bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0549
+
+--- STORJUSDT  (n=7488, post-rate=48%, fill%=2, spread=4.74bps) ---
+    AGG= 15.895  NAIVE= 15.758  L3= 16.168  L3flip= 15.485  ORACLE= 11.017  ANTI= 20.636
+    placebo= 15.831(sd0.089)  L3-edge_vs_placebo=-0.337bps (z=+3.78)  oracle_saves_vs_agg=+4.878bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0696
+
+--- RVNUSDT  (n=7488, post-rate=60%, fill%=0, spread=6.94bps) ---
+    AGG= 37.797  NAIVE= 37.896  L3= 38.180  L3flip= 37.513  ORACLE= 33.289  ANTI= 42.403
+    placebo= 37.854(sd0.082)  L3-edge_vs_placebo=-0.326bps (z=+3.99)  oracle_saves_vs_agg=+4.508bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0158
+
+--- FILUSDT  (n=7488, post-rate=40%, fill%=8, spread=2.15bps) ---
+    AGG=  4.243  NAIVE=  4.758  L3=  4.596  L3flip=  4.406  ORACLE=  0.538  ANTI=  8.464
+    placebo=  4.452(sd0.070)  L3-edge_vs_placebo=-0.144bps (z=+2.04)  oracle_saves_vs_agg=+3.706bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0357
+
+--- IOTAUSDT  (n=7488, post-rate=55%, fill%=1, spread=6.40bps) ---
+    AGG= 18.016  NAIVE= 17.830  L3= 18.245  L3flip= 17.601  ORACLE= 13.513  ANTI= 22.333
+    placebo= 17.913(sd0.086)  L3-edge_vs_placebo=-0.332bps (z=+3.86)  oracle_saves_vs_agg=+4.503bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0563
+
+--- POLYXUSDT  (n=7488, post-rate=52%, fill%=1, spread=4.91bps) ---
+    AGG= 23.620  NAIVE= 23.608  L3= 23.796  L3flip= 23.433  ORACLE= 18.837  ANTI= 28.391
+    placebo= 23.613(sd0.085)  L3-edge_vs_placebo=-0.182bps (z=+2.15)  oracle_saves_vs_agg=+4.783bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0084
+
+--- APEUSDT  (n=7488, post-rate=49%, fill%=2, spread=10.45bps) ---
+    AGG= 11.937  NAIVE= 12.117  L3= 12.370  L3flip= 11.684  ORACLE=  7.462  ANTI= 16.592
+    placebo= 12.026(sd0.078)  L3-edge_vs_placebo=-0.343bps (z=+4.38)  oracle_saves_vs_agg=+4.475bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0703
+
+--- NMRUSDT  (n=7488, post-rate=56%, fill%=0, spread=8.52bps) ---
+    AGG= 46.558  NAIVE= 46.336  L3= 46.626  L3flip= 46.268  ORACLE= 41.363  ANTI= 51.531
+    placebo= 46.433(sd0.086)  L3-edge_vs_placebo=-0.194bps (z=+2.27)  oracle_saves_vs_agg=+5.196bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0111
+
+--- SANDUSDT  (n=7488, post-rate=48%, fill%=2, spread=3.01bps) ---
+    AGG=  8.895  NAIVE=  8.888  L3=  9.129  L3flip=  8.654  ORACLE=  4.940  ANTI= 12.843
+    placebo=  8.892(sd0.068)  L3-edge_vs_placebo=-0.237bps (z=+3.46)  oracle_saves_vs_agg=+3.955bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0571
+
+--- NEOUSDT  (n=7488, post-rate=51%, fill%=1, spread=8.73bps) ---
+    AGG= 13.694  NAIVE= 13.628  L3= 14.025  L3flip= 13.296  ORACLE=  9.510  ANTI= 17.811
+    placebo= 13.658(sd0.074)  L3-edge_vs_placebo=-0.367bps (z=+4.93)  oracle_saves_vs_agg=+4.183bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0285
+
+--- SUSHIUSDT  (n=7488, post-rate=51%, fill%=1, spread=12.09bps) ---
+    AGG= 17.845  NAIVE= 17.728  L3= 18.072  L3flip= 17.501  ORACLE= 13.025  ANTI= 22.548
+    placebo= 17.786(sd0.096)  L3-edge_vs_placebo=-0.286bps (z=+2.99)  oracle_saves_vs_agg=+4.820bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0358
+
+--- IMXUSDT  (n=7488, post-rate=47%, fill%=1, spread=4.88bps) ---
+    AGG= 16.171  NAIVE= 16.876  L3= 16.607  L3flip= 16.440  ORACLE= 11.376  ANTI= 21.671
+    placebo= 16.500(sd0.091)  L3-edge_vs_placebo=-0.107bps (z=+1.18)  oracle_saves_vs_agg=+4.795bps
+    corr(book-OFI dir, passive-minus-agg)=-0.0399
+
+================================================================================
+POOLED across all 50 symbols
+
+--- POOLED ALL 50  (n=374400, post-rate=47%, fill%=8, spread=4.59bps) ---
+    AGG= 13.124  NAIVE= 13.639  L3= 13.521  L3flip= 13.242  ORACLE=  9.382  ANTI= 17.381
+    placebo= 13.366(sd0.011)  L3-edge_vs_placebo=-0.155bps (z=+14.21)  oracle_saves_vs_agg=+3.742bps
+    corr(book-OFI dir, passive-minus-agg)=+0.0033
+
+SANITY vs exec_value_2024_summary.csv (pooled both sizes):
+  BTCUSDT  AGG ref=  0.053 got=  0.053 | L3 ref=  0.672 got=  0.672  OK
+  ETHUSDT  AGG ref=  0.166 got=  0.166 | L3 ref=  0.867 got=  0.867  OK
+  SOLUSDT  AGG ref=  0.920 got=  0.920 | L3 ref=  1.685 got=  1.685  OK
+  AVAXUSDT AGG ref=  3.270 got=  3.270 | L3 ref=  3.694 got=  3.694  OK
+
+EXECUTION across 50 (bps; lower=cheaper). L3 = signal-timed; AGG = always cross.
+       sym |     AGG   NAIVE      L3 | oracle_save  corr_sig
+   ACHUSDT |  27.935  27.946  28.016 |      +5.281   +0.0198
+   NMRUSDT |  46.558  46.336  46.626 |      +5.196   +0.0111
+   ONEUSDT |  37.001  37.363  37.439 |      +5.066   +0.0451
+   FETUSDT |   8.804   8.994   8.936 |      +5.006   +0.0220
+   LDOUSDT |  11.211  11.330  11.648 |      +4.913   +0.0476
+ STORJUSDT |  15.895  15.758  16.168 |      +4.878   +0.0696
+ SUSHIUSDT |  17.845  17.728  18.072 |      +4.820   +0.0358
+   IMXUSDT |  16.171  16.876  16.607 |      +4.795   -0.0399
+ POLYXUSDT |  23.620  23.608  23.796 |      +4.783   +0.0084
+  GALAUSDT |   8.304   9.018   8.892 |      +4.717   +0.0251
+ FLOKIUSDT |  10.908  12.514  11.448 |      +4.713   +0.0009
+  ROSEUSDT |  16.478  16.836  16.982 |      +4.666   +0.0368
+  VTHOUSDT |  63.381  64.307  63.942 |      +4.595   +0.0012
+ THETAUSDT |  16.235  16.487  16.705 |      +4.558   +0.0273
+   RVNUSDT |  37.797  37.896  38.180 |      +4.508   +0.0158
+  IOTAUSDT |  18.016  17.830  18.245 |      +4.503   +0.0563
+   APEUSDT |  11.937  12.117  12.370 |      +4.475   +0.0703
+   GRTUSDT |  11.467  11.781  11.941 |      +4.466   +0.0612
+   ZRXUSDT |  18.944  19.250  19.310 |      +4.321   +0.0152
+  AAVEUSDT |   8.014   7.960   8.140 |      +4.289   +0.0374
+    OPUSDT |   5.466   6.018   5.805 |      +4.289   +0.0198
+   VETUSDT |  14.788  15.164  15.142 |      +4.279   +0.0536
+   NEOUSDT |  13.694  13.628  14.025 |      +4.183   +0.0285
+  MANAUSDT |  11.977  11.821  12.216 |      +4.094   +0.0549
+  WAXPUSDT |  28.865  29.034  29.308 |      +4.049   +0.0730
+  ALGOUSDT |  13.087  13.159  13.450 |      +3.981   +0.0685
+   ZILUSDT |  20.980  21.380  21.509 |      +3.975   +0.0592
+  SANDUSDT |   8.895   8.888   9.129 |      +3.955   +0.0571
+  EGLDUSDT |  16.231  16.114  16.382 |      +3.922   +0.0593
+  NEARUSDT |   4.513   5.448   5.065 |      +3.910   +0.0211
+   UNIUSDT |   7.050   7.713   7.373 |      +3.874   +0.0427
+  HBARUSDT |  11.221  11.518  11.538 |      +3.840   +0.0496
+   FILUSDT |   4.243   4.758   4.596 |      +3.706   +0.0357
+   YFIUSDT |  18.664  18.762  19.006 |      +3.552   +0.0721
+  SHIBUSDT |   4.431   5.677   5.070 |      +3.551   +0.0231
+   BCHUSDT |   5.298   5.925   5.741 |      +3.498   +0.0171
+  AVAXUSDT |   3.270   4.137   3.694 |      +3.438   +0.0371
+  LINKUSDT |   4.356   5.028   4.627 |      +3.434   -0.0309
+  ATOMUSDT |   6.173   6.568   6.578 |      +3.343   +0.0363
+   DOTUSDT |   4.552   5.355   5.034 |      +3.238   +0.0452
+   XLMUSDT |   9.590   9.779   9.852 |      +3.004   +0.0566
+   ADAUSDT |   3.039   4.200   3.707 |      +2.948   +0.0642
+   LTCUSDT |   3.167   3.810   3.477 |      +2.726   +0.0168
+  DOGEUSDT |   1.735   3.565   2.526 |      +2.228   +0.0241
+   XRPUSDT |   1.467   2.933   2.129 |      +1.763   +0.0219
+   BNBUSDT |   1.303   2.483   1.872 |      +1.596   +0.0323
+   SOLUSDT |   0.920   3.019   1.685 |      +1.286   +0.0242
+   ETHUSDT |   0.166   2.057   0.867 |      +0.503   +0.0377
+   BTCUSDT |   0.053   1.564   0.672 |      +0.367   +0.0671
+  USDCUSDT |   0.501   0.499   0.508 |      +0.023   +0.0405
+
+symbols where L3 (signal) is cheaper than just crossing: NONE
+max oracle_saves_vs_agg over 50: 5.281 bps (ACHUSDT)
+DONE.

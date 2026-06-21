@@ -1,0 +1,1463 @@
+
+==========================================================================
+BTCUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.16727  t=32.3
+  book-only  : R2=0.23628  t=205.3
+  joint      : R2=0.32202  t_tr=25.9  t_bk=143.3
+  incr book over trade : 0.15476
+  incr trade over book : 0.08574
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00166    8.2 |      0.00404   47.9 |   0.00456    4.5   36.1 |   0.00290    0.00052
+  5 |       0.00187    4.4 |      0.00331   22.9 |   0.00406    2.7   16.7 |   0.00219    0.00075
+ 10 |       0.00182    3.1 |      0.00235   14.3 |   0.00323    2.1   10.3 |   0.00141    0.00087
+ 30 |       0.00169    2.3 |      0.00117    8.2 |   0.00222    1.8    4.8 |   0.00053    0.00105
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.802   (trade share = 0.198)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00456 |         0.00657 |     0.00201 |    -34.8
+    5 |   0.00406 |         0.00554 |     0.00148 |    -16.3
+   10 |   0.00323 |         0.00408 |     0.00085 |     -9.5
+   30 |   0.00222 |         0.00259 |     0.00037 |     -4.7
+[ 1/50] BTCUSDT    done  n=604,800  contemp_incr_book=0.1548  pred_joint_h1=0.00456  pred_joint_h30=0.00222
+
+==========================================================================
+ETHUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.11638  t=20.9
+  book-only  : R2=0.16941  t=115.5
+  joint      : R2=0.23010  t_tr=14.9  t_bk=79.8
+  incr book over trade : 0.11372
+  incr trade over book : 0.06069
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00092    4.2 |      0.00177   31.4 |   0.00218    2.7   17.3 |   0.00126    0.00040
+  5 |       0.00188    2.5 |      0.00153   16.5 |   0.00271    1.9    6.8 |   0.00084    0.00118
+ 10 |       0.00365    2.2 |      0.00106    9.7 |   0.00395    1.9    2.6 |   0.00031    0.00289
+ 30 |       0.00165    1.9 |      0.00057    5.5 |   0.00184    1.6    2.0 |   0.00019    0.00127
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.803   (trade share = 0.197)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00218 |         0.00293 |     0.00076 |    -13.3
+    5 |   0.00271 |         0.00342 |     0.00071 |     -8.6
+   10 |   0.00395 |         0.00444 |     0.00048 |     -4.7
+   30 |   0.00184 |         0.00201 |     0.00017 |     -1.8
+[ 2/50] ETHUSDT    done  n=604,800  contemp_incr_book=0.1137  pred_joint_h1=0.00218  pred_joint_h30=0.00184
+
+==========================================================================
+SOLUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.14303  t=36.4
+  book-only  : R2=0.28249  t=39.9
+  joint      : R2=0.34235  t_tr=24.7  t_bk=37.4
+  incr book over trade : 0.19933
+  incr trade over book : 0.05986
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00026    3.2 |      0.00182   18.2 |   0.00182    0.5   17.9 |   0.00156    0.00001
+  5 |       0.00022    1.7 |      0.00123    9.0 |   0.00125    0.4    9.2 |   0.00102    0.00001
+ 10 |       0.00036    1.8 |      0.00071    5.7 |   0.00083    1.1    5.2 |   0.00047    0.00012
+ 30 |       0.00066    2.3 |      0.00055    4.0 |   0.00092    1.8    3.1 |   0.00025    0.00037
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.768   (trade share = 0.232)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00182 |         0.00235 |     0.00053 |    -18.3
+    5 |   0.00125 |         0.00159 |     0.00034 |     -8.5
+   10 |   0.00083 |         0.00107 |     0.00025 |     -6.1
+   30 |   0.00092 |         0.00115 |     0.00023 |     -4.1
+[ 3/50] SOLUSDT    done  n=604,800  contemp_incr_book=0.1993  pred_joint_h1=0.00182  pred_joint_h30=0.00092
+
+==========================================================================
+LINKUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.09800  t=19.1
+  book-only  : R2=0.29566  t=93.6
+  joint      : R2=0.33199  t_tr=15.9  t_bk=84.4
+  incr book over trade : 0.23399
+  incr trade over book : 0.03632
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00004    1.8 |      0.00247   24.7 |   0.00250   -1.6   25.1 |   0.00246    0.00003
+  5 |       0.00006    1.0 |      0.00232   12.8 |   0.00234   -0.5   14.1 |   0.00229    0.00002
+ 10 |       0.00012    1.0 |      0.00150    7.7 |   0.00150    0.2    8.6 |   0.00138    0.00000
+ 30 |       0.00010    1.2 |      0.00026    2.7 |   0.00030    0.8    2.6 |   0.00020    0.00004
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.918   (trade share = 0.082)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00250 |         0.00252 |     0.00002 |      2.6
+    5 |   0.00234 |         0.00238 |     0.00004 |      1.8
+   10 |   0.00150 |         0.00155 |     0.00005 |      1.5
+   30 |   0.00030 |         0.00031 |     0.00001 |     -0.5
+[ 4/50] LINKUSDT   done  n=604,800  contemp_incr_book=0.2340  pred_joint_h1=0.00250  pred_joint_h30=0.00030
+
+==========================================================================
+ADAUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.11999  t=29.5
+  book-only  : R2=0.47082  t=231.0
+  joint      : R2=0.50244  t_tr=15.9  t_bk=215.3
+  incr book over trade : 0.38246
+  incr trade over book : 0.03163
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00045    5.1 |      0.00259   25.5 |   0.00264    1.8   25.0 |   0.00220    0.00005
+  5 |       0.00045    2.3 |      0.00205   12.0 |   0.00213    1.0   12.5 |   0.00168    0.00008
+ 10 |       0.00049    1.7 |      0.00124    6.8 |   0.00141    1.0    7.4 |   0.00091    0.00017
+ 30 |       0.00089    1.8 |      0.00032    2.5 |   0.00099    1.7    2.0 |   0.00010    0.00067
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.895   (trade share = 0.105)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00264 |         0.00288 |     0.00023 |     -9.8
+    5 |   0.00213 |         0.00222 |     0.00009 |     -3.3
+   10 |   0.00141 |         0.00146 |     0.00005 |     -2.0
+   30 |   0.00099 |         0.00102 |     0.00003 |     -1.0
+[ 5/50] ADAUSDT    done  n=604,800  contemp_incr_book=0.3825  pred_joint_h1=0.00264  pred_joint_h30=0.00099
+
+==========================================================================
+USDCUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.12906  t=28.8
+  book-only  : R2=0.16792  t=38.5
+  joint      : R2=0.19329  t_tr=13.5  t_bk=25.1
+  incr book over trade : 0.06423
+  incr trade over book : 0.02537
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00154   10.3 |      0.00059    8.2 |   0.00155    7.7   -0.8 |   0.00001    0.00096
+  5 |       0.00408   10.4 |      0.00275   10.2 |   0.00425    6.6    2.8 |   0.00018    0.00150
+ 10 |       0.00510    9.9 |      0.00350    9.0 |   0.00535    6.4    2.6 |   0.00024    0.00185
+ 30 |       0.00553    9.8 |      0.00430    9.7 |   0.00600    6.0    3.6 |   0.00046    0.00170
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.619   (trade share = 0.381)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00155 |         0.00171 |     0.00016 |     -4.0
+    5 |   0.00425 |         0.00512 |     0.00087 |     -5.8
+   10 |   0.00535 |         0.00645 |     0.00110 |     -5.7
+   30 |   0.00600 |         0.00667 |     0.00068 |     -4.0
+[ 6/50] USDCUSDT   done  n=604,800  contemp_incr_book=0.0642  pred_joint_h1=0.00155  pred_joint_h30=0.00600
+
+==========================================================================
+XRPUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.14369  t=30.2
+  book-only  : R2=0.29570  t=198.6
+  joint      : R2=0.34454  t_tr=20.3  t_bk=124.2
+  incr book over trade : 0.20085
+  incr trade over book : 0.04884
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00044    6.6 |      0.00180   31.3 |   0.00186    2.5   25.1 |   0.00142    0.00007
+  5 |       0.00026    3.0 |      0.00119   14.0 |   0.00122    1.0   12.0 |   0.00097    0.00003
+ 10 |       0.00028    2.5 |      0.00063    8.1 |   0.00072    1.4    6.5 |   0.00044    0.00008
+ 30 |       0.00049    2.8 |      0.00015    3.2 |   0.00052    2.4    1.4 |   0.00003    0.00037
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.828   (trade share = 0.172)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00186 |         0.00231 |     0.00045 |    -16.2
+    5 |   0.00122 |         0.00150 |     0.00027 |     -6.9
+   10 |   0.00072 |         0.00094 |     0.00022 |     -4.8
+   30 |   0.00052 |         0.00061 |     0.00010 |     -2.3
+[ 7/50] XRPUSDT    done  n=604,800  contemp_incr_book=0.2009  pred_joint_h1=0.00186  pred_joint_h30=0.00052
+
+==========================================================================
+BNBUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.13618  t=21.4
+  book-only  : R2=0.45816  t=57.9
+  joint      : R2=0.47473  t_tr=9.2  t_bk=50.1
+  incr book over trade : 0.33855
+  incr trade over book : 0.01657
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00131    9.1 |      0.00306   26.8 |   0.00333    4.2   22.3 |   0.00202    0.00027
+  5 |       0.00178    5.2 |      0.00235   12.7 |   0.00302    3.2   10.4 |   0.00124    0.00066
+ 10 |       0.00179    3.5 |      0.00169    7.9 |   0.00252    2.5    6.6 |   0.00074    0.00084
+ 30 |       0.00098    2.1 |      0.00040    3.4 |   0.00105    1.8    1.7 |   0.00008    0.00066
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.792   (trade share = 0.208)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00333 |         0.00430 |     0.00096 |    -16.1
+    5 |   0.00302 |         0.00350 |     0.00048 |     -7.0
+   10 |   0.00252 |         0.00281 |     0.00029 |     -4.3
+   30 |   0.00105 |         0.00112 |     0.00007 |     -1.5
+[ 8/50] BNBUSDT    done  n=604,800  contemp_incr_book=0.3386  pred_joint_h1=0.00333  pred_joint_h30=0.00105
+
+==========================================================================
+AVAXUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.13050  t=23.4
+  book-only  : R2=0.57594  t=310.1
+  joint      : R2=0.60645  t_tr=19.2  t_bk=234.6
+  incr book over trade : 0.47595
+  incr trade over book : 0.03051
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00032    5.4 |      0.00228   23.9 |   0.00230    1.4   21.8 |   0.00198    0.00002
+  5 |       0.00028    2.7 |      0.00155   10.8 |   0.00158    1.0   10.4 |   0.00130    0.00003
+ 10 |       0.00033    2.0 |      0.00063    5.3 |   0.00076    1.3    4.9 |   0.00043    0.00013
+ 30 |       0.00057    2.7 |      0.00006    1.3 |   0.00057    2.7    0.2 |   0.00000    0.00051
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.898   (trade share = 0.102)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00230 |         0.00294 |     0.00064 |    -13.4
+    5 |   0.00158 |         0.00162 |     0.00004 |     -1.9
+   10 |   0.00076 |         0.00080 |     0.00004 |      1.5
+   30 |   0.00057 |         0.00087 |     0.00030 |      2.8
+[ 9/50] AVAXUSDT   done  n=604,800  contemp_incr_book=0.4759  pred_joint_h1=0.00230  pred_joint_h30=0.00057
+
+==========================================================================
+DOGEUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.12896  t=32.2
+  book-only  : R2=0.20437  t=149.5
+  joint      : R2=0.27265  t_tr=24.8  t_bk=103.0
+  incr book over trade : 0.14370
+  incr trade over book : 0.06828
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00016    2.8 |      0.00081   17.9 |   0.00084    1.2   17.1 |   0.00068    0.00003
+  5 |       0.00002    0.6 |      0.00033    6.1 |   0.00033   -0.0    6.6 |   0.00031    0.00000
+ 10 |       0.00001    0.4 |      0.00014    3.3 |   0.00014    0.1    3.4 |   0.00012    0.00000
+ 30 |       0.00002   -0.4 |      0.00000    0.5 |   0.00004   -0.5    0.8 |   0.00001    0.00003
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.848   (trade share = 0.152)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00084 |         0.00108 |     0.00024 |    -14.0
+    5 |   0.00033 |         0.00046 |     0.00013 |     -5.6
+   10 |   0.00014 |         0.00022 |     0.00008 |     -3.6
+   30 |   0.00004 |         0.00004 |     0.00001 |     -0.8
+[10/50] DOGEUSDT   done  n=604,800  contemp_incr_book=0.1437  pred_joint_h1=0.00084  pred_joint_h30=0.00004
+
+==========================================================================
+FETUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.08574  t=9.0
+  book-only  : R2=0.42742  t=47.5
+  joint      : R2=0.43573  t_tr=3.7  t_bk=42.9
+  incr book over trade : 0.34999
+  incr trade over book : 0.00832
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00011    1.4 |      0.00003    1.6 |   0.00011    1.1    0.5 |   0.00000    0.00008
+  5 |       0.00031    1.2 |      0.00005    1.4 |   0.00031    1.0    0.1 |   0.00000    0.00027
+ 10 |       0.00040    1.2 |      0.00004    1.1 |   0.00040    1.0   -0.1 |   0.00000    0.00036
+ 30 |       0.00032    1.2 |      0.00001    0.4 |   0.00033    1.2   -0.3 |   0.00001    0.00032
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.832   (trade share = 0.168)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00011 |         0.00099 |     0.00088 |     -9.7
+    5 |   0.00031 |         0.00106 |     0.00074 |     -5.2
+   10 |   0.00040 |         0.00088 |     0.00048 |     -3.5
+   30 |   0.00033 |         0.00058 |     0.00025 |     -2.0
+[11/50] FETUSDT    done  n=604,800  contemp_incr_book=0.3500  pred_joint_h1=0.00011  pred_joint_h30=0.00033
+
+==========================================================================
+VETUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.09000  t=22.3
+  book-only  : R2=0.31916  t=100.9
+  joint      : R2=0.34057  t_tr=14.6  t_bk=99.8
+  incr book over trade : 0.25057
+  incr trade over book : 0.02141
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00000    0.4 |      0.00097   17.6 |   0.00104   -3.5   19.2 |   0.00104    0.00008
+  5 |       0.00003   -1.0 |      0.00082    7.9 |   0.00104   -3.0   10.1 |   0.00101    0.00022
+ 10 |       0.00004   -0.8 |      0.00060    5.0 |   0.00080   -2.1    6.7 |   0.00076    0.00020
+ 30 |       0.00002   -0.4 |      0.00041    3.0 |   0.00052   -1.1    4.2 |   0.00050    0.00012
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.894   (trade share = 0.106)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00104 |         0.00114 |     0.00009 |      8.3
+    5 |   0.00104 |         0.00130 |     0.00026 |      7.3
+   10 |   0.00080 |         0.00114 |     0.00034 |      6.4
+   30 |   0.00052 |         0.00098 |     0.00046 |      5.1
+[12/50] VETUSDT    done  n=604,800  contemp_incr_book=0.2506  pred_joint_h1=0.00104  pred_joint_h30=0.00052
+
+==========================================================================
+GALAUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.08964  t=11.1
+  book-only  : R2=0.40113  t=20.1
+  joint      : R2=0.41781  t_tr=6.7  t_bk=18.5
+  incr book over trade : 0.32817
+  incr trade over book : 0.01668
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00031    3.8 |      0.00097   10.8 |   0.00104    1.8   11.5 |   0.00073    0.00006
+  5 |       0.00062    2.2 |      0.00079    4.6 |   0.00108    1.6    5.0 |   0.00045    0.00028
+ 10 |       0.00089    1.9 |      0.00059    3.1 |   0.00114    1.6    3.3 |   0.00024    0.00055
+ 30 |       0.00016    1.5 |      0.00010    1.6 |   0.00020    1.3    1.2 |   0.00004    0.00010
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.879   (trade share = 0.121)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00104 |         0.00109 |     0.00005 |     -3.7
+    5 |   0.00108 |         0.00108 |     0.00000 |     -0.4
+   10 |   0.00114 |         0.00117 |     0.00004 |      1.4
+   30 |   0.00020 |         0.00064 |     0.00044 |      4.1
+[13/50] GALAUSDT   done  n=604,800  contemp_incr_book=0.3282  pred_joint_h1=0.00104  pred_joint_h30=0.00020
+
+==========================================================================
+SHIBUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.16830  t=39.6
+  book-only  : R2=0.51470  t=316.6
+  joint      : R2=0.55634  t_tr=28.4  t_bk=262.6
+  incr book over trade : 0.38803
+  incr trade over book : 0.04164
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00019    4.5 |      0.00086   16.8 |   0.00089    1.7   15.1 |   0.00070    0.00003
+  5 |       0.00016    2.4 |      0.00050    7.0 |   0.00054    1.2    6.2 |   0.00038    0.00004
+ 10 |       0.00013    1.6 |      0.00029    4.1 |   0.00033    0.9    3.5 |   0.00020    0.00004
+ 30 |       0.00008    1.0 |      0.00004    1.1 |   0.00010    0.8    0.7 |   0.00001    0.00006
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.885   (trade share = 0.115)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00089 |         0.00169 |     0.00080 |    -16.7
+    5 |   0.00054 |         0.00097 |     0.00043 |     -6.8
+   10 |   0.00033 |         0.00047 |     0.00014 |     -2.9
+   30 |   0.00010 |         0.00011 |     0.00001 |      0.6
+[14/50] SHIBUSDT   done  n=604,800  contemp_incr_book=0.3880  pred_joint_h1=0.00089  pred_joint_h30=0.00010
+
+==========================================================================
+LTCUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.07866  t=3.1
+  book-only  : R2=0.38072  t=100.1
+  joint      : R2=0.41018  t_tr=4.3  t_bk=61.3
+  incr book over trade : 0.33152
+  incr trade over book : 0.02946
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00007    1.0 |      0.00308   26.6 |   0.00308   -0.2   24.6 |   0.00302    0.00000
+  5 |       0.00016    1.7 |      0.00210   12.5 |   0.00213    0.7   12.8 |   0.00197    0.00002
+ 10 |       0.00013    1.5 |      0.00105    7.3 |   0.00108    0.9    7.7 |   0.00096    0.00003
+ 30 |       0.00001    0.5 |      0.00013    2.1 |   0.00013    0.2    2.2 |   0.00012    0.00000
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.894   (trade share = 0.106)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00308 |         0.00322 |     0.00014 |     -8.9
+    5 |   0.00213 |         0.00220 |     0.00008 |     -3.6
+   10 |   0.00108 |         0.00113 |     0.00004 |     -2.2
+   30 |   0.00013 |         0.00013 |     0.00000 |     -0.1
+[15/50] LTCUSDT    done  n=604,800  contemp_incr_book=0.3315  pred_joint_h1=0.00308  pred_joint_h30=0.00013
+
+==========================================================================
+ATOMUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.07158  t=20.1
+  book-only  : R2=0.31809  t=14.9
+  joint      : R2=0.33709  t_tr=10.0  t_bk=14.2
+  incr book over trade : 0.26551
+  incr trade over book : 0.01900
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00022    4.6 |      0.00125   13.9 |   0.00128    1.8   13.4 |   0.00106    0.00003
+  5 |       0.00057    3.2 |      0.00179    8.7 |   0.00195    1.9    9.4 |   0.00139    0.00016
+ 10 |       0.00071    2.4 |      0.00174    5.9 |   0.00199    1.6    6.8 |   0.00128    0.00025
+ 30 |       0.00070    2.8 |      0.00103    3.8 |   0.00137    2.1    3.1 |   0.00067    0.00034
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.888   (trade share = 0.112)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00128 |         0.00135 |     0.00006 |      5.3
+    5 |   0.00195 |         0.00211 |     0.00016 |      4.7
+   10 |   0.00199 |         0.00224 |     0.00025 |      4.5
+   30 |   0.00137 |         0.00178 |     0.00041 |      3.7
+[16/50] ATOMUSDT   done  n=604,800  contemp_incr_book=0.2655  pred_joint_h1=0.00128  pred_joint_h30=0.00137
+
+==========================================================================
+DOTUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.09727  t=25.3
+  book-only  : R2=0.36946  t=101.7
+  joint      : R2=0.39337  t_tr=13.8  t_bk=97.4
+  incr book over trade : 0.29609
+  incr trade over book : 0.02391
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00031    4.7 |      0.00152   17.5 |   0.00156    1.7   18.1 |   0.00125    0.00004
+  5 |       0.00050    2.9 |      0.00137    8.0 |   0.00150    1.7    8.9 |   0.00101    0.00013
+ 10 |       0.00018    1.4 |      0.00085    4.9 |   0.00087    0.5    5.6 |   0.00069    0.00002
+ 30 |       0.00002   -0.5 |      0.00013    1.8 |   0.00021   -0.9    2.3 |   0.00019    0.00008
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.871   (trade share = 0.129)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00156 |         0.00156 |     0.00000 |     -1.1
+    5 |   0.00150 |         0.00151 |     0.00000 |     -0.6
+   10 |   0.00087 |         0.00087 |     0.00000 |     -0.3
+   30 |   0.00021 |         0.00021 |     0.00001 |     -0.6
+[17/50] DOTUSDT    done  n=604,800  contemp_incr_book=0.2961  pred_joint_h1=0.00156  pred_joint_h30=0.00021
+
+==========================================================================
+XLMUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.09238  t=16.5
+  book-only  : R2=0.24278  t=133.8
+  joint      : R2=0.27096  t_tr=13.7  t_bk=102.6
+  incr book over trade : 0.17859
+  incr trade over book : 0.02819
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00004    2.5 |      0.00233   28.5 |   0.00240   -3.2   28.0 |   0.00236    0.00007
+  5 |       0.00001    0.6 |      0.00302   17.7 |   0.00323   -3.3   18.1 |   0.00322    0.00021
+ 10 |       0.00007    1.6 |      0.00229   11.6 |   0.00233   -1.2   11.7 |   0.00227    0.00004
+ 30 |       0.00052    3.2 |      0.00131    6.5 |   0.00147    1.9    5.7 |   0.00094    0.00016
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.920   (trade share = 0.080)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00240 |         0.00269 |     0.00029 |     10.5
+    5 |   0.00323 |         0.00370 |     0.00047 |      7.3
+   10 |   0.00233 |         0.00280 |     0.00046 |      5.5
+   30 |   0.00147 |         0.00209 |     0.00063 |      4.3
+[18/50] XLMUSDT    done  n=604,800  contemp_incr_book=0.1786  pred_joint_h1=0.00240  pred_joint_h30=0.00147
+
+==========================================================================
+HBARUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.16180  t=18.3
+  book-only  : R2=0.21551  t=75.7
+  joint      : R2=0.30702  t_tr=16.6  t_bk=58.0
+  incr book over trade : 0.14522
+  incr trade over book : 0.09151
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00015    1.4 |      0.00075   13.1 |   0.00079    0.7    9.3 |   0.00063    0.00004
+  5 |       0.00042    1.3 |      0.00046    5.6 |   0.00071    1.0    3.8 |   0.00029    0.00025
+ 10 |       0.00106    2.0 |      0.00024    2.9 |   0.00113    1.8    1.5 |   0.00007    0.00089
+ 30 |       0.00268    2.7 |      0.00009    1.5 |   0.00269    2.6   -0.3 |   0.00001    0.00259
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.924   (trade share = 0.076)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00079 |         0.00190 |     0.00111 |    -17.3
+    5 |   0.00071 |         0.00217 |     0.00146 |    -12.1
+   10 |   0.00113 |         0.00230 |     0.00117 |     -8.2
+   30 |   0.00269 |         0.00337 |     0.00068 |     -4.4
+[19/50] HBARUSDT   done  n=604,800  contemp_incr_book=0.1452  pred_joint_h1=0.00079  pred_joint_h30=0.00269
+
+==========================================================================
+ONEUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.07137  t=19.0
+  book-only  : R2=0.20911  t=30.9
+  joint      : R2=0.23779  t_tr=15.3  t_bk=29.2
+  incr book over trade : 0.16642
+  incr trade over book : 0.02868
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00004    2.4 |      0.00083   15.7 |   0.00083   -0.3   15.5 |   0.00079    0.00000
+  5 |       0.00002    0.9 |      0.00060    7.0 |   0.00060   -0.4    7.3 |   0.00058    0.00000
+ 10 |       0.00001    0.4 |      0.00027    3.6 |   0.00027   -0.3    3.8 |   0.00027    0.00000
+ 30 |       0.00001    0.4 |      0.00013    2.1 |   0.00013    0.0    2.0 |   0.00012    0.00000
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.932   (trade share = 0.068)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00083 |         0.00098 |     0.00015 |      6.8
+    5 |   0.00060 |         0.00074 |     0.00013 |      3.5
+   10 |   0.00027 |         0.00035 |     0.00008 |      2.0
+   30 |   0.00013 |         0.00015 |     0.00002 |     -0.6
+[20/50] ONEUSDT    done  n=604,800  contemp_incr_book=0.1664  pred_joint_h1=0.00083  pred_joint_h30=0.00013
+
+==========================================================================
+VTHOUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.18370  t=18.7
+  book-only  : R2=0.09477  t=16.8
+  joint      : R2=0.22244  t_tr=17.5  t_bk=11.8
+  incr book over trade : 0.03874
+  incr trade over book : 0.12767
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00001    0.5 |      0.00039    5.3 |   0.00040   -0.7    5.3 |   0.00040    0.00001
+  5 |       0.00000   -0.3 |      0.00052    4.5 |   0.00059   -1.0    4.3 |   0.00058    0.00007
+ 10 |       0.00001    0.4 |      0.00063    4.0 |   0.00064   -0.4    3.8 |   0.00063    0.00001
+ 30 |       0.00000    0.1 |      0.00054    3.0 |   0.00057   -0.7    3.0 |   0.00057    0.00003
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.785   (trade share = 0.215)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00040 |         0.00041 |     0.00001 |      1.6
+    5 |   0.00059 |         0.00063 |     0.00004 |      1.8
+   10 |   0.00064 |         0.00072 |     0.00008 |      2.1
+   30 |   0.00057 |         0.00096 |     0.00038 |      3.0
+[21/50] VTHOUSDT   done  n=604,800  contemp_incr_book=0.0387  pred_joint_h1=0.00040  pred_joint_h30=0.00057
+
+==========================================================================
+BCHUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.07842  t=13.1
+  book-only  : R2=0.32052  t=118.0
+  joint      : R2=0.35540  t_tr=11.0  t_bk=94.8
+  incr book over trade : 0.27698
+  incr trade over book : 0.03488
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00006    2.1 |      0.00139   26.1 |   0.00139    0.3   24.2 |   0.00133    0.00000
+  5 |       0.00005    1.4 |      0.00093   12.1 |   0.00093    0.4   11.7 |   0.00088    0.00000
+ 10 |       0.00019    2.3 |      0.00039    6.1 |   0.00051    1.7    5.4 |   0.00031    0.00011
+ 30 |       0.00021    2.4 |      0.00000    0.4 |   0.00021    2.4   -0.2 |   0.00000    0.00020
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.909   (trade share = 0.091)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00139 |         0.00139 |     0.00000 |     -0.4
+    5 |   0.00093 |         0.00094 |     0.00001 |      1.0
+   10 |   0.00051 |         0.00051 |     0.00000 |      0.5
+   30 |   0.00021 |         0.00023 |     0.00002 |      0.9
+[22/50] BCHUSDT    done  n=604,800  contemp_incr_book=0.2770  pred_joint_h1=0.00139  pred_joint_h30=0.00021
+
+==========================================================================
+ALGOUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.09577  t=26.0
+  book-only  : R2=0.24974  t=69.5
+  joint      : R2=0.28311  t_tr=18.0  t_bk=65.1
+  incr book over trade : 0.18734
+  incr trade over book : 0.03336
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00014    3.6 |      0.00191   19.3 |   0.00191   -0.3   20.8 |   0.00177    0.00000
+  5 |       0.00030    2.2 |      0.00312   11.6 |   0.00312    0.2   14.3 |   0.00283    0.00000
+ 10 |       0.00017    1.3 |      0.00274    7.9 |   0.00275   -0.2   10.2 |   0.00258    0.00001
+ 30 |       0.00004   -0.8 |      0.00067    3.9 |   0.00088   -2.0    4.7 |   0.00084    0.00021
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.901   (trade share = 0.099)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00191 |         0.00201 |     0.00009 |      5.9
+    5 |   0.00312 |         0.00336 |     0.00023 |      4.7
+   10 |   0.00275 |         0.00311 |     0.00036 |      4.3
+   30 |   0.00088 |         0.00127 |     0.00039 |      3.4
+[23/50] ALGOUSDT   done  n=604,800  contemp_incr_book=0.1873  pred_joint_h1=0.00191  pred_joint_h30=0.00088
+
+==========================================================================
+NEARUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.12787  t=19.4
+  book-only  : R2=0.48090  t=35.3
+  joint      : R2=0.50938  t_tr=8.4  t_bk=32.0
+  incr book over trade : 0.38151
+  incr trade over book : 0.02848
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00011    1.6 |      0.00111   16.3 |   0.00111    0.0   12.3 |   0.00100    0.00000
+  5 |       0.00023    1.8 |      0.00065    7.0 |   0.00071    0.9    5.7 |   0.00048    0.00006
+ 10 |       0.00032    1.7 |      0.00025    3.3 |   0.00043    1.3    2.4 |   0.00012    0.00019
+ 30 |       0.00021    1.0 |      0.00001    0.4 |   0.00022    1.0   -0.4 |   0.00001    0.00021
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.827   (trade share = 0.173)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00111 |         0.00116 |     0.00005 |     -4.1
+    5 |   0.00071 |         0.00072 |     0.00002 |      1.4
+   10 |   0.00043 |         0.00051 |     0.00007 |      2.1
+   30 |   0.00022 |         0.00040 |     0.00019 |      2.5
+[24/50] NEARUSDT   done  n=604,800  contemp_incr_book=0.3815  pred_joint_h1=0.00111  pred_joint_h30=0.00022
+
+==========================================================================
+AAVEUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.10373  t=20.5
+  book-only  : R2=0.16556  t=6.1
+  joint      : R2=0.21727  t_tr=12.2  t_bk=5.6
+  incr book over trade : 0.11354
+  incr trade over book : 0.05171
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00022    3.8 |      0.00031    7.4 |   0.00042    2.8    6.2 |   0.00021    0.00011
+  5 |       0.00029    2.8 |      0.00025    3.3 |   0.00043    2.3    2.8 |   0.00014    0.00018
+ 10 |       0.00045    2.7 |      0.00043    3.1 |   0.00071    2.3    2.8 |   0.00026    0.00028
+ 30 |       0.00018    1.6 |      0.00030    3.0 |   0.00039    1.2    2.7 |   0.00021    0.00009
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.801   (trade share = 0.199)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00042 |         0.00043 |     0.00001 |      1.9
+    5 |   0.00043 |         0.00043 |     0.00000 |      0.6
+   10 |   0.00071 |         0.00072 |     0.00001 |      0.9
+   30 |   0.00039 |         0.00044 |     0.00004 |      1.6
+[25/50] AAVEUSDT   done  n=604,800  contemp_incr_book=0.1135  pred_joint_h1=0.00042  pred_joint_h30=0.00039
+
+==========================================================================
+FLOKIUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.16024  t=33.8
+  book-only  : R2=0.18575  t=13.0
+  joint      : R2=0.26146  t_tr=22.6  t_bk=11.4
+  incr book over trade : 0.10121
+  incr trade over book : 0.07571
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00012    3.7 |      0.00065   12.8 |   0.00066    0.7   11.7 |   0.00053    0.00000
+  5 |       0.00009    2.0 |      0.00031    4.4 |   0.00032    0.8    4.1 |   0.00023    0.00001
+ 10 |       0.00011    1.7 |      0.00014    2.1 |   0.00018    1.2    1.7 |   0.00007    0.00005
+ 30 |       0.00011    1.5 |      0.00003    1.1 |   0.00012    1.4    0.4 |   0.00000    0.00008
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.681   (trade share = 0.319)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00066 |         0.00066 |     0.00000 |     -1.7
+    5 |   0.00032 |         0.00032 |     0.00000 |      0.1
+   10 |   0.00018 |         0.00018 |     0.00000 |      0.3
+   30 |   0.00012 |         0.00013 |     0.00001 |      1.0
+[26/50] FLOKIUSDT  done  n=604,800  contemp_incr_book=0.1012  pred_joint_h1=0.00066  pred_joint_h30=0.00012
+
+==========================================================================
+WAXPUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.07458  t=6.5
+  book-only  : R2=0.04098  t=3.1
+  joint      : R2=0.10689  t_tr=6.2  t_bk=3.1
+  incr book over trade : 0.03232
+  incr trade over book : 0.06591
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00042    6.2 |      0.00044    5.5 |   0.00075    5.3    5.2 |   0.00033    0.00031
+  5 |       0.00022    2.5 |      0.00042    3.8 |   0.00056    2.1    3.7 |   0.00034    0.00014
+ 10 |       0.00009    1.3 |      0.00024    3.0 |   0.00029    1.0    2.9 |   0.00020    0.00005
+ 30 |       0.00001    0.4 |      0.00002    1.1 |   0.00003    0.3    1.0 |   0.00001    0.00001
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.949   (trade share = 0.051)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00075 |         0.00084 |     0.00009 |      3.4
+    5 |   0.00056 |         0.00071 |     0.00015 |      2.8
+   10 |   0.00029 |         0.00040 |     0.00011 |      2.1
+   30 |   0.00003 |         0.00012 |     0.00009 |      1.7
+[27/50] WAXPUSDT   done  n=604,800  contemp_incr_book=0.0323  pred_joint_h1=0.00075  pred_joint_h30=0.00003
+
+==========================================================================
+UNIUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.09668  t=15.1
+  book-only  : R2=0.22225  t=17.3
+  joint      : R2=0.26929  t_tr=12.6  t_bk=16.4
+  incr book over trade : 0.17261
+  incr trade over book : 0.04704
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00005    1.3 |      0.00049    6.7 |   0.00050    0.5    6.7 |   0.00045    0.00001
+  5 |       0.00011    1.1 |      0.00059    3.8 |   0.00063    0.7    4.0 |   0.00052    0.00004
+ 10 |       0.00017    1.0 |      0.00050    2.8 |   0.00057    0.8    2.9 |   0.00041    0.00008
+ 30 |       0.00004    0.3 |      0.00016    1.6 |   0.00017    0.2    1.5 |   0.00014    0.00001
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.852   (trade share = 0.148)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00050 |         0.00055 |     0.00005 |      4.2
+    5 |   0.00063 |         0.00075 |     0.00012 |      3.8
+   10 |   0.00057 |         0.00073 |     0.00015 |      3.4
+   30 |   0.00017 |         0.00035 |     0.00018 |      2.4
+[28/50] UNIUSDT    done  n=604,800  contemp_incr_book=0.1726  pred_joint_h1=0.00050  pred_joint_h30=0.00017
+
+==========================================================================
+ROSEUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.07093  t=6.5
+  book-only  : R2=0.20101  t=12.8
+  joint      : R2=0.21649  t_tr=4.1  t_bk=11.3
+  incr book over trade : 0.14556
+  incr trade over book : 0.01548
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00018    3.2 |      0.00083    9.2 |   0.00084    0.8    8.5 |   0.00067    0.00001
+  5 |       0.00011    1.5 |      0.00056    3.9 |   0.00057    0.3    3.9 |   0.00045    0.00000
+ 10 |       0.00003    0.6 |      0.00021    1.9 |   0.00021   -0.0    2.0 |   0.00018    0.00000
+ 30 |       0.00002   -0.5 |      0.00000    0.1 |   0.00003   -0.7    0.3 |   0.00001    0.00003
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.819   (trade share = 0.181)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00084 |         0.00085 |     0.00000 |      1.1
+    5 |   0.00057 |         0.00058 |     0.00001 |      1.1
+   10 |   0.00021 |         0.00024 |     0.00003 |      1.4
+   30 |   0.00003 |         0.00003 |     0.00000 |      0.2
+[29/50] ROSEUSDT   done  n=604,800  contemp_incr_book=0.1456  pred_joint_h1=0.00084  pred_joint_h30=0.00003
+
+==========================================================================
+GRTUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.08246  t=18.2
+  book-only  : R2=0.27002  t=126.2
+  joint      : R2=0.29150  t_tr=14.5  t_bk=113.9
+  incr book over trade : 0.20904
+  incr trade over book : 0.02148
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00006    3.3 |      0.00160   26.1 |   0.00162   -1.7   27.2 |   0.00156    0.00002
+  5 |       0.00003    1.0 |      0.00168   13.1 |   0.00172   -1.4   15.0 |   0.00170    0.00005
+ 10 |       0.00004    0.9 |      0.00121    7.9 |   0.00123   -0.6    9.2 |   0.00118    0.00001
+ 30 |       0.00017    1.8 |      0.00035    3.7 |   0.00041    1.2    3.4 |   0.00025    0.00006
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.907   (trade share = 0.093)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00162 |         0.00166 |     0.00004 |      4.1
+    5 |   0.00172 |         0.00177 |     0.00005 |      2.5
+   10 |   0.00123 |         0.00130 |     0.00007 |      2.3
+   30 |   0.00041 |         0.00047 |     0.00006 |      1.5
+[30/50] GRTUSDT    done  n=604,800  contemp_incr_book=0.2090  pred_joint_h1=0.00162  pred_joint_h30=0.00041
+
+==========================================================================
+YFIUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.08375  t=14.7
+  book-only  : R2=0.26845  t=7.0
+  joint      : R2=0.28344  t_tr=3.9  t_bk=6.4
+  incr book over trade : 0.19968
+  incr trade over book : 0.01498
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00017    2.6 |      0.00073    8.1 |   0.00076    1.0    7.6 |   0.00059    0.00002
+  5 |       0.00007    1.1 |      0.00061    4.5 |   0.00061    0.1    4.4 |   0.00054    0.00000
+ 10 |       0.00010    1.1 |      0.00041    2.8 |   0.00043    0.5    2.8 |   0.00032    0.00002
+ 30 |       0.00056    2.0 |      0.00040    2.2 |   0.00074    1.7    1.7 |   0.00018    0.00033
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.902   (trade share = 0.098)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00076 |         0.00077 |     0.00001 |      1.8
+    5 |   0.00061 |         0.00067 |     0.00006 |      2.5
+   10 |   0.00043 |         0.00052 |     0.00010 |      2.4
+   30 |   0.00074 |         0.00089 |     0.00015 |      2.2
+[31/50] YFIUSDT    done  n=604,800  contemp_incr_book=0.1997  pred_joint_h1=0.00076  pred_joint_h30=0.00074
+
+==========================================================================
+OPUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.05779  t=4.5
+  book-only  : R2=0.50160  t=196.8
+  joint      : R2=0.50773  t_tr=2.5  t_bk=76.0
+  incr book over trade : 0.44993
+  incr trade over book : 0.00613
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00027    4.3 |      0.00162   20.3 |   0.00166    1.7   19.3 |   0.00139    0.00004
+  5 |       0.00035    2.2 |      0.00152    9.5 |   0.00160    1.1   10.2 |   0.00125    0.00008
+ 10 |       0.00043    1.6 |      0.00095    5.3 |   0.00113    1.1    6.0 |   0.00070    0.00018
+ 30 |       0.00003    0.4 |      0.00007    1.1 |   0.00009    0.3    1.3 |   0.00005    0.00001
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.926   (trade share = 0.074)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00166 |         0.00197 |     0.00031 |    -10.4
+    5 |   0.00160 |         0.00175 |     0.00015 |     -3.8
+   10 |   0.00113 |         0.00119 |     0.00006 |     -1.9
+   30 |   0.00009 |         0.00016 |     0.00007 |     -1.5
+[32/50] OPUSDT     done  n=604,800  contemp_incr_book=0.4499  pred_joint_h1=0.00166  pred_joint_h30=0.00009
+
+==========================================================================
+EGLDUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.08718  t=8.7
+  book-only  : R2=0.33289  t=24.8
+  joint      : R2=0.34139  t_tr=2.3  t_bk=36.5
+  incr book over trade : 0.25421
+  incr trade over book : 0.00850
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00016    3.0 |      0.00090   11.2 |   0.00090   -0.1   13.2 |   0.00074    0.00000
+  5 |       0.00008    1.4 |      0.00079    5.7 |   0.00080   -0.5    7.1 |   0.00071    0.00001
+ 10 |       0.00018    1.8 |      0.00066    4.2 |   0.00067    0.4    4.6 |   0.00049    0.00001
+ 30 |       0.00004    0.7 |      0.00023    2.4 |   0.00023    0.0    2.7 |   0.00019    0.00000
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.903   (trade share = 0.097)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00090 |         0.00091 |     0.00001 |      1.3
+    5 |   0.00080 |         0.00080 |     0.00000 |      0.4
+   10 |   0.00067 |         0.00067 |     0.00000 |     -0.1
+   30 |   0.00023 |         0.00039 |     0.00015 |     -2.4
+[33/50] EGLDUSDT   done  n=604,800  contemp_incr_book=0.2542  pred_joint_h1=0.00090  pred_joint_h30=0.00023
+
+==========================================================================
+THETAUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.06505  t=23.0
+  book-only  : R2=0.26001  t=124.8
+  joint      : R2=0.28179  t_tr=16.7  t_bk=116.7
+  incr book over trade : 0.21674
+  incr trade over book : 0.02178
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00004    2.3 |      0.00158   22.9 |   0.00159   -1.1   23.6 |   0.00155    0.00001
+  5 |       0.00001    0.6 |      0.00163   12.4 |   0.00167   -1.2   13.8 |   0.00166    0.00004
+ 10 |       0.00001    0.5 |      0.00088    7.0 |   0.00089   -0.5    7.7 |   0.00088    0.00001
+ 30 |       0.00003    0.7 |      0.00012    2.0 |   0.00013    0.4    2.0 |   0.00010    0.00001
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.932   (trade share = 0.068)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00159 |         0.00190 |     0.00031 |     11.0
+    5 |   0.00167 |         0.00212 |     0.00044 |      7.0
+   10 |   0.00089 |         0.00127 |     0.00038 |      4.9
+   30 |   0.00013 |         0.00031 |     0.00018 |      2.3
+[34/50] THETAUSDT  done  n=604,800  contemp_incr_book=0.2167  pred_joint_h1=0.00159  pred_joint_h30=0.00013
+
+==========================================================================
+ZILUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.10346  t=21.9
+  book-only  : R2=0.32661  t=34.1
+  joint      : R2=0.36066  t_tr=17.3  t_bk=31.9
+  incr book over trade : 0.25720
+  incr trade over book : 0.03406
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00007    2.5 |      0.00083   13.3 |   0.00084    0.5   12.9 |   0.00076    0.00000
+  5 |       0.00000    0.1 |      0.00059    6.2 |   0.00063   -0.9    6.6 |   0.00063    0.00003
+ 10 |       0.00001   -0.3 |      0.00037    3.9 |   0.00044   -0.9    4.6 |   0.00043    0.00006
+ 30 |       0.00014   -1.3 |      0.00005    1.3 |   0.00024   -1.6    1.9 |   0.00010    0.00019
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.912   (trade share = 0.088)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00084 |         0.00084 |     0.00001 |     -1.6
+    5 |   0.00063 |         0.00063 |     0.00000 |     -0.2
+   10 |   0.00044 |         0.00044 |     0.00000 |      0.6
+   30 |   0.00024 |         0.00025 |     0.00001 |     -0.6
+[35/50] ZILUSDT    done  n=604,800  contemp_incr_book=0.2572  pred_joint_h1=0.00084  pred_joint_h30=0.00024
+
+==========================================================================
+ACHUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.15048  t=21.8
+  book-only  : R2=0.34627  t=73.3
+  joint      : R2=0.40935  t_tr=17.2  t_bk=63.8
+  incr book over trade : 0.25888
+  incr trade over book : 0.06309
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00023    3.6 |      0.00144   15.3 |   0.00148    1.5   14.7 |   0.00125    0.00004
+  5 |       0.00010    1.3 |      0.00132    7.5 |   0.00132    0.2    7.6 |   0.00122    0.00000
+ 10 |       0.00008    0.8 |      0.00080    4.1 |   0.00080    0.2    4.4 |   0.00073    0.00000
+ 30 |       0.00002    0.4 |      0.00017    2.1 |   0.00017    0.1    2.0 |   0.00015    0.00000
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.927   (trade share = 0.073)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00148 |         0.00149 |     0.00001 |      1.6
+    5 |   0.00132 |         0.00135 |     0.00003 |      1.4
+   10 |   0.00080 |         0.00086 |     0.00005 |      1.5
+   30 |   0.00017 |         0.00019 |     0.00002 |      0.9
+[36/50] ACHUSDT    done  n=604,800  contemp_incr_book=0.2589  pred_joint_h1=0.00148  pred_joint_h30=0.00017
+
+==========================================================================
+ZRXUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.12910  t=22.2
+  book-only  : R2=0.27304  t=7.5
+  joint      : R2=0.33120  t_tr=11.2  t_bk=7.1
+  incr book over trade : 0.20209
+  incr trade over book : 0.05816
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00035    4.5 |      0.00143   13.7 |   0.00153    2.4   12.7 |   0.00117    0.00010
+  5 |       0.00016    1.7 |      0.00087    6.8 |   0.00090    0.8    7.0 |   0.00074    0.00003
+ 10 |       0.00025    1.6 |      0.00063    4.5 |   0.00073    1.0    4.6 |   0.00048    0.00010
+ 30 |       0.00025    1.2 |      0.00016    1.9 |   0.00033    1.0    1.6 |   0.00008    0.00018
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.925   (trade share = 0.075)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00153 |         0.00156 |     0.00004 |      2.9
+    5 |   0.00090 |         0.00094 |     0.00004 |      1.9
+   10 |   0.00073 |         0.00077 |     0.00004 |      1.6
+   30 |   0.00033 |         0.00039 |     0.00006 |     -1.5
+[37/50] ZRXUSDT    done  n=604,800  contemp_incr_book=0.2021  pred_joint_h1=0.00153  pred_joint_h30=0.00033
+
+==========================================================================
+LDOUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.08188  t=20.9
+  book-only  : R2=0.29307  t=112.1
+  joint      : R2=0.31086  t_tr=10.9  t_bk=113.5
+  incr book over trade : 0.22898
+  incr trade over book : 0.01780
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00005    2.2 |      0.00166   20.6 |   0.00169   -1.9   23.5 |   0.00164    0.00003
+  5 |       0.00010    1.8 |      0.00211   12.9 |   0.00213   -0.9   14.4 |   0.00204    0.00002
+ 10 |       0.00014    1.7 |      0.00189    9.5 |   0.00189   -0.3   10.4 |   0.00175    0.00000
+ 30 |       0.00022    1.4 |      0.00097    5.3 |   0.00100    0.5    5.0 |   0.00078    0.00003
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.914   (trade share = 0.086)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00169 |         0.00183 |     0.00014 |      6.9
+    5 |   0.00213 |         0.00222 |     0.00009 |      2.9
+   10 |   0.00189 |         0.00194 |     0.00005 |      1.7
+   30 |   0.00100 |         0.00102 |     0.00002 |      0.8
+[38/50] LDOUSDT    done  n=604,800  contemp_incr_book=0.2290  pred_joint_h1=0.00169  pred_joint_h30=0.00100
+
+==========================================================================
+MANAUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.06263  t=14.5
+  book-only  : R2=0.36897  t=32.2
+  joint      : R2=0.38665  t_tr=8.9  t_bk=31.1
+  incr book over trade : 0.32402
+  incr trade over book : 0.01768
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00038    3.8 |      0.00080   15.7 |   0.00100    2.8   13.7 |   0.00062    0.00020
+  5 |       0.00050    1.7 |      0.00077    7.6 |   0.00106    1.3    6.6 |   0.00056    0.00030
+ 10 |       0.00024    1.0 |      0.00039    3.9 |   0.00052    0.7    3.6 |   0.00029    0.00014
+ 30 |       0.00008   -0.6 |      0.00001    0.5 |   0.00011   -0.6    0.8 |   0.00002    0.00010
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.939   (trade share = 0.061)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00100 |         0.00107 |     0.00007 |      6.5
+    5 |   0.00106 |         0.00119 |     0.00012 |      4.5
+   10 |   0.00052 |         0.00068 |     0.00015 |      3.6
+   30 |   0.00011 |         0.00022 |     0.00012 |      2.3
+[39/50] MANAUSDT   done  n=604,800  contemp_incr_book=0.3240  pred_joint_h1=0.00100  pred_joint_h30=0.00011
+
+==========================================================================
+STORJUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.08763  t=12.7
+  book-only  : R2=0.27950  t=12.4
+  joint      : R2=0.31342  t_tr=9.4  t_bk=11.7
+  incr book over trade : 0.22579
+  incr trade over book : 0.03392
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00030    5.2 |      0.00099   12.0 |   0.00108    3.0   11.0 |   0.00079    0.00010
+  5 |       0.00010    2.2 |      0.00098    7.6 |   0.00099    0.6    7.5 |   0.00089    0.00001
+ 10 |       0.00002    0.7 |      0.00083    5.4 |   0.00083   -0.5    5.6 |   0.00081    0.00001
+ 30 |       0.00001    0.5 |      0.00032    2.8 |   0.00032   -0.1    2.8 |   0.00030    0.00000
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.913   (trade share = 0.087)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00108 |         0.00112 |     0.00004 |      3.2
+    5 |   0.00099 |         0.00107 |     0.00008 |      2.6
+   10 |   0.00083 |         0.00098 |     0.00014 |      2.7
+   30 |   0.00032 |         0.00047 |     0.00015 |      2.0
+[40/50] STORJUSDT  done  n=604,800  contemp_incr_book=0.2258  pred_joint_h1=0.00108  pred_joint_h30=0.00032
+
+==========================================================================
+RVNUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.06463  t=19.4
+  book-only  : R2=0.26021  t=43.1
+  joint      : R2=0.27845  t_tr=10.8  t_bk=41.8
+  incr book over trade : 0.21383
+  incr trade over book : 0.01824
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00013    1.6 |      0.00055    5.3 |   0.00058    0.8    6.4 |   0.00045    0.00003
+  5 |       0.00000    0.2 |      0.00057    4.3 |   0.00060   -0.6    4.6 |   0.00059    0.00002
+ 10 |       0.00001    0.4 |      0.00067    3.6 |   0.00069   -0.4    4.1 |   0.00067    0.00001
+ 30 |       0.00000   -0.2 |      0.00032    2.7 |   0.00037   -0.9    3.2 |   0.00036    0.00005
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.931   (trade share = 0.069)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00058 |         0.00066 |     0.00008 |      2.6
+    5 |   0.00060 |         0.00084 |     0.00025 |      3.1
+   10 |   0.00069 |         0.00111 |     0.00042 |      3.0
+   30 |   0.00037 |         0.00075 |     0.00039 |      2.6
+[41/50] RVNUSDT    done  n=604,800  contemp_incr_book=0.2138  pred_joint_h1=0.00058  pred_joint_h30=0.00037
+
+==========================================================================
+FILUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.07724  t=19.3
+  book-only  : R2=0.38005  t=112.2
+  joint      : R2=0.39932  t_tr=11.9  t_bk=106.4
+  incr book over trade : 0.32207
+  incr trade over book : 0.01926
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00018    3.3 |      0.00062   12.4 |   0.00067    1.8   13.0 |   0.00049    0.00005
+  5 |       0.00021    1.6 |      0.00029    4.1 |   0.00040    1.2    4.4 |   0.00019    0.00011
+ 10 |       0.00020    1.3 |      0.00008    1.7 |   0.00023    1.1    1.4 |   0.00003    0.00015
+ 30 |       0.00016    1.1 |      0.00001   -0.5 |   0.00021    1.3   -1.4 |   0.00005    0.00020
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.912   (trade share = 0.088)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00067 |         0.00067 |     0.00000 |      0.3
+    5 |   0.00040 |         0.00042 |     0.00002 |      1.6
+   10 |   0.00023 |         0.00024 |     0.00001 |      0.9
+   30 |   0.00021 |         0.00024 |     0.00004 |      1.2
+[42/50] FILUSDT    done  n=604,800  contemp_incr_book=0.3221  pred_joint_h1=0.00067  pred_joint_h30=0.00021
+
+==========================================================================
+IOTAUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.08000  t=17.4
+  book-only  : R2=0.30670  t=110.3
+  joint      : R2=0.33502  t_tr=12.8  t_bk=96.7
+  incr book over trade : 0.25503
+  incr trade over book : 0.02832
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00015    2.9 |      0.00075    9.8 |   0.00078    1.4   10.7 |   0.00063    0.00003
+  5 |       0.00024    1.9 |      0.00105    6.7 |   0.00111    1.0    7.4 |   0.00087    0.00006
+ 10 |       0.00056    2.2 |      0.00090    4.4 |   0.00118    1.7    4.6 |   0.00062    0.00028
+ 30 |       0.00007    0.9 |      0.00010    1.6 |   0.00014    0.7    1.3 |   0.00007    0.00004
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.934   (trade share = 0.066)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00078 |         0.00107 |     0.00029 |      8.0
+    5 |   0.00111 |         0.00151 |     0.00040 |      4.8
+   10 |   0.00118 |         0.00169 |     0.00051 |      3.7
+   30 |   0.00014 |         0.00044 |     0.00030 |      2.8
+[43/50] IOTAUSDT   done  n=604,800  contemp_incr_book=0.2550  pred_joint_h1=0.00078  pred_joint_h30=0.00014
+
+==========================================================================
+POLYXUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.11879  t=12.6
+  book-only  : R2=0.41012  t=70.0
+  joint      : R2=0.43134  t_tr=7.6  t_bk=58.4
+  incr book over trade : 0.31255
+  incr trade over book : 0.02122
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00013    4.0 |      0.00129   17.4 |   0.00129   -0.4   16.3 |   0.00117    0.00000
+  5 |       0.00002    1.1 |      0.00082    7.4 |   0.00085   -1.3    7.6 |   0.00082    0.00003
+ 10 |       0.00002    0.8 |      0.00041    4.0 |   0.00041   -0.5    4.1 |   0.00039    0.00001
+ 30 |       0.00000    0.1 |      0.00016    2.1 |   0.00017   -0.6    2.1 |   0.00017    0.00001
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.893   (trade share = 0.107)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00129 |         0.00130 |     0.00000 |     -0.8
+    5 |   0.00085 |         0.00086 |     0.00001 |      1.3
+   10 |   0.00041 |         0.00049 |     0.00008 |      2.2
+   30 |   0.00017 |         0.00044 |     0.00027 |      3.0
+[44/50] POLYXUSDT  done  n=604,800  contemp_incr_book=0.3126  pred_joint_h1=0.00129  pred_joint_h30=0.00017
+
+==========================================================================
+APEUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.07827  t=16.2
+  book-only  : R2=0.21986  t=65.3
+  joint      : R2=0.24879  t_tr=14.0  t_bk=56.5
+  incr book over trade : 0.17051
+  incr trade over book : 0.02892
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00000   -0.5 |      0.00064   14.0 |   0.00070   -3.1   14.4 |   0.00070    0.00006
+  5 |       0.00002   -1.1 |      0.00055    7.0 |   0.00067   -2.6    7.8 |   0.00065    0.00012
+ 10 |       0.00002   -0.8 |      0.00031    3.8 |   0.00040   -1.6    4.5 |   0.00038    0.00009
+ 30 |       0.00000    0.0 |      0.00000   -0.1 |   0.00000    0.1   -0.1 |   0.00000    0.00000
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.951   (trade share = 0.049)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00070 |         0.00072 |     0.00002 |      2.6
+    5 |   0.00067 |         0.00073 |     0.00006 |      2.7
+   10 |   0.00040 |         0.00049 |     0.00009 |      2.3
+   30 |   0.00000 |         0.00006 |     0.00006 |      1.2
+[45/50] APEUSDT    done  n=604,800  contemp_incr_book=0.1705  pred_joint_h1=0.00070  pred_joint_h30=0.00000
+
+==========================================================================
+NMRUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.06547  t=7.4
+  book-only  : R2=0.27754  t=16.6
+  joint      : R2=0.30301  t_tr=6.1  t_bk=15.9
+  incr book over trade : 0.23754
+  incr trade over book : 0.02547
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00003    1.2 |      0.00290   15.5 |   0.00292   -1.0   15.8 |   0.00289    0.00002
+  5 |       0.00003    0.8 |      0.00318   10.1 |   0.00321   -0.9   10.6 |   0.00318    0.00003
+ 10 |       0.00007    1.0 |      0.00259    6.5 |   0.00259   -0.1    6.9 |   0.00252    0.00000
+ 30 |       0.00011    1.3 |      0.00097    4.1 |   0.00099    0.6    4.1 |   0.00088    0.00002
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.943   (trade share = 0.057)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00292 |         0.00311 |     0.00019 |      5.6
+    5 |   0.00321 |         0.00386 |     0.00065 |      6.6
+   10 |   0.00259 |         0.00355 |     0.00095 |      6.2
+   30 |   0.00099 |         0.00152 |     0.00053 |      3.7
+[46/50] NMRUSDT    done  n=604,800  contemp_incr_book=0.2375  pred_joint_h1=0.00292  pred_joint_h30=0.00099
+
+==========================================================================
+SANDUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.05280  t=16.7
+  book-only  : R2=0.45213  t=103.8
+  joint      : R2=0.45868  t_tr=5.9  t_bk=115.2
+  incr book over trade : 0.40587
+  incr trade over book : 0.00655
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00002    1.6 |      0.00040   11.3 |   0.00040   -0.3   11.8 |   0.00039    0.00000
+  5 |       0.00002   -0.9 |      0.00025    4.6 |   0.00031   -1.8    5.6 |   0.00029    0.00006
+ 10 |       0.00009   -1.5 |      0.00009    2.2 |   0.00024   -2.0    3.0 |   0.00015    0.00014
+ 30 |       0.00005   -1.1 |      0.00000   -0.4 |   0.00005   -1.1   -0.1 |   0.00000    0.00005
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.929   (trade share = 0.071)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00040 |         0.00041 |     0.00000 |     -1.4
+    5 |   0.00031 |         0.00032 |     0.00001 |     -1.3
+   10 |   0.00024 |         0.00028 |     0.00004 |     -1.6
+   30 |   0.00005 |         0.00008 |     0.00003 |     -0.9
+[47/50] SANDUSDT   done  n=604,800  contemp_incr_book=0.4059  pred_joint_h1=0.00040  pred_joint_h30=0.00005
+
+==========================================================================
+NEOUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.06747  t=16.8
+  book-only  : R2=0.28388  t=34.5
+  joint      : R2=0.30577  t_tr=13.6  t_bk=32.6
+  incr book over trade : 0.23830
+  incr trade over book : 0.02189
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00002    1.7 |      0.00229   25.2 |   0.00234   -2.3   26.1 |   0.00231    0.00005
+  5 |       0.00000   -0.3 |      0.00233   13.5 |   0.00254   -2.3   14.7 |   0.00253    0.00020
+ 10 |       0.00001   -0.3 |      0.00145    8.0 |   0.00159   -1.3    9.0 |   0.00159    0.00014
+ 30 |       0.00002    0.6 |      0.00047    3.6 |   0.00047   -0.1    3.7 |   0.00044    0.00000
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.964   (trade share = 0.036)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00234 |         0.00322 |     0.00088 |     15.9
+    5 |   0.00254 |         0.00361 |     0.00107 |      9.4
+   10 |   0.00159 |         0.00239 |     0.00080 |      6.1
+   30 |   0.00047 |         0.00130 |     0.00083 |      4.0
+[48/50] NEOUSDT    done  n=604,800  contemp_incr_book=0.2383  pred_joint_h1=0.00234  pred_joint_h30=0.00047
+
+==========================================================================
+SUSHIUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.05847  t=21.5
+  book-only  : R2=0.12102  t=141.2
+  joint      : R2=0.15717  t_tr=21.2  t_bk=117.0
+  incr book over trade : 0.09870
+  incr trade over book : 0.03616
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00003    2.0 |      0.00129   21.5 |   0.00129   -0.1   21.3 |   0.00126    0.00000
+  5 |       0.00007    1.3 |      0.00163   13.1 |   0.00164    0.2   13.1 |   0.00157    0.00000
+ 10 |       0.00009    1.1 |      0.00107    7.8 |   0.00109    0.5    7.9 |   0.00100    0.00002
+ 30 |       0.00000   -0.1 |      0.00037    3.5 |   0.00038   -0.5    3.7 |   0.00038    0.00001
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.967   (trade share = 0.033)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00129 |         0.00383 |     0.00253 |     30.9
+    5 |   0.00164 |         0.00574 |     0.00411 |     21.3
+   10 |   0.00109 |         0.00436 |     0.00327 |     13.7
+   30 |   0.00038 |         0.00214 |     0.00176 |      7.3
+[49/50] SUSHIUSDT  done  n=604,800  contemp_incr_book=0.0987  pred_joint_h1=0.00129  pred_joint_h30=0.00038
+
+==========================================================================
+IMXUSDT ALL (7 days)  (n=604,800 sec, trail=10s)
+==========================================================================
+
+--- CONTEMPORANEOUS: 1s return [t-1,t] on same-second OFI (HAC) ---
+  trade-only : R2=0.05752  t=7.7
+  book-only  : R2=0.28872  t=143.2
+  joint      : R2=0.30679  t_tr=6.0  t_bk=69.1
+  incr book over trade : 0.24927
+  incr trade over book : 0.01807
+
+--- PREDICTIVE: future log-return [t,t+h] on trailing-10s OFI (HAC) ---
+  h | trade-only R2      t | book-only R2      t |  joint R2   t_tr   t_bk | incr_book incr_trade
+  1 |       0.00024    4.6 |      0.00291   27.5 |   0.00293    1.2   25.6 |   0.00269    0.00002
+  5 |       0.00019    2.4 |      0.00291   15.3 |   0.00292    0.4   15.1 |   0.00273    0.00001
+ 10 |       0.00025    2.1 |      0.00207    9.7 |   0.00211    0.8    9.6 |   0.00186    0.00004
+ 30 |       0.00027    1.7 |      0.00048    3.7 |   0.00063    1.3    3.4 |   0.00036    0.00014
+
+--- CANCELLATION: best-level size decreases attributed to CANCEL vs TRADE ---
+  cancel share = 0.945   (trade share = 0.055)
+  Does cancel-imbalance add over trade+book OFI? (trail=10s, HAC)
+    h |  tr+bk R2 | tr+bk+cancel R2 | incr_cancel | t_cancel
+    1 |   0.00293 |         0.00366 |     0.00073 |     14.9
+    5 |   0.00292 |         0.00402 |     0.00110 |     10.3
+   10 |   0.00211 |         0.00312 |     0.00102 |      7.4
+   30 |   0.00063 |         0.00129 |     0.00066 |      4.2
+[50/50] IMXUSDT    done  n=604,800  contemp_incr_book=0.2493  pred_joint_h1=0.00293  pred_joint_h30=0.00063
+
+wrote C:\Users\jackw\Desktop\math-199-research\scratch\ofi_broad_50sym.csv  (50 symbols)
+
+SANITY vs book_ofi_2024.log (contemporaneous incr book-OFI, ALL):
+  BTCUSDT    ref=0.1548  got=0.1548  OK
+  ETHUSDT    ref=0.1137  got=0.1137  OK
+  SOLUSDT    ref=0.1993  got=0.1993  OK
+  AVAXUSDT   ref=0.4759  got=0.4759  OK
+
+PREDICTIVE joint R^2 decay (total forecast power, trade+book):
+       sym |      h=1      h=5     h=10     h=30 |  max>10s
+   BTCUSDT |  0.00456  0.00406  0.00323  0.00222 |  0.00323
+   BNBUSDT |  0.00333  0.00302  0.00252  0.00105 |  0.00252
+   LTCUSDT |  0.00308  0.00213  0.00108  0.00013 |  0.00108
+   IMXUSDT |  0.00293  0.00292  0.00211  0.00063 |  0.00211
+   NMRUSDT |  0.00292  0.00321  0.00259  0.00099 |  0.00259
+   ADAUSDT |  0.00264  0.00213  0.00141  0.00099 |  0.00141
+  LINKUSDT |  0.00250  0.00234  0.00150  0.00030 |  0.00150
+   XLMUSDT |  0.00240  0.00323  0.00233  0.00147 |  0.00233
+   NEOUSDT |  0.00234  0.00254  0.00159  0.00047 |  0.00159
+  AVAXUSDT |  0.00230  0.00158  0.00076  0.00057 |  0.00076
+   ETHUSDT |  0.00218  0.00271  0.00395  0.00184 |  0.00395
+  ALGOUSDT |  0.00191  0.00312  0.00275  0.00088 |  0.00275
+   XRPUSDT |  0.00186  0.00122  0.00072  0.00052 |  0.00072
+   SOLUSDT |  0.00182  0.00125  0.00083  0.00092 |  0.00092
+   LDOUSDT |  0.00169  0.00213  0.00189  0.00100 |  0.00189
+    OPUSDT |  0.00166  0.00160  0.00113  0.00009 |  0.00113
+   GRTUSDT |  0.00162  0.00172  0.00123  0.00041 |  0.00123
+ THETAUSDT |  0.00159  0.00167  0.00089  0.00013 |  0.00089
+   DOTUSDT |  0.00156  0.00150  0.00087  0.00021 |  0.00087
+  USDCUSDT |  0.00155  0.00425  0.00535  0.00600 |  0.00600
+   ZRXUSDT |  0.00153  0.00090  0.00073  0.00033 |  0.00073
+   ACHUSDT |  0.00148  0.00132  0.00080  0.00017 |  0.00080
+   BCHUSDT |  0.00139  0.00093  0.00051  0.00021 |  0.00051
+ SUSHIUSDT |  0.00129  0.00164  0.00109  0.00038 |  0.00109
+ POLYXUSDT |  0.00129  0.00085  0.00041  0.00017 |  0.00041
+  ATOMUSDT |  0.00128  0.00195  0.00199  0.00137 |  0.00199
+  NEARUSDT |  0.00111  0.00071  0.00043  0.00022 |  0.00043
+ STORJUSDT |  0.00108  0.00099  0.00083  0.00032 |  0.00083
+   VETUSDT |  0.00104  0.00104  0.00080  0.00052 |  0.00080
+  GALAUSDT |  0.00104  0.00108  0.00114  0.00020 |  0.00114
+  MANAUSDT |  0.00100  0.00106  0.00052  0.00011 |  0.00052
+  EGLDUSDT |  0.00090  0.00080  0.00067  0.00023 |  0.00067
+  SHIBUSDT |  0.00089  0.00054  0.00033  0.00010 |  0.00033
+  ROSEUSDT |  0.00084  0.00057  0.00021  0.00003 |  0.00021
+  DOGEUSDT |  0.00084  0.00033  0.00014  0.00004 |  0.00014
+   ZILUSDT |  0.00084  0.00063  0.00044  0.00024 |  0.00044
+   ONEUSDT |  0.00083  0.00060  0.00027  0.00013 |  0.00027
+  HBARUSDT |  0.00079  0.00071  0.00113  0.00269 |  0.00269
+  IOTAUSDT |  0.00078  0.00111  0.00118  0.00014 |  0.00118
+   YFIUSDT |  0.00076  0.00061  0.00043  0.00074 |  0.00074
+  WAXPUSDT |  0.00075  0.00056  0.00029  0.00003 |  0.00029
+   APEUSDT |  0.00070  0.00067  0.00040  0.00000 |  0.00040
+   FILUSDT |  0.00067  0.00040  0.00023  0.00021 |  0.00023
+ FLOKIUSDT |  0.00066  0.00032  0.00018  0.00012 |  0.00018
+   RVNUSDT |  0.00058  0.00060  0.00069  0.00037 |  0.00069
+   UNIUSDT |  0.00050  0.00063  0.00057  0.00017 |  0.00057
+  AAVEUSDT |  0.00042  0.00043  0.00071  0.00039 |  0.00071
+  SANDUSDT |  0.00040  0.00031  0.00024  0.00005 |  0.00024
+  VTHOUSDT |  0.00040  0.00059  0.00064  0.00057 |  0.00064
+   FETUSDT |  0.00011  0.00031  0.00040  0.00033 |  0.00040
+
+DONE.

@@ -74,3 +74,24 @@ generating output is committed, so each is now one-command reproducible:
   over the total no-stop Sharpe (+2.51), recorded in `docs/L2_FINDINGS.md:219-221`. This single
   ratio is still sourced from the writeup; the components are consistent with the reimplementation
   runs but a dedicated random-pair placebo log is not separately committed.
+
+## Universe-wide L2 robustness (supports `main_proposed.tex`, not the canonical paper)
+
+The proposed paper extends the three Section 5 L2 tests from the four event-level majors to the full
+top-50 universe, over the same regime-spanning 2024 days (7 days for OFI, 13 for execution/impact).
+The four majors reproduce the committed four-symbol numbers as a correctness check, so the broadened
+numbers sit on the same footing as the paper's.
+
+| Result | Script | Per-symbol data | 4-major reproduction |
+|---|---|---|---|
+| book-OFI decay across 50 | `scratch/book_ofi_broad.py` | `scratch/ofi_broad_50sym.csv` | contemporaneous incr book-OFI matches `book_ofi_2024.log` byte-for-byte |
+| execution null across 50 | `scratch/book_exec_broad.py` | `scratch/exec_broad_50sym.csv` | AGG/L3 costs match `exec_value_2024_summary.csv` exactly |
+| size-to-impact across 50 | `scratch/book_impact_broad.py` | `scratch/impact_broad_50sym.csv` | retail/mid/inst 1s impact matches Table 5 exactly |
+
+Headline: the OFI-decay and execution nulls hold across all 50 (1s-ahead forecast R^2 < 0.5% for
+every symbol; the signal-timed execution rule is costlier than crossing in 50/50). Size-to-impact
+holds on the liquid names (39/50, all of the top 10) but turns noisy on the thinnest, so the proposed
+paper keeps Table 5 to four majors. The breadth additions were adversarially verified (numbers,
+overclaim, voice, consistency) before being written into `main_proposed.tex` via the deterministic
+`scratch/apply_proposed*.py` transforms. The 114 MB intermediate `scratch/exec_broad_orders.csv` is
+gitignored; `book_exec_broad.py` rebuilds or reuses it.

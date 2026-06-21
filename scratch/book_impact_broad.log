@@ -1,0 +1,112 @@
+  BTCUSDT    retail=0.125 mid=0.234 inst=0.326  inst/retail=2.61  (91s)
+  ETHUSDT    retail=0.154 mid=0.240 inst=0.319  inst/retail=2.07  (156s)
+  SOLUSDT    retail=0.154 mid=0.257 inst=0.318  inst/retail=2.06  (211s)
+  AVAXUSDT   retail=0.180 mid=0.375 inst=0.379  inst/retail=2.11  (239s)
+  LINKUSDT   retail=0.213 mid=0.275 inst=0.280  inst/retail=1.31  (266s)
+  ADAUSDT    retail=0.180 mid=0.382 inst=0.392  inst/retail=2.18  (295s)
+  USDCUSDT   retail=0.001 mid=0.003 inst=0.008  inst/retail=5.86  (315s)
+  XRPUSDT    retail=0.144 mid=0.284 inst=0.367  inst/retail=2.56  (349s)
+  BNBUSDT    retail=0.129 mid=0.295 inst=0.352  inst/retail=2.72  (383s)
+  DOGEUSDT   retail=0.146 mid=0.210 inst=0.306  inst/retail=2.10  (429s)
+  FETUSDT    retail=0.240 mid=0.141 inst=0.070  inst/retail=0.29  (456s)
+  VETUSDT    retail=0.220 mid=0.156 inst=0.055  inst/retail=0.25  (480s)
+  GALAUSDT   retail=0.232 mid=0.344 inst=0.496  inst/retail=2.13  (504s)
+  SHIBUSDT   retail=0.109 mid=0.260 inst=0.375  inst/retail=3.45  (559s)
+  LTCUSDT    retail=0.143 mid=0.307 inst=0.248  inst/retail=1.74  (584s)
+  ATOMUSDT   retail=0.236 mid=0.288 inst=0.256  inst/retail=1.09  (607s)
+  DOTUSDT    retail=0.181 mid=0.287 inst=0.243  inst/retail=1.34  (633s)
+  XLMUSDT    retail=0.197 mid=0.417 inst=0.562  inst/retail=2.85  (648s)
+  HBARUSDT   retail=0.217 mid=0.292 inst=0.279  inst/retail=1.28  (666s)
+  ONEUSDT    retail=0.439 mid=0.426 inst=0.432  inst/retail=0.99  (683s)
+  VTHOUSDT   retail=0.637 mid=1.704 inst=3.114  inst/retail=4.89  (695s)
+  BCHUSDT    retail=0.227 mid=0.289 inst=0.079  inst/retail=0.35  (717s)
+  ALGOUSDT   retail=0.184 mid=0.287 inst=0.239  inst/retail=1.30  (733s)
+  NEARUSDT   retail=0.221 mid=0.333 inst=0.249  inst/retail=1.13  (761s)
+  AAVEUSDT   retail=0.276 mid=0.386 inst=0.403  inst/retail=1.46  (789s)
+  FLOKIUSDT  retail=0.290 mid=0.310 inst=0.293  inst/retail=1.01  (881s)
+  WAXPUSDT   retail=0.671 mid=0.753 inst=0.607  inst/retail=0.90  (895s)
+  UNIUSDT    retail=0.257 mid=0.320 inst=0.045  inst/retail=0.17  (921s)
+  ROSEUSDT   retail=0.551 mid=0.513 inst=0.806  inst/retail=1.46  (945s)
+  GRTUSDT    retail=0.241 mid=0.402 inst=0.409  inst/retail=1.70  (964s)
+  YFIUSDT    retail=0.659 mid=0.599 inst=0.414  inst/retail=0.63  (978s)
+  OPUSDT     retail=0.202 mid=0.341 inst=0.463  inst/retail=2.29  (1005s)
+  EGLDUSDT   retail=0.364 mid=0.501 inst=0.822  inst/retail=2.26  (1021s)
+  THETAUSDT  retail=0.282 mid=0.454 inst=0.557  inst/retail=1.98  (1039s)
+  ZILUSDT    retail=0.437 mid=0.382 inst=0.789  inst/retail=1.81  (1055s)
+  ACHUSDT    retail=0.522 mid=0.674 inst=0.708  inst/retail=1.36  (1070s)
+  ZRXUSDT    retail=0.628 mid=0.575 inst=0.793  inst/retail=1.26  (1085s)
+  LDOUSDT    retail=0.255 mid=0.331 inst=0.380  inst/retail=1.49  (1109s)
+  MANAUSDT   retail=0.389 mid=0.478 inst=0.515  inst/retail=1.33  (1125s)
+  STORJUSDT  retail=0.552 mid=0.576 inst=1.453  inst/retail=2.63  (1144s)
+  RVNUSDT    retail=0.725 mid=0.587 inst=1.751  inst/retail=2.42  (1158s)
+  FILUSDT    retail=0.196 mid=0.336 inst=0.341  inst/retail=1.74  (1182s)
+  IOTAUSDT   retail=0.380 mid=0.337 inst=0.493  inst/retail=1.30  (1196s)
+  POLYXUSDT  retail=0.376 mid=0.313 inst=0.286  inst/retail=0.76  (1213s)
+  APEUSDT    retail=-0.070 mid=0.090 inst=0.118  inst/retail=nan  (1232s)
+  NMRUSDT    retail=0.716 mid=0.397 inst=-1.877  inst/retail=-2.62  (1244s)
+  SANDUSDT   retail=0.272 mid=0.298 inst=-0.012  inst/retail=-0.04  (1261s)
+  NEOUSDT    retail=0.307 mid=0.362 inst=0.276  inst/retail=0.90  (1278s)
+  SUSHIUSDT  retail=0.168 mid=0.512 inst=0.869  inst/retail=5.16  (1296s)
+  IMXUSDT    retail=0.593 mid=0.660 inst=1.555  inst/retail=2.62  (1321s)
+
+SANITY vs Table 5 (retail/mid/institutional 1s RAW bps):
+  BTCUSDT  ref=0.13/0.23/0.33  got=0.13/0.23/0.33  OK
+  ETHUSDT  ref=0.15/0.24/0.32  got=0.15/0.24/0.32  OK
+  SOLUSDT  ref=0.15/0.26/0.32  got=0.15/0.26/0.32  OK
+  AVAXUSDT ref=0.18/0.38/0.38  got=0.18/0.37/0.38  OK
+
+SIZE -> IMPACT across the 50:
+  institutional 1s impact > retail in 39/50 symbols
+  inst/retail ratio: median 1.49  min -2.62  max 5.86
+      sym  retail_1s   mid_1s  institutional_1s  inst_over_retail
+  NMRUSDT   0.715858 0.396897         -1.876966         -2.621980
+ SANDUSDT   0.271868 0.297534         -0.011693         -0.043012
+  UNIUSDT   0.256529 0.320290          0.044801          0.174641
+  VETUSDT   0.220411 0.155791          0.054900          0.249081
+  FETUSDT   0.239682 0.140994          0.069859          0.291466
+  BCHUSDT   0.227298 0.289021          0.078626          0.345915
+  YFIUSDT   0.658702 0.599049          0.414416          0.629140
+POLYXUSDT   0.375622 0.312861          0.285732          0.760689
+  NEOUSDT   0.307401 0.361565          0.275548          0.896380
+ WAXPUSDT   0.671485 0.752892          0.607153          0.904194
+  ONEUSDT   0.438636 0.425576          0.432139          0.985189
+FLOKIUSDT   0.289919 0.309960          0.292599          1.009244
+ ATOMUSDT   0.235904 0.288112          0.256164          1.085886
+ NEARUSDT   0.220602 0.333476          0.249204          1.129654
+  ZRXUSDT   0.627956 0.575304          0.792952          1.262751
+ HBARUSDT   0.217248 0.292103          0.278625          1.282523
+ ALGOUSDT   0.184496 0.286546          0.239296          1.297025
+ IOTAUSDT   0.380123 0.336579          0.493243          1.297587
+ LINKUSDT   0.213022 0.275159          0.279842          1.313676
+ MANAUSDT   0.388583 0.478413          0.515307          1.326119
+  DOTUSDT   0.181041 0.287320          0.242913          1.341758
+  ACHUSDT   0.521814 0.673753          0.708334          1.357444
+ AAVEUSDT   0.276250 0.386023          0.402714          1.457791
+ ROSEUSDT   0.550986 0.513086          0.806160          1.463124
+  LDOUSDT   0.255317 0.330633          0.379779          1.487484
+  GRTUSDT   0.240850 0.402232          0.408935          1.697884
+  LTCUSDT   0.143200 0.307334          0.248469          1.735123
+  FILUSDT   0.195858 0.336358          0.341074          1.741431
+  ZILUSDT   0.436982 0.381848          0.789415          1.806518
+THETAUSDT   0.281843 0.454171          0.556840          1.975711
+  SOLUSDT   0.154467 0.256504          0.318143          2.059623
+  ETHUSDT   0.153753 0.239595          0.318961          2.074508
+ DOGEUSDT   0.145838 0.209972          0.306497          2.101620
+ AVAXUSDT   0.179789 0.374821          0.379214          2.109212
+ GALAUSDT   0.232327 0.344281          0.495599          2.133193
+  ADAUSDT   0.179577 0.381797          0.392003          2.182920
+ EGLDUSDT   0.363814 0.500792          0.822470          2.260684
+   OPUSDT   0.201875 0.340891          0.463176          2.294366
+  RVNUSDT   0.724838 0.587316          1.750976          2.415679
+  XRPUSDT   0.143719 0.284178          0.367314          2.555772
+  BTCUSDT   0.125099 0.234174          0.326494          2.609874
+  IMXUSDT   0.593041 0.659970          1.555395          2.622744
+STORJUSDT   0.552444 0.576019          1.452636          2.629473
+  BNBUSDT   0.129441 0.294902          0.351768          2.717592
+  XLMUSDT   0.197119 0.417330          0.561839          2.850251
+ SHIBUSDT   0.108782 0.260441          0.375189          3.448986
+ VTHOUSDT   0.637264 1.704350          3.114191          4.886812
+SUSHIUSDT   0.168292 0.511902          0.868961          5.163427
+ USDCUSDT   0.001351 0.003023          0.007913          5.855561
+  APEUSDT  -0.069916 0.089916          0.117502               NaN
+DONE.

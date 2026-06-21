@@ -32,3 +32,13 @@ main.out
 main.toc
 main.synctex.gz
 main_compile.log
+main_proposed.aux
+main_proposed.log
+main_proposed.out
+main_proposed.toc
+main_proposed.synctex.gz
+proposed_build*.log
+texput.log
+
+# Large regenerable intermediate (114MB, exceeds GitHub limit; book_exec_broad.py rebuilds it)
+scratch/exec_broad_orders.csv
