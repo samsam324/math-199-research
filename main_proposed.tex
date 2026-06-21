@@ -304,6 +304,34 @@ Clean tests (EG and static OLS, test window) & $2$ to $3\%$ & n/a \\
 \end{tabular}
 \end{table}
 
+The artifact does not depend on that single start date. We re-ran the identical screen at five
+disjoint quarterly anchors from mid 2023 to mid 2024 (Table~\ref{tab:kalman-anchors}). At every
+one, real pairs and all three placebos pass the Kalman innovation ADF at $99$ to $100\%$, with
+Wilson $95\%$ intervals that never fall below $95\%$, while the clean Engle-Granger benchmark
+stays between $1$ and $8\%$. The screen reports the same near total cointegration whether the
+input can be cointegrated or not, at every start date we tried.
+
+\begin{table}[h]
+\centering
+\caption{The artifact is not specific to one start date: the identical screen at five disjoint
+quarterly anchors. Real pairs and all three placebos (independent random walk, phase randomized,
+block shuffled) pass the Kalman innovation ADF at $p<0.05$ at nearly $100\%$ (Wilson $95\%$
+intervals in brackets; $n=120$ real, $80$ per placebo), while the clean Engle-Granger test stays
+low. $90$ day train / $30$ day test at each $t_0$.}
+\label{tab:kalman-anchors}
+\begin{tabular}{lrrr}
+\toprule
+Anchor $t_0$ & Real Kalman & All placebos & Clean EG \\
+\midrule
+2023-07-01 & $100\%$ $[97,100]$ & $100\%$ & $3.8\%$ \\
+2023-10-01 & $99.2\%$ $[95,100]$ & $100\%$ & $1.4\%$ \\
+2024-01-01 & $100\%$ $[97,100]$ & $100\%$ & $2.1\%$ \\
+2024-04-01 & $100\%$ $[97,100]$ & $100\%$ & $8.1\%$ \\
+2024-07-01 & $100\%$ $[97,100]$ & $100\%$ & $6.4\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 We also ran a positive control: sixty constructed pairs that are genuinely cointegrated,
 $y_t = x_t + e_t$ with $x_t$ a random walk and $e_t$ a tight stationary AR(1). The Kalman screen
 passes them at $100\%$, the same rate it passes the random walk negatives, so it does not separate
