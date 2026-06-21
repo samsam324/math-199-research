@@ -1,29 +1,30 @@
-"""Stream Binance-spot L2 from Tardis.dev straight to S3 as Hive-partitioned parquet.
-
-For each (data_type, symbol, day): download the Tardis csv.gz to a temp dir, convert
-it to parquet with DuckDB (fast, multi-threaded), upload to
+"""Stream Binance-spot L2 from Tardis.dev straight to S3 as Hive-partitioned parquet,
+CONCURRENTLY. For each (data_type, symbol, day): download the Tardis csv.gz, convert it
+to parquet with DuckDB, upload to
 
     s3://<bucket>/<data_type>/symbol=<SYM>/year=<YYYY>/<YYYY-MM-DD>.parquet
 
-then delete the temp files. Idempotent (skips days already in S3 via HEAD), so a crash
-or Spot reclaim resumes cleanly. Local disk stays tiny (one symbol-day at a time), which
-is what lets the same script run on a laptop or a 30 GB EC2 box.
+then delete the temp files. Idempotent (skips days already in S3 via HEAD), so a crash or
+Spot reclaim resumes cleanly. A thread pool overlaps the network-bound download/upload with
+the CPU-bound convert; each worker has its own DuckDB connection, boto3 client, and asyncio
+loop (tardis_dev is async). Local disk stays tiny (one file per in-flight worker).
 
 Examples
-  # validate: two paid mid-month days (proves 2023+2025 plan coverage), BTC+ETH
-  python scripts/tardis_to_s3.py --bucket math199-l2-873750256216 \
-      --symbols BTCUSDT ETHUSDT --dates 2023-06-15 2025-06-15
-
-  # full 3-year pull, top-50 universe (run on EC2)
-  python scripts/tardis_to_s3.py --bucket math199-l2-873750256216 \
-      --symbols-file data/l2_universe_top50.txt --from 2023-01-01 --to 2025-12-31
+  python scripts/tardis_to_s3.py --bucket B --symbols BTCUSDT ETHUSDT --dates 2023-06-15 --workers 8
+  python scripts/tardis_to_s3.py --bucket B --symbols-file data/l2_universe_top50.txt \
+      --from 2023-01-01 --to 2025-12-31 --workers 10 --storage-class STANDARD_IA
 """
 from __future__ import annotations
 import argparse
+import asyncio
 import os
+import shutil
 import sys
-import time
 import tempfile
+import threading
+import time
+from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 import boto3
@@ -34,6 +35,7 @@ REPO = Path(__file__).resolve().parents[1]
 EXCHANGE = "binance"
 DATA_TYPES_DEFAULT = ["book_snapshot_25", "trades"]
 MAX_RETRIES, BACKOFF = 4, 5.0
+_local = threading.local()
 
 
 def load_api_key() -> str:
@@ -50,48 +52,58 @@ def load_api_key() -> str:
     return key
 
 
-def s3_key(data_type: str, symbol: str, day: str) -> str:
+def s3_key(data_type, symbol, day):
     return f"{data_type}/symbol={symbol}/year={day[:4]}/{day}.parquet"
 
 
-def exists(s3, bucket: str, key: str) -> bool:
-    try:
-        s3.head_object(Bucket=bucket, Key=key)
-        return True
-    except Exception:
-        return False
-
-
-def fetch_csv(data_type: str, symbol: str, day: str, api_key: str, tmp: Path) -> Path | None:
-    """Download one Tardis symbol-day csv.gz to tmp. Returns path, or None if no data."""
+def fetch_csv(data_type, symbol, day, api_key, tmp: Path):
     from tardis_dev import download_datasets
     dest = tmp / f"{data_type}_{symbol}_{day}.csv.gz"
     nxt = (pd.Timestamp(day) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            download_datasets(
-                exchange=EXCHANGE, data_types=[data_type], symbols=[symbol],
-                from_date=day, to_date=nxt, api_key=api_key,
-                download_dir=str(tmp), get_filename=lambda *_a, _n=dest.name, **_k: _n)
+            download_datasets(exchange=EXCHANGE, data_types=[data_type], symbols=[symbol],
+                              from_date=day, to_date=nxt, api_key=api_key,
+                              download_dir=str(tmp), get_filename=lambda *_a, _n=dest.name, **_k: _n)
             return dest if dest.exists() and dest.stat().st_size > 0 else None
-        except Exception as e:
+        except Exception:
             if attempt == MAX_RETRIES:
-                print(f"  FAIL {data_type}/{symbol}/{day}: {e}", flush=True)
                 return None
             time.sleep(BACKOFF * attempt)
     return None
 
 
-def to_parquet(con, csv_gz: Path, pq: Path) -> bool:
+def _init_worker(region):
+    asyncio.set_event_loop(asyncio.new_event_loop())   # tardis_dev is async; one loop per thread
+    _local.con = duckdb.connect()
+    _local.con.execute("PRAGMA threads=2")
+    _local.s3 = boto3.client("s3", region_name=region)
+
+
+def process_one(job, bucket, storage_class, api_key):
+    dt, sym, day = job
+    key = s3_key(dt, sym, day)
     try:
-        con.execute(
-            f"COPY (SELECT * FROM read_csv_auto('{csv_gz.as_posix()}', "
-            f"compression='gzip', sample_size=-1)) "
-            f"TO '{pq.as_posix()}' (FORMAT parquet, COMPRESSION zstd)")
-        return pq.exists() and pq.stat().st_size > 0
-    except Exception as e:
-        print(f"  CONVERT FAIL {csv_gz.name}: {e}", flush=True)
-        return False
+        _local.s3.head_object(Bucket=bucket, Key=key)
+        return "skip"
+    except Exception:
+        pass
+    tmpd = Path(tempfile.mkdtemp())
+    try:
+        csv = fetch_csv(dt, sym, day, api_key, tmpd)
+        if csv is None:
+            return "nodata"
+        pq = tmpd / "out.parquet"
+        try:
+            _local.con.execute(
+                f"COPY (SELECT * FROM read_csv_auto('{csv.as_posix()}', compression='gzip', "
+                f"sample_size=-1)) TO '{pq.as_posix()}' (FORMAT parquet, COMPRESSION zstd)")
+        except Exception:
+            return "convfail"
+        _local.s3.upload_file(str(pq), bucket, key, ExtraArgs={"StorageClass": storage_class})
+        return "ok"
+    finally:
+        shutil.rmtree(tmpd, ignore_errors=True)
 
 
 def main():
@@ -102,10 +114,10 @@ def main():
     ap.add_argument("--data-types", nargs="*", default=DATA_TYPES_DEFAULT)
     ap.add_argument("--from", dest="d_from")
     ap.add_argument("--to", dest="d_to")
-    ap.add_argument("--dates", nargs="*", help="explicit days instead of a --from/--to range")
+    ap.add_argument("--dates", nargs="*")
     ap.add_argument("--region", default="us-west-2")
-    ap.add_argument("--storage-class", default="STANDARD",
-                    help="STANDARD (instant, ~$18/mo per TB) or STANDARD_IA (cheaper store, small retrieval fee)")
+    ap.add_argument("--storage-class", default="STANDARD")
+    ap.add_argument("--workers", type=int, default=8)
     a = ap.parse_args()
 
     if a.symbols_file:
@@ -122,43 +134,26 @@ def main():
         sys.exit("need --dates or --from/--to")
 
     api_key = load_api_key()
-    s3 = boto3.client("s3", region_name=a.region)
-    con = duckdb.connect()
-    con.execute("PRAGMA threads=4")
+    # day-major job order: a contiguous window is queryable as soon as early days finish
+    jobs = [(dt, sym, day) for day in days for dt in a.data_types for sym in syms]
+    print(f"plan: {len(syms)} symbols x {len(days)} days x {len(a.data_types)} types = {len(jobs)} files "
+          f"-> s3://{a.bucket}  ({a.workers} workers)", flush=True)
 
-    total = len(days) * len(a.data_types) * len(syms)
-    print(f"plan: {len(syms)} symbols x {len(days)} days x {len(a.data_types)} types = {total} files "
-          f"-> s3://{a.bucket}", flush=True)
-    done = skipped = uploaded = nodata = 0
-    t0 = time.time()
-    with tempfile.TemporaryDirectory() as td:
-        tmp = Path(td)
-        # day-major so a contiguous window is queryable as soon as early days land
-        for day in days:
-            for dt in a.data_types:
-                for sym in syms:
-                    done += 1
-                    key = s3_key(dt, sym, day)
-                    if exists(s3, a.bucket, key):
-                        skipped += 1
-                        continue
-                    csv_gz = fetch_csv(dt, sym, day, api_key, tmp)
-                    if csv_gz is None:
-                        nodata += 1
-                        continue
-                    pq = tmp / f"{dt}_{sym}_{day}.parquet"
-                    if to_parquet(con, csv_gz, pq):
-                        s3.upload_file(str(pq), a.bucket, key,
-                                       ExtraArgs={"StorageClass": a.storage_class})
-                        uploaded += 1
-                        pq.unlink(missing_ok=True)
-                    csv_gz.unlink(missing_ok=True)
-                    if uploaded and uploaded % 25 == 0:
-                        rate = uploaded / max(1e-9, time.time() - t0)
-                        print(f"  {done}/{total} | uploaded {uploaded} skip {skipped} nodata {nodata} "
-                              f"| {rate:.2f} files/s", flush=True)
-    print(f"DONE: {done} processed, {uploaded} uploaded, {skipped} already present, "
-          f"{nodata} no-data, in {time.time()-t0:.0f}s", flush=True)
+    counts, t0 = Counter(), time.time()
+    with ThreadPoolExecutor(max_workers=a.workers, initializer=_init_worker, initargs=(a.region,)) as ex:
+        futs = [ex.submit(process_one, j, a.bucket, a.storage_class, api_key) for j in jobs]
+        for k, fut in enumerate(as_completed(futs), 1):
+            try:
+                counts[fut.result()] += 1
+            except Exception:
+                counts["error"] += 1
+            if k % 100 == 0:
+                rate = k / max(1e-9, time.time() - t0)
+                eta_h = (len(jobs) - k) / max(1e-9, rate) / 3600
+                print(f"  {k}/{len(jobs)} | ok {counts['ok']} skip {counts['skip']} "
+                      f"nodata {counts['nodata']} fail {counts['convfail']+counts['error']} "
+                      f"| {rate:.1f} files/s ETA {eta_h:.1f}h", flush=True)
+    print(f"DONE in {time.time()-t0:.0f}s: {dict(counts)}", flush=True)
 
 
 if __name__ == "__main__":

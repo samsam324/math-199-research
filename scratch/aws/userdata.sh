@@ -15,7 +15,7 @@ cat > /opt/run_pull.sh <<'RUN'
 export TARDIS_API_KEY=$(aws ssm get-parameter --name /tardis/api_key --with-decryption --query Parameter.Value --output text --region us-west-2)
 cd /opt/puller
 /opt/venv/bin/python3 tardis_to_s3.py --bucket math199-l2-873750256216 --symbols-file /opt/puller/universe.txt \
-   --from 2023-01-01 --to 2025-12-31 --storage-class STANDARD_IA --region us-west-2 >> /var/log/tardis-pull.log 2>&1
+   --from 2023-01-01 --to 2025-12-31 --storage-class STANDARD_IA --region us-west-2 --workers 10 >> /var/log/tardis-pull.log 2>&1
 shutdown -h now
 RUN
 chmod +x /opt/run_pull.sh
