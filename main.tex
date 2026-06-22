@@ -86,11 +86,13 @@ integrated error is transferred to the estimated state equation. Our contributio
 screen-level placebo audit of the specific Kalman dynamic hedge plus ADF pipeline that
 circulates in pairs trading practice (\cite{vidyamurthy2004pairs, elliott2005pairs,
 triantafyllopoulos2011dynamic}), with a positive control showing the screen cannot
-separate constructed cointegrated pairs from random walks. Second, we measure whether L2
-order book signals improve execution placement for crypto majors with $29{,}952$ simulated
-parent orders on event level Binance L2 data. They do not: aggressive crossing is cheapest
-across all four symbols, the signal correlates $+0.03$ with the per order advantage of posting over crossing, and a perfect foresight oracle would save $1.4$ bps so the opportunity exists
-but no contemporaneous feature forecasts it. Third, the candidate market neutral reversion
+separate constructed cointegrated pairs from random walks. Second, extending
+Schnaubelt's~\cite{schnaubelt2022rl} large-scale RL placement study on crypto L2, we run a
+specification-style test on a four-major basket (BTC, ETH, SOL, AVAX) with $29{,}952$ parent
+orders on event-level Binance L2 data in 2024. Aggressive crossing is cheapest across all
+four symbols, the signal correlates $+0.03$ with the per order advantage of posting over
+crossing, and a perfect foresight oracle bounds achievable savings at $1.4$ bps: the
+opportunity exists but no contemporaneous feature realizes it. Third, the candidate market neutral reversion
 strategy that emerges from the surviving structure clears honest accounting at a venue- and
 HAC adjusted monthly Sharpe near $1.0$, only without a stop, and a preregistered held out
 backtest of it inflates above the in sample number on uncostable microcap moves; our one
@@ -195,12 +197,24 @@ block shuffled placebos at the same near-$100\%$ rate as real pairs, and a posit
 control of constructed cointegrated pairs passes at the same rate as the random walk
 negative) is the contribution. The companion rolling $z$ result is a similarly
 screen-level placebo audit of a known induced-autocorrelation artifact.
-Second, the direct measurement of L2 execution value on crypto majors with $29{,}952$
-simulated parent orders, with a perfect foresight oracle as the upper bound, is, to our
-knowledge, the first such test for crypto. Third, the survivorship analysis on a
-point in time universe that includes the LUNA, UST, and FTT collapses, with the
-structural break circuit breaker preserving roughly $96\%$ of monthly Sharpe at the $8\%$/year
-breakage rate consistent with historical delistings, is also new to crypto pair spreads.
+Second, building on Schnaubelt~\cite{schnaubelt2022rl}, who shows that L2-aware
+reinforcement-learning placement can beat an always-cross immediate-market baseline on
+cryptocurrency pairs at much larger scale ($18$ months, $\sim$$3.5$M order book states), we
+run a complementary specification-style test on a four-major basket (BTC, ETH, SOL, AVAX)
+with $29{,}952$ parent orders on Binance 2024 L2 data. The contribution is narrower and
+twofold: a perfect-foresight oracle as an explicit upper bound, which bounds the
+achievable savings at $1.4$ bps, and a negative finding that no simple contemporaneous L2
+imbalance feature realizes that oracle gap (signal-vs-cross correlation $+0.03$). Third,
+we apply two ingredients jointly to crypto pair spreads: a point-in-time universe that
+respects the actual delisting dates of LUNA, UST, FTT, and LUNC (PIT and delisting-aware
+crypto cross-sections appear in Ammann, Burdorf, Liebi, and
+St\"ockl~\cite{ammann2022survivorship} and Liu, Tsyvinski, and Wu~\cite{liu2022common}),
+and a leg-level structural-break circuit breaker that halts a pair when one leg moves more
+than $50\%$ adversely (break-aware stops on equity pair spreads appear in Lu and
+Lai~\cite{lu2021structural}). The breaker preserves roughly $96\%$ of monthly Sharpe at an
+$8\%$/year breakage rate consistent with historical crypto delisting frequency. To our
+knowledge, this joint treatment on crypto pair spreads is new, though each ingredient has
+prior art in adjacent domains.
 
 % =====================================================================
 \section{Data and market setting}
@@ -849,6 +863,10 @@ where delisting risk concentrates, we cannot yet say.
 % =====================================================================
 \begin{thebibliography}{99}
 
+\bibitem{ammann2022survivorship}
+Ammann, M., Burdorf, T., Liebi, L.~J., \& St\"ockl, S. (2022). Survivorship and delisting bias
+in cryptocurrency markets. Working paper, University of St.~Gallen. SSRN~4287573.
+
 \bibitem{andersen2014vpin}
 Andersen, T.~G., \& Bondarenko, O. (2014). VPIN and the flash crash.
 \emph{Journal of Financial Markets}, 17, 1--46.
@@ -903,6 +921,10 @@ Krauss, C., Do, X.~A., \& Huck, N. (2017). Deep neural networks, gradient-booste
 random forests: statistical arbitrage on the S\&P~500. \emph{European Journal of
 Operational Research}, 259(2), 689--702.
 
+\bibitem{liu2022common}
+Liu, Y., Tsyvinski, A., \& Wu, X. (2022). Common risk factors in cryptocurrency.
+\emph{Journal of Finance}, 77(2), 1133--1177.
+
 \bibitem{kunsch1989block}
 K\"unsch, H.~R. (1989). The jackknife and the bootstrap for general stationary
 observations. \emph{Annals of Statistics}, 17(3), 1217--1241.
@@ -913,6 +935,10 @@ Kyle, A.~S. (1985). Continuous auctions and insider trading.
 
 \bibitem{lopezdeprado2018advances}
 L\'opez de Prado, M. (2018). \emph{Advances in Financial Machine Learning}. Wiley.
+
+\bibitem{lu2021structural}
+Lu, C.-Y., Lai, S.-C., et~al. (2021). Structural break-aware pairs trading strategy using
+deep reinforcement learning. \emph{Journal of Supercomputing}, 78, 3843--3882.
 
 \bibitem{makarov2020trading}
 Makarov, I., \& Schoar, A. (2020). Trading and arbitrage in cryptocurrency markets.
@@ -926,6 +952,10 @@ heteroskedasticity and autocorrelation consistent covariance matrix.
 \bibitem{saiddickey1984}
 Said, S.~E., \& Dickey, D.~A. (1984). Testing for unit roots in autoregressive-moving
 average models of unknown order. \emph{Biometrika}, 71(3), 599--607.
+
+\bibitem{schnaubelt2022rl}
+Schnaubelt, M. (2022). Deep reinforcement learning for the optimal placement of cryptocurrency
+limit orders. \emph{European Journal of Operational Research}, 296(3), 993--1006.
 
 \bibitem{stoikov2018microprice}
 Stoikov, S. (2018). The micro-price: a high-frequency estimator of future prices.
