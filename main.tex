@@ -42,7 +42,7 @@ only a few percent of pairs. A rolling $z$ score appears to generate a large rev
 but it reverts mechanically even on a pure random walk. Both artifacts hold at hourly,
 four hour, and daily frequencies. Once we benchmark against placebos, the structure that
 survives is either priced too fast to trade or too marginal to deploy. Order flow information in
-the Level 2 book decays within seconds. Reversion speed ranks pairs (Spearman $\rho = 0.46$), but
+the L2 book decays within seconds. Reversion speed ranks pairs (Spearman $\rho = 0.46$), but
 the ranking does not turn into profit. The one market neutral mean reversion book that clears
 honest accounting posts a HAC and venue adjusted monthly Sharpe near $1.0$,\footnote{All Sharpe
 figures in this paper are unit notional and capacity unbounded; impact is not modeled. See
@@ -245,7 +245,7 @@ domains as cited.
 
 The spread work uses hourly OHLCV for USDT spot pairs from the Binance.US API, stored locally,
 spanning 2021 through May 2026. The cross-exchange check pulls the same hours from Coinbase
-(USD quoted) for the overlapping majors. The microstructure work uses event-level Level 2 data
+(USD quoted) for the overlapping majors. The microstructure work uses event-level L2 data
 from Tardis: top-25 book snapshots and the trade tape for Binance.com (global) spot, the 50 most liquid USDT
 symbols, over 2024. We keep these separate on purpose, and note the venue gap: the spread strategy trades Binance.US, a
 much thinner venue, while the order flow null is measured on the deeper global book. The spread and
@@ -616,7 +616,7 @@ property (Section~\ref{sec:survivor}) is marginal at best.
 
 \subsection{Order flow at tradable horizons}
 
-We tested the order flow ideas on a 2024 sample of Binance Level 2 book and trade data: aggregate
+We tested the order flow ideas on a 2024 sample of Binance L2 book and trade data: aggregate
 book metrics on the top 50 USDT majors, and event level tests on four majors (BTC, ETH, SOL,
 AVAX) across days drawn from all twelve months, from Tardis. The book carries real,
 contemporaneous information about price formation, but none of it survives to a horizon you could
@@ -736,7 +736,7 @@ The one useful byproduct is a cost number. Walking the real book puts execution 
 to $23\%$ below the flat 5 bps slippage component the earlier backtests assumed. Cheaper costs do
 not rescue the strategy.
 
-The efficiency reading is scoped to the liquid core. The Level 2 tests cover top 50 aggregate book
+The efficiency reading is scoped to the liquid core. The L2 tests cover top 50 aggregate book
 metrics and four megacap symbols on the global venue. The thin Binance.US microcaps where the
 marginal reversion edge of Section~\ref{sec:survivor} lives are not in this sample. The two
 findings plausibly fit together, though across nonoverlapping samples rather than on one venue:
@@ -928,7 +928,7 @@ complete point-in-time universe of every delisted coin is still beyond our data.
 across the whole project. The preregistered test of Section~\ref{sec:survivor} covers one
 configuration but cannot undo the selection that produced it, so the deflated Sharpe caution
 stands.
-\item \emph{Microstructure coverage.} The event-level Level 2 tests use four symbols (BTC, ETH,
+\item \emph{Microstructure coverage.} The event-level L2 tests use four symbols (BTC, ETH,
 SOL, AVAX) over days sampled across 2024, not a continuous year on the full universe. The
 aggregate book metrics use the top 50. The execution and impact results are four symbol.
 \item \emph{Single venue and quote.} The spread results are Binance.US, USDT quoted, with a
@@ -991,7 +991,7 @@ $50\%$ circuit-breaker sensitivity sweep (Section~\ref{sec:survivor}) is in
 \texttt{scratch/threshold\_sweep.py}; the survivorship analysis with delisted coins is in
 \texttt{scratch/t2\_survivorship\_rerun.py} and \texttt{t2\_worstcase.py}; the L2 execution
 test (Table~\ref{tab:exec}) is in \texttt{scratch/exec\_value\_2024.py}. The figures in
-this paper were produced by \texttt{scratch/make\_figures\_v2.py}. The Level 2 dataset
+this paper were produced by \texttt{scratch/make\_figures\_v2.py}. The L2 dataset
 (Tardis Binance.com 2024) is in S3; query helpers are in
 \texttt{scripts/l2\_query.py} and a presigned-link generator is in
 \texttt{scripts/presign.py}. All stochastic procedures (the $200$ random-walk surrogates,
