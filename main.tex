@@ -80,13 +80,18 @@ per event reversion of $+0.98z$ to $+1.61z$ across hourly, four hour, and daily 
 and a Sharpe near $2.2$ on random pair placebos against $4.75$ on the actual data. The
 underlying mechanisms are known: a well specified Kalman filter has white steady state
 innovations~\cite{harvey1989structural}, rolling mean demeaning induces negative
-autocorrelation, and Ero\u{g}lu, Miller, and Yi\u{g}it~\cite{eroglu2022tvc} show that
-time-varying-parameter Kalman models are vulnerable to spurious regression because the
-integrated error is transferred to the estimated state equation. Our contribution is the
-screen-level placebo audit of the specific Kalman dynamic hedge plus ADF pipeline that
-circulates in pairs trading practice (\cite{vidyamurthy2004pairs, elliott2005pairs,
+autocorrelation~\cite{working1960correlation, cochrane1988random}, and Ero\u{g}lu, Miller,
+and Yi\u{g}it~\cite{eroglu2022tvc} show that time-varying-parameter Kalman models are
+vulnerable to spurious regression because the integrated error is transferred to the
+estimated state equation. Our contribution is the screen-level placebo audit: for the
+Kalman ADF screen, on the Kalman dynamic hedge plus ADF pipeline that circulates in pairs
+trading practice (\cite{vidyamurthy2004pairs, elliott2005pairs,
 triantafyllopoulos2011dynamic}), with a positive control showing the screen cannot
-separate constructed cointegrated pairs from random walks. Second, extending
+separate constructed cointegrated pairs from random walks; and for the rolling $z$ rule,
+the random-real-pairs bootstrap of Gatev, Goetzmann, and
+Rouwenhorst~\cite{gatev2006pairs} is the closest prior precedent, extended here to
+synthetic random-walk and phase-randomized nulls with per-event reversion magnitudes
+reported in $z$-units. Second, extending
 Schnaubelt's~\cite{schnaubelt2022rl} large-scale RL placement study on crypto L2, we run a
 specification-style test on a four-major basket (BTC, ETH, SOL, AVAX) with $29{,}952$ parent
 orders on event-level Binance L2 data in 2024. Aggressive crossing is cheapest across all
@@ -196,7 +201,12 @@ specific Kalman-plus-ADF tradability filter passes random walk, phase randomized
 block shuffled placebos at the same near-$100\%$ rate as real pairs, and a positive
 control of constructed cointegrated pairs passes at the same rate as the random walk
 negative) is the contribution. The companion rolling $z$ result is a similarly
-screen-level placebo audit of a known induced-autocorrelation artifact.
+screen-level placebo audit of a known induced-autocorrelation
+artifact~\cite{working1960correlation, cochrane1988random}; the closest prior precedent is
+the random-real-pairs bootstrap of Gatev, Goetzmann, and Rouwenhorst~\cite{gatev2006pairs},
+and our extension is the specific combination of synthetic random-walk and phase-randomized
+nulls applied to a rolling-window $z$-score screen with per-event reversion magnitudes
+reported in $z$-units.
 Second, building on Schnaubelt~\cite{schnaubelt2022rl}, who shows that L2-aware
 reinforcement-learning placement can beat an always-cross immediate-market baseline on
 cryptocurrency pairs at much larger scale ($18$ months, $\sim$$3.5$M order book states), we
@@ -454,8 +464,11 @@ produced a large reversion edge.
 The edge is mechanical. Subtracting a trailing mean from any series, including a pure random
 walk, manufactures mean reversion, because the trailing mean chases the level and the deviation
 from it cannot wander as freely as the raw series. Demeaning by a trailing window of length $L$
-induces negative autocorrelation of order $1/L$ in the result, a known bias, so the floor is
-calculable rather than fitted. A random walk has no mean to revert to, yet
+induces negative autocorrelation of order $1/L$ in the result. This is the time-aggregation
+bias documented by Working~\cite{working1960correlation}: first differences of moving
+averages of a random chain are spuriously correlated even when the underlying chain is not.
+Cochrane~\cite{cochrane1988random}'s variance-ratio analysis of GNP gives the same lesson
+from the persistence side. The floor is therefore calculable rather than fitted. A random walk has no mean to revert to, yet
 a rolling $z$ score on one still reverts.
 
 We measured the mechanical floor two ways, and both are large. Per $|z|>2$ event, the signed
@@ -880,6 +893,10 @@ Management}, 40(5), 94--107.
 Brauneis, A., \& Mestel, R. (2018). Price discovery of cryptocurrencies: Bitcoin and beyond.
 \emph{Economics Letters}, 165, 58--61.
 
+\bibitem{cochrane1988random}
+Cochrane, J.~H. (1988). How big is the random walk in GNP? \emph{Journal of Political
+Economy}, 96(5), 893--920.
+
 \bibitem{contkukanovstoikov2014}
 Cont, R., Kukanov, A., \& Stoikov, S. (2014). The price impact of order book events.
 \emph{Journal of Financial Econometrics}, 12(1), 47--88.
@@ -975,6 +992,10 @@ Wiley Finance.
 \bibitem{wei2018liquidity}
 Wei, W.~C. (2018). Liquidity and market efficiency in cryptocurrencies.
 \emph{Economics Letters}, 168, 21--24.
+
+\bibitem{working1960correlation}
+Working, H. (1960). Note on the correlation of first differences of averages in a random
+chain. \emph{Econometrica}, 28(4), 916--918.
 
 \end{thebibliography}
 
