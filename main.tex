@@ -78,11 +78,15 @@ same rate as the random walk negative: the screen carries no information about
 cointegration. A rolling $z$ score reverts mechanically on pure random walks, producing
 per event reversion of $+0.98z$ to $+1.61z$ across hourly, four hour, and daily frequencies
 and a Sharpe near $2.2$ on random pair placebos against $4.75$ on the actual data. The
-underlying mechanisms (that a well specified Kalman filter has white steady state
-innovations~\cite{harvey1989structural} and that rolling mean demeaning induces negative
-autocorrelation) are textbook. The matched placebo demonstration applied to the
-cointegration screen tradition~\cite{vidyamurthy2004pairs, elliott2005pairs,
-triantafyllopoulos2011dynamic} is, to our knowledge, new. Second, we measure whether L2
+underlying mechanisms are known: a well specified Kalman filter has white steady state
+innovations~\cite{harvey1989structural}, rolling mean demeaning induces negative
+autocorrelation, and Ero\u{g}lu, Miller, and Yi\u{g}it~\cite{eroglu2022tvc} show that
+time-varying-parameter Kalman models are vulnerable to spurious regression because the
+integrated error is transferred to the estimated state equation. Our contribution is the
+screen-level placebo audit of the specific Kalman dynamic hedge plus ADF pipeline that
+circulates in pairs trading practice (\cite{vidyamurthy2004pairs, elliott2005pairs,
+triantafyllopoulos2011dynamic}), with a positive control showing the screen cannot
+separate constructed cointegrated pairs from random walks. Second, we measure whether L2
 order book signals improve execution placement for crypto majors with $29{,}952$ simulated
 parent orders on event level Binance L2 data. They do not: aggressive crossing is cheapest
 across all four symbols, the signal correlates $+0.03$ with the per order advantage of posting over crossing, and a perfect foresight oracle would save $1.4$ bps so the opportunity exists
@@ -122,8 +126,14 @@ online estimation, which is essentially the Kalman dynamic hedge we run. The dis
 alternative of Gatev, Goetzmann, and Rouwenhorst~\cite{gatev2006pairs} is the standard
 benchmark.
 Harvey's classical state space text~\cite{harvey1989structural} states the steady state
-whitening property we exploit, but the connection to downstream cointegration screening is
-not drawn there.
+whitening property we exploit. The closest econometric prior is Ero\u{g}lu, Miller, and
+Yi\u{g}it~\cite{eroglu2022tvc}, who show that time-varying-parameter Kalman cointegration
+models suffer from spurious regression because the integrated error is transferred to the
+estimated state equation; they propose corrections at the cointegrating-vector level. Our
+paper applies the consequence of that finding at the screen level: the specific
+Kalman-plus-ADF pipeline used as a tradability filter cannot discriminate cointegrated
+pairs from random walks, and we document this empirically with matched placebos and a
+positive control.
 
 \subsection{Microstructure and order flow}
 \label{sec:related-micro}
@@ -175,14 +185,16 @@ survive to a tradable horizon.
 \subsection{What is new here}
 \label{sec:related-novelty}
 
-Three things in this paper are not in the literatures above. First, the matched placebo
-audit of two standard cointegration screens (the result that an ADF test on Kalman
-innovations and a rolling $z$ score on a residual pass random walk, phase randomized, and
-block shuffled placebos at the same rate as real pairs, and the positive control showing
-the Kalman screen cannot separate cointegrated from random walk data) is, to our
-knowledge, new. The underlying mechanisms (filter innovation whitening, rolling mean
-demeaning) are textbook; the placebo audit applied to the cointegration screen tradition
-(\cite{vidyamurthy2004pairs, elliott2005pairs, triantafyllopoulos2011dynamic}) is not.
+Three things in this paper are not in the literatures above. First, the screen-level
+placebo audit of the Kalman dynamic hedge plus ADF cointegration pipeline. The mechanism
+that drives our finding (QMLE Kalman absorbing integrated error into the time-varying
+state estimate) is documented at the cointegrating-vector level by Ero\u{g}lu, Miller,
+and Yi\u{g}it~\cite{eroglu2022tvc}; the screen-level empirical consequence we report (the
+specific Kalman-plus-ADF tradability filter passes random walk, phase randomized, and
+block shuffled placebos at the same near-$100\%$ rate as real pairs, and a positive
+control of constructed cointegrated pairs passes at the same rate as the random walk
+negative) is the contribution. The companion rolling $z$ result is a similarly
+screen-level placebo audit of a known induced-autocorrelation artifact.
 Second, the direct measurement of L2 execution value on crypto majors with $29{,}952$
 simulated parent orders, with a perfect foresight oracle as the upper bound, is, to our
 knowledge, the first such test for crypto. Third, the survivorship analysis on a
@@ -255,10 +267,37 @@ about $3\%$ of pairs. The contrast looked decisive.
 The contrast measures the filter, though, and says almost nothing about the pair. A Kalman filter with nonzero process noise
 adapts its hedge ratio to track whatever relationship is present. Its innovations are then
 driven toward whiteness, exactly white only for a correctly specified filter at steady state,
-and approximately so here on the frozen parameter test window~\cite{harvey1989structural}. An ADF test on a nearly white
+and approximately so here on the frozen parameter test window~\cite{harvey1989structural}. This
+is a screen-level instance of the spurious-regression-in-Kalman-TVP mechanism documented by
+Ero\u{g}lu, Miller, and Yi\u{g}it~\cite{eroglu2022tvc}: when the model is estimated by
+quasi-maximum likelihood, the integrated component of the pair is absorbed into the
+time-varying state estimate, leaving stationary innovations regardless of whether the
+underlying processes are cointegrated. An ADF test on a nearly white
 series rejects the unit root almost always, whether or not the two assets are cointegrated. Running
 that test on a filter's own innovations is close to circular. The real evidence is in the controls
 below, which show that even genuinely cointegrated pairs look like random walks under this screen.
+
+We can state the screen-level consequence formally:
+
+\begin{quote}
+\textbf{Proposition (screen-level corollary of \cite{eroglu2022tvc}).}
+\emph{Let $y_t$ and $x_t$ be $I(1)$ processes, cointegrated or not. Fit a Kalman
+dynamic-hedge model $y_t = \alpha_t + \beta_t x_t + v_t$ with non-degenerate state-evolution
+covariance $Q$ by quasi-maximum likelihood on a training window, then forward-roll the
+filter with frozen parameters on a test window of length $T$. Then the test-window
+one-step innovations $\{e_t\}$ are asymptotically stationary, and an augmented
+Dickey-Fuller test on $\{e_t\}$ rejects the unit root with probability tending to $1$
+as $T \to \infty$.}
+
+\emph{Sketch.} The QMLE pseudo-true $(Q^\star, R^\star)$ drives the recursive state
+updates to absorb the integrated component of $y_t - \beta_t x_t$ into the state estimate
+$\hat\beta_t$~\cite{eroglu2022tvc, harvey1989structural}, leaving stationary
+innovations. Standard ADF asymptotics~\cite{saiddickey1984} then give rejection
+probability $\to 1$ against the stationary alternative.
+\end{quote}
+
+The proposition makes precise why the screen carries no cointegration information. The
+empirical demonstration is below.
 An earlier draft of this project defended the result on the grounds that the
 parameters were fit on training data only and never refit on test. That defense misses the
 mechanism. The whitening holds out of sample too, because the filter keeps adapting on the
@@ -838,6 +877,10 @@ Elliott, R.~J., van der Hoek, J., \& Malcolm, W.~P. (2005). Pairs trading.
 \bibitem{engle1987cointegration}
 Engle, R.~F., \& Granger, C.~W.~J. (1987). Co-integration and error correction:
 representation, estimation, and testing. \emph{Econometrica}, 55(2), 251--276.
+
+\bibitem{eroglu2022tvc}
+Ero\u{g}lu, B.~A., Miller, J.~I., \& Yi\u{g}it, T. (2022). Time-varying cointegration and
+the Kalman filter. \emph{Econometric Reviews}, 41(1), 1--21.
 
 \bibitem{fil2020pairs}
 Fil, M., \& Kristoufek, L. (2020). Pairs trading in cryptocurrency markets.
