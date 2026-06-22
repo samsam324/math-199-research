@@ -48,7 +48,7 @@ honest accounting posts a HAC- and venue-adjusted monthly Sharpe near $1.0$, and
 stop and only as a multiweek hold. That $1.0$ is an
 exploratory, post-hoc estimate that was never preregistered, and our preregistered test gives a
 confidence interval spanning zero, so we claim no significant tradable edge. We read this as evidence that the
-liquid core of crypto pair spreads is efficient. The methodological takeaway is simpler: do not
+liquid core of crypto pair spreads is efficient. The methodological lesson is simpler: do not
 trust a cointegration or $z$ score screen until you have shown it fails on a matched placebo.
 \end{abstract}
 
@@ -68,8 +68,7 @@ with a continuously traded market and a rapidly changing set of listed coins. Ou
 relationships exist in crypto, ``as a way of gaining a deeper understanding of market efficiency
 and information flow.'' This paper answers that question, and the answer is mostly negative.
 
-We make three contributions, and we are explicit about which are new and which are
-replication. First, two standard pair screening tools manufacture the appearance of
+We claim three contributions, each bounded against prior work as cited. First, two standard pair screening tools manufacture the appearance of
 structure on data that cannot carry it. A Kalman dynamic hedge cointegration test passes
 random walk, phase-randomized, and block-shuffled placebos at the same near-$100\%$ rate it
 passes real pairs, and a positive control of constructed cointegrated pairs passes at the
@@ -100,15 +99,15 @@ opportunity exists but no contemporaneous feature realizes it. Third, the candid
 strategy that emerges from the surviving structure clears honest accounting at a venue- and
 HAC adjusted monthly Sharpe near $1.0$, only without a stop, and a preregistered held-out
 backtest of it inflates above the in-sample number on uncostable microcap moves; our one
-surviving result ends up cutting against itself. The takeaway is the methodological one:
-trust a cointegration or mean reversion screen only after it fails on a placebo built to
-reproduce the claim if the claim is mechanical.
+surviving result ends up cutting against itself. The methodological lesson is the one
+that holds across all three: trust a cointegration or mean reversion screen only after it
+fails on a placebo built to reproduce the claim if the claim is mechanical.
 
 The backtest-overfitting
 literature~\cite{bailey2014dsr} stress tests the strategy you finally pick;
 the screen you used to build the spread needs the same scrutiny.
 
-For the avoidance of doubt: our three contributions are bounded as follows. The Kalman screen
+To restate the scope. The Kalman screen
 mechanism is from Ero\u{g}lu, Miller, and Yi\u{g}it~\cite{eroglu2022tvc} and our extension is
 the screen-level placebo audit and the positive control. The L2 execution test extends
 Schnaubelt~\cite{schnaubelt2022rl} with an oracle bound and a null result on a smaller
@@ -198,7 +197,7 @@ data predicts at sub-second horizons, which is shorter than our hourly bars and 
 with our finding that L2 order flow information decays within $30$ seconds and does not
 survive to a tradable horizon.
 
-\subsection{What is new here}
+\subsection{Position relative to prior work}
 \label{sec:related-novelty}
 
 Each of this paper's three contributions is bounded against prior art. We list what we add
@@ -539,13 +538,13 @@ lesson the backtest-overfitting literature draws for strategy selection~\cite{ba
 the screens that build the spread.
 
 % =====================================================================
-\section{What is real but not tradable}
+\section{Real but untradable structure}
 \label{sec:real}
 
 Strip the two artifacts and some genuine structure remains. None of it is tradable. Either the market prices it faster than anyone could act on it, or it is a
 statistical regularity that does not turn into money. We take the clearest case of each.
 
-\subsection{Reversion speed ranks pairs but does not pay}
+\subsection{Reversion-speed persistence}
 
 Mean reversion persists out-of-sample even though cointegration does not. Across nine disjoint
 walk forward splits (six month train, three-month test), a pair's in-sample OU reversion speed (Appendix~\ref{app:ou})
@@ -573,7 +572,7 @@ Ranking pairs by reversion speed tells you where reversion lives, but not whethe
 money on it. Extracting the edge after costs is a separate question, and the strategy built on the
 property (Section~\ref{sec:survivor}) is marginal at best.
 
-\subsection{Order flow is informative, but priced within seconds}
+\subsection{Order flow at tradable horizons}
 
 We tested the order flow ideas on a 2024 sample of Binance Level 2 book and trade data: aggregate
 book metrics on the top 50 USDT majors, and event level tests on four majors (BTC, ETH, SOL,
@@ -703,7 +702,7 @@ the majors we can measure are efficient, and the names with an apparent edge are
 We did not measure the microcaps' microstructure directly, so the join is an inference.
 
 % =====================================================================
-\section{The marginal survivor}
+\section{A marginal survivor}
 \label{sec:survivor}
 
 One strategy survives, but only barely. There is a real, market-neutral,
@@ -711,7 +710,7 @@ diversified mean-reversion effect in crypto pair spreads. Its tradable magnitude
 exists only without a stop, and a literal backtest of it inflates spectacularly. We start with the
 limits, since they matter more than the headline number.
 
-\subsection{The effect is real and market-neutral}
+\subsection{Construction and market-neutrality}
 
 Selecting pairs by reversion speed and holding the spread to convergence, with a static
 train window hedge and $z$ score (not the rolling $z$ of Section~\ref{sec:rollingz}), produces a
@@ -721,7 +720,7 @@ hidden factor bet. It replicates on an independent exchange (Coinbase, USD quote
 from-scratch reimplementations that share none of our pipeline, none of which found look ahead,
 so the effect is not a coding artifact.
 
-\subsection{It exists only without a stop}
+\subsection{Sensitivity to the exit rule}
 
 The exit rule decides the sign of the P\&L. With a conventional $|z| = 4$ stop the strategy loses
 (Sharpe $-2.25$), and the stop is the cause: it realizes losses on spreads that then revert.
@@ -730,7 +729,7 @@ build an hourly strategy with tight risk management. This is the opposite: a pat
 never closes on a stop, with a median hold near 35 days, in which $78\%$ of positions do not converge within a quarter and
 about a third of the return is a generic survivor comovement floor.
 
-\subsection{The magnitude is uncertain, and a literal backtest inflates it}
+\subsection{Magnitude and the preregistered held-out test}
 
 The naive Binance Sharpe was first reported near $2.5$, and four independent reimplementations put
 it at $2.0$ to $2.2$. Neither is the honest figure. Month long holds make hourly returns heavily
@@ -805,7 +804,7 @@ hourly-annualized series where HAC at lag $240$ is well-defined. Either way, the
 confirms the inflation and gives no significant evidence for a deployable edge. The $\sim 1.0$ figure is itself exploratory, adjusted for HAC and
 venue after the search, and was never preregistered.
 
-\subsection{What would have to be true}
+\subsection{Conditions for deployability}
 
 The effect is also selection sensitive and survivorship fragile. A deflated Sharpe correction
 (Section~\ref{sec:methods}) survives the no-stop family of configurations but fails the whole
@@ -875,26 +874,26 @@ Five limitations bound these results, and the survivorship gap is the one most l
 the conclusion.
 
 \begin{itemize}
-\item \textbf{Survivorship.} The local store holds currently listed symbols, so most delisted
+\item \emph{Survivorship.} The local store holds currently listed symbols, so most delisted
 coins are absent. The surviving strategy's robustness rests on the selector avoiding coins that
 later delist. Forced to hold through three real collapses (Section~\ref{sec:survivor}) the no stop
 loss runs $-117\%$ to $-258\%$ per-pair and the circuit breaker caps it near $-65\%$ to $-91\%$. A
 complete point-in-time universe of every delisted coin is still beyond our data.
-\item \textbf{Selection.} No single configuration was fixed before the search and evaluated once
+\item \emph{Selection.} No single configuration was fixed before the search and evaluated once
 across the whole project. The preregistered test of Section~\ref{sec:survivor} covers one
 configuration but cannot undo the selection that produced it, so the deflated Sharpe caution
 stands.
-\item \textbf{Microstructure coverage.} The event-level Level 2 tests use four symbols (BTC, ETH,
+\item \emph{Microstructure coverage.} The event-level Level 2 tests use four symbols (BTC, ETH,
 SOL, AVAX) over days sampled across 2024, not a continuous year on the full universe. The
 aggregate book metrics use the top 50. The execution and impact results are four symbol.
-\item \textbf{Single venue and quote.} The spread results are Binance.US, USDT quoted, with a
+\item \emph{Single venue and quote.} The spread results are Binance.US, USDT quoted, with a
 Coinbase USD-quoted cross check on the overlapping liquid majors. The microstructure is
 Binance.com (global) spot. The cross-check is not a same-instrument replication: USD-quoted
 Coinbase pairs have a different participant base, different fee schedule, and different
 microstructure from USDT-quoted Binance.US pairs, so part of the Coinbase-Binance Sharpe
 gap is venue and quote currency rather than overfitting. We have not tested other quote
 currencies or a broader set of venues.
-\item \textbf{Costs and capacity.} Costs are a flat per-leg charge. We do not model market impact
+\item \emph{Costs and capacity.} Costs are a flat per-leg charge. We do not model market impact
 or capacity, which is exactly what inflates the held-out microcap backtest of
 Section~\ref{sec:survivor}.
 \end{itemize}
@@ -909,7 +908,7 @@ only the next few seconds, a horizon no one can trade. The one market-neutral re
 that survives is real but marginal, stop sensitive, and selection sensitive, and a literal
 backtest of it inflates on costs it does not model.
 
-The takeaway is a methodological habit more than a tradable strategy. Trust a cointegration or
+The lesson is a methodological habit rather than a tradable strategy. Trust a cointegration or
 mean reversion screen only after you have shown it fails on a matched placebo built to reproduce
 the claim if the claim is mechanical. For crypto the evidence points to microstructure efficiency in the liquid majors at
 tradable horizons: the information is real, and the market has already priced it.
