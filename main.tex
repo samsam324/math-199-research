@@ -6,7 +6,7 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{graphicx}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 
 % Placeholder box for figures whose source data lives on the Windows machine
@@ -21,11 +21,10 @@
   }}%
 }
 
-\title{Screening artifacts in cryptocurrency pair spreads:\\
-why Kalman cointegration tests pass random walks,\\
-and what survives once they don't}
+\title{Cryptocurrency pair spreads:\\
+a screening-artifact audit and the marginal survivor}
 \author{Jack Lutz \and Sammy Adham \and Frank Kronewitter}
-\date{\today}
+\date{\today\\[0.4em]\small Advisor: Mihai Cucuringu}
 
 \begin{document}
 
@@ -35,19 +34,19 @@ and what survives once they don't}
 We set out to build a profitable statistical arbitrage strategy on hourly cryptocurrency
 pair spreads. It did not work, and this paper is mostly about why.
 Two screens that appear to find strong, tradable structure are statistical artifacts. A
-Kalman dynamic hedge ratio appears to produce stationary, mean reverting spreads for nearly
+Kalman dynamic hedge ratio appears to produce stationary, mean-reverting spreads for nearly
 the entire liquid universe, but it runs a stationarity test on a filter's own innovations,
 which are white by construction. Placebos that cannot be cointegrated pass the same screen at
-the same nearly $100\%$ rate, while a clean test finds genuine out of sample cointegration in
+the same nearly $100\%$ rate, while a clean test finds genuine out-of-sample cointegration in
 only a few percent of pairs. A rolling $z$ score appears to generate a large reversion edge,
 but it reverts mechanically even on a pure random walk. Both artifacts hold at hourly,
-four hour, and daily frequencies. Once we benchmark against placebos, the structure that
+four-hour, and daily frequencies. Once we benchmark against placebos, the structure that
 survives is either priced too fast to trade or too marginal to deploy. Order flow information in
 the Level 2 book decays within seconds. Reversion speed ranks pairs (Spearman $\rho = 0.46$), but
-the ranking does not turn into profit. The one market neutral mean reversion book that clears
-honest accounting posts a HAC and venue adjusted monthly Sharpe near $1.0$, and only without a
+the ranking does not turn into profit. The one market-neutral mean-reversion book that clears
+honest accounting posts a HAC- and venue-adjusted monthly Sharpe near $1.0$, and only without a
 stop and only as a multiweek hold. That $1.0$ is an
-exploratory, post hoc estimate that was never preregistered, and our preregistered test gives a
+exploratory, post-hoc estimate that was never preregistered, and our preregistered test gives a
 confidence interval spanning zero, so we claim no significant tradable edge. We read this as evidence that the
 liquid core of crypto pair spreads is efficient. The methodological takeaway is simpler: do not
 trust a cointegration or $z$ score screen until you have shown it fails on a matched placebo.
@@ -65,19 +64,19 @@ to trade once costs and selection are counted.
 The project began in the pairs trading tradition of Gatev, Goetzmann, and
 Rouwenhorst~\cite{gatev2006pairs}: find two assets whose prices hold a stable relationship, trade the
 spread when it deviates, and collect the reversion. Cryptocurrency is a natural place to look,
-with a continuously traded market and a rapidly changing set of listed coins. Our proposal was noncommittal about profit from the start. It framed the goal as quantifying whether stable mean reverting
+with a continuously traded market and a rapidly changing set of listed coins. Our proposal was noncommittal about profit from the start. It framed the goal as quantifying whether stable mean-reverting
 relationships exist in crypto, ``as a way of gaining a deeper understanding of market efficiency
 and information flow.'' This paper answers that question, and the answer is mostly negative.
 
 We make three contributions, and we are explicit about which are new and which are
 replication. First, two standard pair screening tools manufacture the appearance of
 structure on data that cannot carry it. A Kalman dynamic hedge cointegration test passes
-random walk, phase randomized, and block shuffled placebos at the same near-$100\%$ rate it
+random walk, phase-randomized, and block-shuffled placebos at the same near-$100\%$ rate it
 passes real pairs, and a positive control of constructed cointegrated pairs passes at the
-same rate as the random walk negative: the screen carries no information about
+same rate as the random-walk negative: the screen carries no information about
 cointegration. A rolling $z$ score reverts mechanically on pure random walks, producing
-per event reversion of $+0.98z$ to $+1.61z$ across hourly, four hour, and daily frequencies
-and a Sharpe near $2.2$ on random pair placebos against $4.75$ on the actual data. The
+per-event reversion of $+0.98z$ to $+1.61z$ across hourly, four-hour, and daily frequencies
+and a Sharpe near $2.2$ on random-pair placebos against $4.75$ on the actual data. The
 underlying mechanisms are known: a well specified Kalman filter has white steady state
 innovations~\cite{harvey1989structural}, rolling mean demeaning induces negative
 autocorrelation~\cite{working1960correlation, cochrane1988random}, and Ero\u{g}lu, Miller,
@@ -95,19 +94,29 @@ reported in $z$-units. Second, extending
 Schnaubelt's~\cite{schnaubelt2022rl} large-scale RL placement study on crypto L2, we run a
 specification-style test on a four-major basket (BTC, ETH, SOL, AVAX) with $29{,}952$ parent
 orders on event-level Binance L2 data in 2024. Aggressive crossing is cheapest across all
-four symbols, the signal correlates $+0.03$ with the per order advantage of posting over
+four symbols, the signal correlates $+0.03$ with the per-order advantage of posting over
 crossing, and a perfect foresight oracle bounds achievable savings at $1.4$ bps: the
-opportunity exists but no contemporaneous feature realizes it. Third, the candidate market neutral reversion
+opportunity exists but no contemporaneous feature realizes it. Third, the candidate market-neutral reversion
 strategy that emerges from the surviving structure clears honest accounting at a venue- and
-HAC adjusted monthly Sharpe near $1.0$, only without a stop, and a preregistered held out
-backtest of it inflates above the in sample number on uncostable microcap moves; our one
+HAC adjusted monthly Sharpe near $1.0$, only without a stop, and a preregistered held-out
+backtest of it inflates above the in-sample number on uncostable microcap moves; our one
 surviving result ends up cutting against itself. The takeaway is the methodological one:
 trust a cointegration or mean reversion screen only after it fails on a placebo built to
 reproduce the claim if the claim is mechanical.
 
-The backtest overfitting
+The backtest-overfitting
 literature~\cite{bailey2014dsr} stress tests the strategy you finally pick;
 the screen you used to build the spread needs the same scrutiny.
+
+For the avoidance of doubt: our three contributions are bounded as follows. The Kalman screen
+mechanism is from Ero\u{g}lu, Miller, and Yi\u{g}it~\cite{eroglu2022tvc} and our extension is
+the screen-level placebo audit and the positive control. The L2 execution test extends
+Schnaubelt~\cite{schnaubelt2022rl} with an oracle bound and a null result on a smaller
+basket. The survivorship analysis combines point-in-time crypto cross-sections (Ammann,
+Burdorf, Liebi, and St\"ockl~\cite{ammann2022survivorship}; Liu, Tsyvinski, and
+Wu~\cite{liu2022common}) with a leg-level break-aware stop (Lu and
+Lai~\cite{lu2021structural}) and asks the joint question for crypto pair spreads. None of
+the three is unconditional novelty; each is a deliberate addition on top of cited prior work.
 
 % =====================================================================
 \section{Related work}
@@ -148,11 +157,11 @@ positive control.
 The information content of order flow is the central object of classical microstructure,
 beginning with Kyle~\cite{kyle1985continuous} on the linear price impact of informed
 trading. Hasbrouck~\cite{hasbrouck1991measuring} introduces the permanent versus transient
-decomposition of trade impact, which we use to interpret the seconds scale half life we
-observe. The event time order flow imbalance of Cont, Kukanov, and
-Stoikov~\cite{contkukanovstoikov2014} predicts subsecond mid moves nearly linearly on
+decomposition of trade impact, which we use to interpret the seconds-scale half-life we
+observe. The event-time order flow imbalance of Cont, Kukanov, and
+Stoikov~\cite{contkukanovstoikov2014} predicts sub-second mid moves nearly linearly on
 equities; we replicate this on Binance L2 in 2024 for BTC, ETH, SOL, and AVAX. We use the
-size weighted microprice of Stoikov~\cite{stoikov2018microprice} as our regression target.
+size-weighted microprice of Stoikov~\cite{stoikov2018microprice} as our regression target.
 The toxicity program of Easley, L\'opez de Prado, and O'Hara~\cite{easley2012vpin} is the
 natural place to look for a tradable order flow signal at longer horizons, but Andersen and
 Bondarenko~\cite{andersen2014vpin} show its predictive content is largely mechanical and
@@ -163,14 +172,14 @@ critique.
 \label{sec:related-crypto}
 
 The crypto efficiency literature has converged on a picture our results are consistent
-with: the most traded coins on the most traded venues look weak form efficient, while
+with: the most-traded coins on the most-traded venues look weak-form efficient, while
 thinner segments do not. Urquhart's~\cite{urquhart2016inefficiency} original Bitcoin tests
 rejected EMH on early daily data but already noted the second half of the sample looked
 tighter. Wei~\cite{wei2018liquidity} shows on 456 coins that return predictability and
 Hurst persistence collapse with liquidity, and Brauneis and Mestel~\cite{brauneis2018price}
 replicate the link across 73 coins and eight tests. Makarov and
-Schoar~\cite{makarov2020trading} show that persistent cross exchange price gaps survive
-transaction costs and are best explained by capital control and credit frictions, which
+Schoar~\cite{makarov2020trading} show that persistent cross-exchange price gaps survive
+transaction costs and are best explained by capital-control and credit frictions, which
 mirrors why our Coinbase adjusted Sharpe sits below the Binance.US figure. The closest
 prior on crypto pairs is Fil and Kristoufek~\cite{fil2020pairs}, who find that most
 strategies underperform their benchmarks once costs are realistic; our honest accounting
@@ -184,21 +193,22 @@ trees, and random forests to S\&P~500 statistical arbitrage and find ensemble li
 erode sharply after costs. Our XGBoost / LSTM / transformer comparison reproduces the same
 pattern on crypto pairs: a calibrated spread $z$ score carries roughly $79\%$ of the P\&L of
 a four architecture stack, in line with the multiple testing cautions of L\'opez de
-Prado~\cite{lopezdeprado2018advances}. The deep learning literature on limit order book
-data predicts at subsecond horizons, which is shorter than our hourly bars and consistent
+Prado~\cite{lopezdeprado2018advances}. The deep-learning literature on limit order book
+data predicts at sub-second horizons, which is shorter than our hourly bars and consistent
 with our finding that L2 order flow information decays within $30$ seconds and does not
 survive to a tradable horizon.
 
 \subsection{What is new here}
 \label{sec:related-novelty}
 
-Three things in this paper are not in the literatures above. First, the screen-level
+Each of this paper's three contributions is bounded against prior art. We list what we add
+on top of the cited literature, not what is unconditionally new. First, the screen-level
 placebo audit of the Kalman dynamic hedge plus ADF cointegration pipeline. The mechanism
-that drives our finding (QMLE Kalman absorbing integrated error into the time-varying
+that drives our finding (quasi-maximum likelihood, QMLE, Kalman absorbing integrated error into the time-varying
 state estimate) is documented at the cointegrating-vector level by Ero\u{g}lu, Miller,
 and Yi\u{g}it~\cite{eroglu2022tvc}; the screen-level empirical consequence we report (the
-specific Kalman-plus-ADF tradability filter passes random walk, phase randomized, and
-block shuffled placebos at the same near-$100\%$ rate as real pairs, and a positive
+specific Kalman-plus-ADF tradability filter passes random walk, phase-randomized, and
+block-shuffled placebos at the same near-$100\%$ rate as real pairs, and a positive
 control of constructed cointegrated pairs passes at the same rate as the random walk
 negative) is the contribution. The companion rolling $z$ result is a similarly
 screen-level placebo audit of a known induced-autocorrelation
@@ -231,8 +241,8 @@ prior art in adjacent domains.
 \label{sec:methods}
 
 The spread work uses hourly OHLCV for USDT spot pairs from the Binance.US API, stored locally,
-spanning 2021 through May 2026. The cross exchange check pulls the same hours from Coinbase
-(USD quoted) for the overlapping majors. The microstructure work uses event level Level 2 data
+spanning 2021 through May 2026. The cross-exchange check pulls the same hours from Coinbase
+(USD quoted) for the overlapping majors. The microstructure work uses event-level Level 2 data
 from Tardis: top-25 book snapshots and the trade tape for Binance.com (global) spot, the 50 most liquid USDT
 symbols, over 2024. We keep these separate on purpose, and note the venue gap: the spread strategy trades Binance.US, a
 much thinner venue, while the order flow null is measured on the deeper global book. The spread and
@@ -242,11 +252,11 @@ the Tardis book.
 The investable universe is the 50 most liquid USDT symbols, $\binom{50}{2}=1{,}225$ candidate
 pairs, constructed as of each analysis time. A
 symbol is eligible only if its history begins before the analysis window and reaches its start, a
-point in time rule added after an audit found that later listings could otherwise leak into the
+point-in-time rule added after an audit found that later listings could otherwise leak into the
 historical universe. The local store holds currently listed symbols, so delisted coins are mostly
 absent. We treat this as a survivorship limitation (Section~\ref{sec:limits}), not a solved
-problem. Costs are charged on every position change at $15$ bps per leg ($10$ bps fee, $5$ bps
-slippage), about $30$ bps round trip for the two leg spread, and stated before any performance
+problem. Costs are charged on every position change at $15$ bps per-leg ($10$ bps fee, $5$ bps
+slippage), about $30$ bps round trip for the two-leg spread, and stated before any performance
 number.
 
 A few conventions hold throughout. Inference uses Newey-West HAC standard
@@ -255,21 +265,23 @@ targets and month long holds make naive errors far too small. In one case a spur
 reversal collapsed from $t = -22.8$ to $t = -1.4$ under HAC. Evaluation is strict walk forward,
 six month train and three month test (Appendix~\ref{app:wf}), with hedge ratios and pair selection fit on the train
 window only. And every positive claim is checked against a matched placebo, a random walk,
-phase randomized, block shuffled, or random pair null built to reproduce the claim if it is
+phase-randomized, block-shuffled, or random-pair null built to reproduce the claim if it is
 mechanical (Appendix~\ref{app:placebo}). Selection across many configurations is corrected with a deflated Sharpe
 ratio~\cite{bailey2014dsr} (Appendix~\ref{app:dsr}), which discounts the Sharpe ratio (a strategy's mean return divided by its return standard deviation) for the number of configurations searched. Appendix~\ref{sec:appendix} gives self-contained definitions of every method and metric used in this paper, for readers who have not met all of them.
 
 For the one trading result that survives (Section~\ref{sec:survivor}) we preregistered a single
-configuration: the parameters and the held out evaluation window were written to a file and
-committed before the run, then evaluated once and reported whatever the result was. The lock and
-the one correction we made before running are in the repository's commit history.
+configuration: the parameters and the held-out evaluation window were written to a file and
+committed before the run, then evaluated once and reported whatever the result was. The lock is
+commit \texttt{d80cde7} (``pre-register the single-config reversion test (locked before
+running)''), and the one correction we made before running (\texttt{bd4909b}) is also in the
+commit history.
 
 % =====================================================================
 \section{Two screening artifacts}
 \label{sec:artifacts}
 
 Two screens drove our early results, and both are artifacts. The first, a Kalman dynamic
-hedge ratio, appeared to find out of sample cointegration in almost every liquid pair. The
+hedge ratio, appeared to find out-of-sample cointegration in almost every liquid pair. The
 second, a rolling $z$ score, appeared to find strong mean reversion. We show that each passes
 a placebo it should fail, and that neither carries the information it seems to. This is the
 paper's main methodological contribution. The rolling $z$ score is a standard entry signal and the
@@ -280,11 +292,11 @@ fooled by.
 \label{sec:kalman}
 
 A static hedge ratio fits one $\beta$ for the whole sample. A Kalman dynamic hedge (Appendix~\ref{app:kalman}) lets
-$\beta$ drift as a random walk and updates it each step from the data. We fit the process and
+$\beta$ drift as a random-walk and updates it each step from the data. We fit the process and
 observation noise by maximum likelihood on the training window, froze them, and rolled the
 filter forward on the test window. The test period innovations, the filter's one step
 prediction errors, became the spread, and we ran an augmented Dickey-Fuller (ADF) test on
-them~\cite{saiddickey1984} (Appendix~\ref{app:adf}). Under this screen $100\%$ of the top 50 pairs rejected the unit root out of sample at
+them~\cite{saiddickey1984} (Appendix~\ref{app:adf}). Under this screen $100\%$ of the top 50 pairs rejected the unit root out-of-sample at
 $p<0.05$, and $96.4\%$ at $p<0.001$. A static OLS spread over the same window passed only
 about $3\%$ of pairs. The contrast looked decisive.
 
@@ -299,7 +311,7 @@ time-varying state estimate, leaving stationary innovations regardless of whethe
 underlying processes are cointegrated. An ADF test on a nearly white
 series rejects the unit root almost always, whether or not the two assets are cointegrated. Running
 that test on a filter's own innovations is close to circular. The real evidence is in the controls
-below, which show that even genuinely cointegrated pairs look like random walks under this screen.
+below, which show that even genuinely cointegrated pairs look like random-walks under this screen.
 
 We can state the screen-level consequence formally:
 
@@ -308,10 +320,11 @@ We can state the screen-level consequence formally:
 \emph{Let $y_t$ and $x_t$ be $I(1)$ processes, cointegrated or not. Fit a Kalman
 dynamic-hedge model $y_t = \alpha_t + \beta_t x_t + v_t$ with non-degenerate state-evolution
 covariance $Q$ by quasi-maximum likelihood on a training window, then forward-roll the
-filter with frozen parameters on a test window of length $T$. Then the test-window
-one-step innovations $\{e_t\}$ are asymptotically stationary, and an augmented
-Dickey-Fuller test on $\{e_t\}$ rejects the unit root with probability tending to $1$
-as $T \to \infty$.}
+filter with frozen parameters on a test window of length $T$. Then at the QMLE
+pseudo-true parameters the integrated component of $y_t - \beta_t x_t$ is absorbed into
+the state estimate $\hat\beta_t$, so the one-step innovations $\{e_t\}$ inherit no
+integrated component, and an augmented Dickey-Fuller test on $\{e_t\}$ has asymptotic
+power approaching $1$ against the unit-root null as $T \to \infty$.}
 
 \emph{Sketch.} The QMLE pseudo-true $(Q^\star, R^\star)$ drives the recursive state
 updates to absorb the integrated component of $y_t - \beta_t x_t$ into the state estimate
@@ -322,17 +335,26 @@ probability $\to 1$ against the stationary alternative.
 
 The proposition makes precise why the screen carries no cointegration information. The
 empirical demonstration is below.
+
+Ero\u{g}lu, Miller, and Yi\u{g}it~\cite{eroglu2022tvc} also propose a correction. Their
+remedy operates at the cointegrating-vector level: an estimator that recovers a (possibly
+time-varying) cointegrating coefficient and distinguishes among no cointegration, fixed
+cointegration, and time-varying cointegration. This does not directly repair the
+screen-level pipeline we audit, which is the binary decision ``does this pair pass the
+ADF screen?'' The correct screen-level response to the artifact is what we run here: a
+matched placebo. Engineering a one-shot pass/fail filter that inherits their estimator's
+discrimination is left for future work.
 An earlier draft of this project defended the result on the grounds that the
 parameters were fit on training data only and never refit on test. That defense misses the
-mechanism. The whitening holds out of sample too, because the filter keeps adapting on the
+mechanism. The whitening holds out-of-sample too, because the filter keeps adapting on the
 test window from its frozen dynamics.
 
 A placebo settles it. We ran the identical screen on series that cannot be cointegrated:
-(a) independent simulated random walks, (b) each coin paired with a phase randomized surrogate
-of another coin, and (c) real pairs with one leg block shuffled. All three pass at the same
+(a) independent simulated random walks, (b) each coin paired with a phase-randomized surrogate
+of another coin, and (c) real pairs with one leg block-shuffled. All three pass at the same
 nearly $100\%$ rate as the real pairs (Table~\ref{tab:kalman-placebo}). A clean, noncircular
 test tells the opposite story. Engle-Granger~\cite{engle1987cointegration} on the test window, and a
-static OLS ADF, put genuine out of sample cointegration at $2$ to $3\%$ of pairs on the matched
+static OLS ADF, put genuine out-of-sample cointegration at $2$ to $3\%$ of pairs on the matched
 window, at or below the $5\%$ null floor. The screen carries no cointegration information. We are not
 claiming that no pair ever comoves, only that this screen cannot detect it.
 
@@ -340,7 +362,7 @@ claiming that no pair ever comoves, only that this screen cannot detect it.
 \centering
 \includegraphics[width=\linewidth]{fig_kalman_innovations_white}
 \caption{A Kalman filter whitens its own innovations: a representative real pair (top) and an
-independent random walk pair (bottom) produce visually indistinguishable innovation series, with
+independent random-walk pair (bottom) produce visually indistinguishable innovation series, with
 sample autocorrelation functions flat past lag $1$. This is the mechanism behind the artifact
 documented in Table~\ref{tab:kalman-placebo}.}
 \label{fig:kalman-innovations}
@@ -358,9 +380,9 @@ subsample), $t_0 =$
 Series tested & ADF $p<0.05$ & ADF $p<0.001$ \\
 \midrule
 Real top 50 pairs & $100.0\%$ & $96.4\%$ \\
-(a) Independent random walks & $100.0\%$ & $98.3\%$ \\
-(b) Coin vs.\ phase randomized surrogate & $100.0\%$ & $95.0\%$ \\
-(c) Real pair, one leg block shuffled & $100.0\%$ & $95.0\%$ \\
+(a) Independent random-walks & $100.0\%$ & $98.3\%$ \\
+(b) Coin vs.\ phase-randomized surrogate & $100.0\%$ & $95.0\%$ \\
+(c) Real pair, one leg block-shuffled & $100.0\%$ & $95.0\%$ \\
 \midrule
 Clean tests (EG and static OLS, test window) & $2$ to $3\%$ & n/a \\
 \bottomrule
@@ -368,22 +390,22 @@ Clean tests (EG and static OLS, test window) & $2$ to $3\%$ & n/a \\
 \end{table}
 
 We also ran a positive control: sixty constructed pairs that are genuinely cointegrated,
-$y_t = x_t + e_t$ with $x_t$ a random walk and $e_t$ a tight stationary AR(1). The Kalman screen
-passes them at $100\%$, the same rate it passes the random walk negatives, so it does not separate
+$y_t = x_t + e_t$ with $x_t$ a random-walk and $e_t$ a tight stationary AR(1). The Kalman screen
+passes them at $100\%$, the same rate it passes the random-walk negatives, so it does not separate
 true cointegration from none (Table~\ref{tab:poscontrol}). We can see the mechanism directly: the
 test window innovations are white, with a Ljung-Box test failing to reject whiteness for $87\%$ of
-the cointegrated pairs and $95\%$ of the random walk pairs, while the static OLS residual stays
+the cointegrated pairs and $95\%$ of the random-walk pairs, while the static OLS residual stays
 autocorrelated for both. The fitted hedge barely moves (median process variance
 $q_\beta \approx 2\times 10^{-9}$), so the whitening comes from the filter fitting noise rather than tracking a
 real relationship. The clean tests do separate the two, passing the positive control more often
 than the negative ($17\%$ versus $2\%$ for Engle-Granger, $27\%$ versus $8\%$ for static OLS),
-though genuine out of sample cointegration is hard to detect on a short window.
+though genuine out-of-sample cointegration is hard to detect on a short window.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.82\linewidth]{fig_poscontrol_vs_negcontrol}
 \caption{Positive vs negative control: the Kalman screen passes both the truly cointegrated
-pairs and independent random walks at near $100\%$, while the clean Engle-Granger and static OLS
+pairs and independent random-walks at near $100\%$, while the clean Engle-Granger and static OLS
 tests separate the two groups. Visual companion to Table~\ref{tab:poscontrol}.}
 \label{fig:poscontrol}
 \end{figure}
@@ -407,10 +429,10 @@ Clean static OLS ADF passes & $26.7\%$ & $8.3\%$ \\
 \end{tabular}
 \end{table}
 
-The artifact does not depend on the bar. We reran the screen at hourly, four hour, and daily
+The artifact does not depend on the bar. We reran the screen at hourly, four-hour, and daily
 frequencies on a recent multiyear window (Table~\ref{tab:kalman-freq}). Real pairs and
-random walk placebos pass together at every cadence (Figure~\ref{fig:freq}): $100\%$ versus
-$100\%$ versus $100\%$ at hourly and four hour, and $70\%$ versus $68\%$ at daily ($p<0.001$). The clean tests behave differently.
+random-walk placebos pass together at every cadence (Figure~\ref{fig:freq}): $100\%$ versus
+$100\%$ versus $100\%$ at hourly and four-hour, and $70\%$ versus $68\%$ at daily ($p<0.001$). The clean tests behave differently.
 Engle-Granger runs at $25\%$ on this long hourly window and falls to the $5\%$ null floor at
 daily. A static OLS ADF runs higher still, from $42\%$ at hourly to $8\%$ at daily. Both are
 window dependent. Over long hourly spans the crypto majors share a common trend, which a clean
@@ -422,7 +444,7 @@ carries no cointegration information at any frequency we tested.
 
 \begin{table}[h]
 \centering
-\caption{Frequency robustness of the Kalman artifact. Real pairs and random walk placebos pass
+\caption{Frequency robustness of the Kalman artifact. Real pairs and random-walk placebos pass
 the screen together at every cadence. The clean Engle-Granger and static OLS benchmarks do
 not. Top-50 universe, 60 pairs per cell, recent multiyear window.}
 \label{tab:kalman-freq}
@@ -442,9 +464,9 @@ Daily  & $100.0\%$ & $70.0\%$  & $100.0\%$ & $68.3\%$  & $5.0\%$  & $8.3\%$ \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.74\linewidth]{fig_freq_invariance}
-\caption{Placebo gap by frequency. The Kalman screen's (real minus random walk placebo) pass rate
+\caption{Placebo gap by frequency. The Kalman screen's (real minus random-walk placebo) pass rate
 gap is essentially zero at every cadence, while the clean Engle-Granger test's gap is large and
-frequency dependent. The clean test's random walk placebo passes at its nominal $5\%$ size. This reshaped view makes visible what
+frequency dependent. The clean test's random-walk placebo passes at its nominal $5\%$ size. This reshaped view makes visible what
 Table~\ref{tab:kalman-freq}'s percentages only imply: a flat zero line is the diagnostic. (Note:
 this replaces the original bar chart version that simply duplicated the table.)}
 \label{fig:freq}
@@ -468,22 +490,22 @@ induces negative autocorrelation of order $1/L$ in the result. This is the time-
 bias documented by Working~\cite{working1960correlation}: first differences of moving
 averages of a random chain are spuriously correlated even when the underlying chain is not.
 Cochrane~\cite{cochrane1988random}'s variance-ratio analysis of GNP gives the same lesson
-from the persistence side. The floor is therefore calculable rather than fitted. A random walk has no mean to revert to, yet
+from the persistence side. The floor is therefore calculable rather than fitted. A random-walk has no mean to revert to, yet
 a rolling $z$ score on one still reverts.
 
 We measured the mechanical floor two ways, and both are large. Per $|z|>2$ event, the signed
-reversion on pure random walks is positive at every frequency we tested: $+0.98z$ at hourly,
-$+1.61z$ at four hour, and $+1.51z$ at daily, each many standard deviations from zero
+reversion on pure random-walks is positive at every frequency we tested: $+0.98z$ at hourly,
+$+1.61z$ at four-hour, and $+1.51z$ at daily, each many standard deviations from zero
 (Table~\ref{tab:rollingz}; Figure~\ref{fig:rollingz} shows the mechanism on one path). As a trading rule at hourly frequency, a rolling $z$ strategy that
-posts a Sharpe near $4.75$ on our data still posts about $2.2$ on random pairs and $2.4$ on
-phase randomized noise. Most of the apparent edge is the floor. For this reason every per event
-reversion magnitude elsewhere in this paper is reported net of a per pair, per window
-random walk floor.
+posts a Sharpe near $4.75$ on our data still posts about $2.2$ on random-pairs and $2.4$ on
+phase-randomized noise. Most of the apparent edge is the floor. For this reason every per-event
+reversion magnitude elsewhere in this paper is reported net of a per-pair, per window
+random-walk floor.
 
 \begin{table}[h]
 \centering
 \caption{The rolling $z$ score manufactures mean reversion on pure random walks, at every
-frequency. Mean signed reversion per $|z|>2$ event, 200 random walk surrogates per cell.}
+frequency. Mean signed reversion per $|z|>2$ event, 200 random-walk surrogates per cell.}
 \label{tab:rollingz}
 \begin{tabular}{lrr}
 \toprule
@@ -500,7 +522,7 @@ Daily  & $+1.51$ & $0.45$ \\
 \centering
 \includegraphics[width=0.78\linewidth]{fig_rollingz_noise}
 \caption{A rolling $z$ score manufactures mean reversion on a pure random walk. Top: one
-simulated random walk and its trailing mean. Bottom: the resulting rolling $z$, which crosses
+simulated random-walk and its trailing mean. Bottom: the resulting rolling $z$, which crosses
 $\pm 2$ and reverts toward zero, although the series has no mean to revert to.}
 \label{fig:rollingz}
 \end{figure}
@@ -510,9 +532,9 @@ placebo reproduces. Both are robust to the analysis choices: the rolling $z$ flo
 ($+0.45$ to $+2.6z$) across lookback, horizon, and threshold, and the Kalman placebo passes at
 $85\%$ or more across the ADF lag, so neither is an artifact of the parameters we picked. A cointegration screen built on a
 filter's own innovations must be checked against a white noise placebo before it is believed,
-and a rolling $z$ reversion claim must be checked against a random walk null. Neither check is
+and a rolling $z$ reversion claim must be checked against a random-walk null. Neither check is
 standard practice, and without them both screens report a signal that is not there. This is the
-lesson the backtest overfitting literature draws for strategy selection~\cite{bailey2014dsr}, applied one level earlier, to
+lesson the backtest-overfitting literature draws for strategy selection~\cite{bailey2014dsr}, applied one level earlier, to
 the screens that build the spread.
 
 % =====================================================================
@@ -524,25 +546,25 @@ statistical regularity that does not turn into money. We take the clearest case 
 
 \subsection{Reversion speed ranks pairs but does not pay}
 
-Mean reversion persists out of sample even though cointegration does not. Across nine disjoint
-walk forward splits (six month train, three month test), a pair's in sample OU reversion speed (Appendix~\ref{app:ou})
-predicts its out of sample \emph{excess} reversion, net of the rolling $z$ floor of
+Mean reversion persists out-of-sample even though cointegration does not. Across nine disjoint
+walk forward splits (six month train, three month test), a pair's in-sample OU reversion speed (Appendix~\ref{app:ou})
+predicts its out-of-sample \emph{excess} reversion, net of the rolling $z$ floor of
 Section~\ref{sec:rollingz}: Spearman rank correlation $\rho = 0.46$ (95\% CI $[0.37, 0.54]$, $p<0.001$), positive
 in every one of the nine splits. The top quintile shows about $0.69z$ more excess reversion than
-the bottom out of sample ($[0.58, 0.81]$, $p<0.001$). The placebos are clean: a random
+the bottom out-of-sample ($[0.58, 0.81]$, $p<0.001$). The placebos are clean: a random
 quintile split gives $+0.0001z$, and shuffling the train to test link collapses $\rho$ to
 $-0.002$. Reversion speed is a real, graded, persistent property that ranks pairs.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{fig_reversion_persistence_scatter}
-\caption{In sample OU reversion speed predicts out of sample excess reversion across $9$
+\caption{In sample OU reversion speed predicts out-of-sample excess reversion across $9$
 walk forward splits (Spearman $\rho = 0.46$). Left panel: real pairs; the positive slope is
 present in each of the nine splits. Right panel: rank shuffled placebo collapses to noise.}
 \label{fig:rev-persist}
 \end{figure}
 
-One caveat belongs on that coefficient. The $\rho = 0.46$ is the strongest of four in sample
+One caveat belongs on that coefficient. The $\rho = 0.46$ is the strongest of four in-sample
 reversion metrics we tried, chosen after the fact, and it is not corrected for that choice. The
 direction holds across all nine splits. The exact coefficient is a best case.
 
@@ -563,15 +585,15 @@ small ones, and the ranking replicates across all of 2024 on four coins (one sec
 BTC of $0.33/0.23/0.13$ bps for institutional, mid, and retail, with institutional $2.0$ to
 $2.6\times$ retail, though the longer horizon permanent estimate is noisier;
 Table~\ref{tab:institutional-impact}). Book side order flow
-imbalance~\cite{contkukanovstoikov2014} explains subsecond midprice moves better than trade flow does (contemporaneous incremental $R^2$
+imbalance~\cite{contkukanovstoikov2014} explains sub-second midprice moves better than trade flow does (contemporaneous incremental $R^2$
 of $+0.11$ to $+0.15$ for BTC and ETH), and $77$ to $90\%$ of the liquidity that leaves the best
-quote is cancellations, invisible to trade only analysis (Figure~\ref{fig:cancel-share}).
+quote is cancellations, invisible to trade-only analysis (Figure~\ref{fig:cancel-share}).
 
 \begin{table}[h]
 \centering
 \caption{Per trade price impact at $1$-second horizon by trade size bucket and symbol: institutional
 ($>$\$$10$k) consistently $2.0$ to $2.6\times$ retail across BTC/ETH/SOL/AVAX, validating
-size as a per order information proxy.}
+size as a per-order information proxy.}
 \label{tab:institutional-impact}
 \begin{tabular}{lrrr}
 \toprule
@@ -592,7 +614,7 @@ AVAXUSDT & $0.18$ & $0.38$ & $0.38$ \\
 \includegraphics[width=\linewidth]{fig_ofi_decay}
 \caption{Predictive incremental $R^2$ of book-OFI for forward midprice moves decays from
 $\sim$$11$ to $48\%$ contemporaneously down to under $0.3\%$ at a one second forecast horizon and a $0.01$ to $0.06\%$ noise floor out to $300$ seconds, across BTC/ETH/SOL/AVAX
-and all 2024 market regimes. The information half life is seconds; no tradable forecast
+and all 2024 market regimes. The information half-life is seconds; no tradable forecast
 horizon survives.}
 \label{fig:ofi-decay}
 \end{figure}
@@ -601,7 +623,7 @@ horizon survives.}
 \centering
 \includegraphics[width=0.66\linewidth]{fig_cancellation_share}
 \caption{Cancellations dominate trades in best level liquidity withdrawal: $77$ to $90\%$ (about $77$ to $80\%$ for BTC, ETH, SOL; $90\%$ for AVAX) of
-best level size reductions are cancels, invisible to trade only microstructure analysis
+best level size reductions are cancels, invisible to trade-only microstructure analysis
 (BTC/ETH/SOL/AVAX, 2024).}
 \label{fig:cancel-share}
 \end{figure}
@@ -614,11 +636,20 @@ continuation, with a negligible incremental $R^2$. Hidden and iceberg liquidity 
 We then measured whether the signal helps execution, the usual fallback when a signal does not
 forecast returns. It does not (Table~\ref{tab:exec}). Across 29{,}952 simulated parent orders
 over event level book and tape, aggressive crossing is the cheapest method for these majors, a
-signal timed passive rule does worse than a random one at the same posting rate, and the signal's
-correlation with the per order advantage of posting over crossing is $+0.03$, noise. A
+signal-timed passive rule does worse than a random one at the same posting rate, and the signal's
+correlation with the per-order advantage of posting over crossing is $+0.03$, noise. A
 perfect foresight oracle would save 1.4 bps, so the opportunity is real, but no contemporaneous book
 feature forecasts it. The null holds across all twelve months of 2024, including the August 5
-crash. Table~\ref{tab:exec-symbol-breakdown} confirms the pooled result holds per symbol and per
+crash. Schnaubelt~\cite{schnaubelt2022rl} reaches the opposite headline with a different
+metric and a different agent class: an RL placement policy trained on ~3.5M order book
+states across 18 months posts a 37.71\% implementation-shortfall reduction vs immediate
+market execution. The two findings are not in conflict. His agent learns a state-conditional
+mixture of posting and crossing on a different basket and a different cost decomposition;
+ours measures whether any single-shot contemporaneous L2 feature realizes the
+oracle-bounded passive-vs-cross advantage on our basket. The complementarity is the
+oracle bound: at 1.4 bps it caps how much any contemporaneous-feature rule on majors can
+save against always-crossing, and a learned policy must work mainly through state
+conditioning, not the static L2 signal. Table~\ref{tab:exec-symbol-breakdown} confirms the pooled result holds per symbol and per
 order size.
 
 \begin{table}[h]
@@ -642,7 +673,7 @@ Oracle (perfect foresight) & $-0.30$ \\
 \begin{table}[h]
 \centering
 \caption{Per symbol breakdown of execution costs at \$$10$k and \$$50$k notional. Aggressive crossing
-dominates across all four majors and both sizes: the L2 signal timed rule is more expensive than crossing in every
+dominates across all four majors and both sizes: the L2 signal-timed rule is more expensive than crossing in every
 cell, consistent with the pooled result of Table~\ref{tab:exec}.}
 \label{tab:exec-symbol-breakdown}
 \begin{tabular}{lrrrrr}
@@ -674,16 +705,16 @@ We did not measure the microcaps' microstructure directly, so the join is an inf
 \section{The marginal survivor}
 \label{sec:survivor}
 
-One strategy survives, but only barely. There is a real, market neutral,
-diversified mean reversion effect in crypto pair spreads. Its tradable magnitude is uncertain, it
+One strategy survives, but only barely. There is a real, market-neutral,
+diversified mean-reversion effect in crypto pair spreads. Its tradable magnitude is uncertain, it
 exists only without a stop, and a literal backtest of it inflates spectacularly. We start with the
 limits, since they matter more than the headline number.
 
-\subsection{The effect is real and market neutral}
+\subsection{The effect is real and market-neutral}
 
 Selecting pairs by reversion speed and holding the spread to convergence, with a static
 train window hedge and $z$ score (not the rolling $z$ of Section~\ref{sec:rollingz}), produces a
-positive, market neutral return. It is diversified: beta to an equal weight crypto index is about $-0.06$,
+positive, market-neutral return. It is diversified: beta to an equal weight crypto index is about $-0.06$,
 and the top ten principal component portfolios explain only $1.7\%$ of its return, so it is not a
 hidden factor bet. It replicates on an independent exchange (Coinbase, USD quoted) and under four
 from scratch reimplementations that share none of our pipeline, none of which found look ahead,
@@ -736,26 +767,26 @@ splits. Right: scatter of IID vs HAC Sharpe per split, with the $\mathrm{HAC} = 
 \label{fig:hac-inflation}
 \end{figure}
 
-A preregistered, held out test makes the fragility concrete. We locked the configuration before
-running (Section~\ref{sec:methods} records the lock) and evaluated it once on held out data,
+A preregistered, held-out test makes the fragility concrete. We locked the configuration before
+running (Section~\ref{sec:methods} records the lock) and evaluated it once on held-out data,
 from June 2025 to May 2026. The literal result was a monthly Sharpe near $5$, \emph{higher} than the
-in sample figure, and it is not a tradable edge. It is inflation spread broadly across
+in-sample figure, and it is not a tradable edge. It is inflation spread broadly across
 high volatility microcap alts: individual pair windows post $+300$ to $+517\%$ in three months
 under a flat 15 bps cost that badly understates the true cost of trading those names, with
 unit notional accounting that ignores capacity. A $+517\%$ three month leg implies roughly a
 $150\times$ gross return, not realizable at any size. Those names are barely traded
 (Figure~\ref{fig:microcap-adv}): on Binance.US
-the held out microcaps (WAXP, ZIL, VTHO, ACH, EGLD) turn over a median of tens to a few
+the held-out microcaps (WAXP, ZIL, VTHO, ACH, EGLD) turn over a median of tens to a few
 thousand dollars a day, roughly three to four thousand times less than the majors, so the
 deployable notional is negligible and a flat, size independent cost is indefensible. The same
-machinery on a venue without those microcaps returns the $\sim 1.0$ figure. So the held out test does not confirm an alpha. It
+machinery on a venue without those microcaps returns the $\sim 1.0$ figure. So the held-out test does not confirm an alpha. It
 shows the raw backtest is untrustworthy, and our own surviving result fails the same test the rest
 of the paper applies to everything else.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.82\linewidth]{fig_microcap_adv}
-\caption{Median daily USD volume on Binance.US, log scale. The preregistered held out microcaps
+\caption{Median daily USD volume on Binance.US, log scale. The preregistered held-out microcaps
 (WAXP, ZIL, VTHO, ACH, EGLD; red) trade at tens to a few thousand dollars per day, three to
 four orders of magnitude below the majors (blue) whose costs the backtest assumes. A flat,
 size independent transaction cost is therefore indefensible on these names.}
@@ -763,8 +794,8 @@ size independent transaction cost is therefore indefensible on these names.}
 \end{figure}
 
 The preregistration had a second arm, which we report in full. A single selection over all data
-before June 2025 qualified only two pairs (long horizon reversion in the tradable band is
-rare), and they posted a monthly Sharpe of $1.60$, with a HAC hourly annualized Sharpe of $0.95$ whose $95\%$
+before June 2025 qualified only two pairs (long-horizon reversion in the tradable band is
+rare), and they posted a monthly Sharpe of $1.60$, with a HAC hourly-annualized Sharpe of $0.95$ whose $95\%$
 confidence interval $[-0.21, 1.89]$ spans zero. So the preregistered test confirms the inflation and gives no significant
 evidence for a deployable edge. The $\sim 1.0$ figure is itself exploratory, adjusted for HAC and
 venue after the search, and was never preregistered.
@@ -775,16 +806,21 @@ The effect is also selection sensitive and survivorship fragile. A deflated Shar
 (Section~\ref{sec:methods}) survives the no stop family of configurations but fails the whole
 stop versus no stop search, and
 the supports we might cite for it (the $t$ statistic, the $\rho = 0.46$ of
-Section~\ref{sec:real}, the market neutrality) share the same universe, selection, and windows,
+Section~\ref{sec:real}, the market-neutrality) share the same universe, selection, and windows,
 so they are correlated rather than independent confirmations. Its survivorship robustness rests
 on the selector avoiding coins that later delist, not on surviving them: a held position in a
 coin that collapses is a $-100\%$ leg. We tested this directly by forcing the book to hold through
 three real collapses (LUNA, UST, FTT, each paired with BTC, with the selector's avoidance
-overridden, Figure~\ref{fig:forced-collapse}). Without a stop the loss runs $-117\%$ to $-258\%$ per pair, with intracollapse
-drawdowns to $-1{,}300\%$. The structural break circuit breaker (halt after a single leg moves more
+overridden, Figure~\ref{fig:forced-collapse}). Without a stop the loss runs $-117\%$ to $-258\%$ per-pair, with intracollapse
+drawdowns to $-1{,}300\%$. The structural-break circuit breaker (halt after a single leg moves more
 than $50\%$ against the position) caps the loss to about $-65\%$ to $-91\%$ and the worst drawdown
-to $-117\%$. The breaker blunts the tail but does not remove it, and at the book level it is what separates a
-bounded delisting risk from an unbounded one. We also inject permanent delisting scale breaks into a
+to $-117\%$. The $50\%$ threshold is the tightest level at which monthly Sharpe is essentially
+unchanged from the no-breaker baseline: across a sweep $K \in \{25, 30, 40, 50, 60, 70, 80, 90\}\%$,
+Sharpe retention drops to $0.85$--$0.94$ for $K \le 40\%$ (the breaker fires on noise and exits
+real reversion) and stays at $\sim$$1.00$--$1.02$ for $K \ge 50\%$, while the worst per-pair
+loss climbs from $-131\%$ at $K = 50\%$ to $-207\%$ at $K = 90\%$. So $50\%$ is the sweet spot,
+not an arbitrary cutoff. The breaker blunts the tail but does not remove it, and at the book
+level it is what separates a bounded delisting risk from an unbounded one. We also inject permanent delisting scale breaks into a
 fraction of the 40 pairs each quarter (Figure~\ref{fig:circuit-breaker}). Without the breaker the no stop book's monthly Sharpe falls
 to zero and then negative as the break rate rises. With the breaker it stays positive across the
 whole range, keeping about $96\%$ of its monthly Sharpe at an $8\%$/yr break rate and $88\%$ at
@@ -795,7 +831,7 @@ $19\%$/yr.
 \includegraphics[width=\linewidth]{fig_forced_collapse_perpair}
 \caption{Per pair P\&L when the no stop rule is forced to hold through three real delisting
 collapses (LUNA-May 2022, UST-May 2022, FTT-Nov 2022). Without the circuit breaker, losses run
-$-117\%$ to $-258\%$ per pair (a leg can lose more than $100\%$ on the log spread accounting);
+$-117\%$ to $-258\%$ per-pair (a leg can lose more than $100\%$ on the log spread accounting);
 with the $50\%$ single leg breaker, losses are capped at $-65\%$ to $-91\%$.}
 \label{fig:forced-collapse}
 \end{figure}
@@ -804,7 +840,7 @@ with the $50\%$ single leg breaker, losses are capped at $-65\%$ to $-91\%$.}
 \centering
 \includegraphics[width=0.8\linewidth]{fig_circuit_breaker_retention}
 \caption{Monthly Sharpe of the no stop reversion book as a function of injected delisting rate,
-with and without the structural break circuit breaker. Without the breaker, the Sharpe declines steadily and crosses zero only near a $50\%$/year
+with and without the structural-break circuit breaker. Without the breaker, the Sharpe declines steadily and crosses zero only near a $50\%$/year
 break rate. With the breaker, it retains $\approx 96\%$ of its Sharpe at the
 $8\%$/year rate consistent with historical liquid major attrition.}
 \label{fig:circuit-breaker}
@@ -812,15 +848,15 @@ $8\%$/year rate consistent with historical liquid major attrition.}
 
 A few things make those retention figures optimistic. First, the injected breaks ramp
 smoothly, so the breaker exits near its $50\%$ threshold, whereas the real gapping collapses above
-cost it $-65\%$ to $-91\%$ per pair. Second, the figures sit on the gross book, not the HAC- and
+cost it $-65\%$ to $-91\%$ per-pair. Second, the figures sit on the gross book, not the HAC- and
 venue honest $\sim 1.0$, against which a delisting drag would bite proportionally harder. Third, the
 breaks are drawn independently, which understates the way breaks cluster in market wide selloffs. The robust finding is the
 qualitative one: the circuit breaker, not diversification alone, is what bounds the delisting tail,
 and at the low single digit yearly attrition that liquid top 50 names actually see, the haircut is
 modest. A
-fully point in time universe of every delisted coin is still beyond our data.
+fully point-in-time universe of every delisted coin is still beyond our data.
 
-The defensible claim is therefore the sensitivity itself. There is a real, market neutral
+The defensible claim is therefore the sensitivity itself. There is a real, market-neutral
 reversion signal in crypto pair spreads that can be selected by reversion speed. Whether it is
 worth anything after realistic costs, capacity, and selection is unresolved, and the most honest
 single number, a monthly Sharpe near $1.0$, is an estimate that a literal backtest does not cap
@@ -837,20 +873,24 @@ the conclusion.
 \item \textbf{Survivorship.} The local store holds currently listed symbols, so most delisted
 coins are absent. The surviving strategy's robustness rests on the selector avoiding coins that
 later delist. Forced to hold through three real collapses (Section~\ref{sec:survivor}) the no stop
-loss runs $-117\%$ to $-258\%$ per pair and the circuit breaker caps it near $-65\%$ to $-91\%$. A
-complete point in time universe of every delisted coin is still beyond our data.
+loss runs $-117\%$ to $-258\%$ per-pair and the circuit breaker caps it near $-65\%$ to $-91\%$. A
+complete point-in-time universe of every delisted coin is still beyond our data.
 \item \textbf{Selection.} No single configuration was fixed before the search and evaluated once
 across the whole project. The preregistered test of Section~\ref{sec:survivor} covers one
 configuration but cannot undo the selection that produced it, so the deflated Sharpe caution
 stands.
-\item \textbf{Microstructure coverage.} The event level Level 2 tests use four symbols (BTC, ETH,
+\item \textbf{Microstructure coverage.} The event-level Level 2 tests use four symbols (BTC, ETH,
 SOL, AVAX) over days sampled across 2024, not a continuous year on the full universe. The
 aggregate book metrics use the top 50. The execution and impact results are four symbol.
 \item \textbf{Single venue and quote.} The spread results are Binance.US, USDT quoted, with a
-Coinbase cross check. The microstructure is Binance spot. We have not tested other quote
+Coinbase USD-quoted cross check on the overlapping liquid majors. The microstructure is
+Binance.com (global) spot. The cross-check is not a same-instrument replication: USD-quoted
+Coinbase pairs have a different participant base, different fee schedule, and different
+microstructure from USDT-quoted Binance.US pairs, so part of the Coinbase-Binance Sharpe
+gap is venue and quote currency rather than overfitting. We have not tested other quote
 currencies or a broader set of venues.
-\item \textbf{Costs and capacity.} Costs are a flat per leg charge. We do not model market impact
-or capacity, which is exactly what inflates the held out microcap backtest of
+\item \textbf{Costs and capacity.} Costs are a flat per-leg charge. We do not model market impact
+or capacity, which is exactly what inflates the held-out microcap backtest of
 Section~\ref{sec:survivor}.
 \end{itemize}
 
@@ -860,7 +900,7 @@ Section~\ref{sec:survivor}.
 
 These negative results say more about the screens we used than about the market itself. The Kalman cointegration test and the rolling
 $z$ score both pass placebos they should fail, at every frequency we tested. Order flow forecasts
-only the next few seconds, a horizon no one can trade. The one market neutral reversion effect
+only the next few seconds, a horizon no one can trade. The one market-neutral reversion effect
 that survives is real but marginal, stop sensitive, and selection sensitive, and a literal
 backtest of it inflates on costs it does not model.
 
@@ -869,9 +909,28 @@ mean reversion screen only after you have shown it fails on a matched placebo bu
 the claim if the claim is mechanical. For crypto the evidence points to microstructure efficiency in the liquid majors at
 tradable horizons: the information is real, and the market has already priced it.
 
-What would move the result is a genuinely point in time universe with delisted coins, a capacity and impact aware cost model, and a single preregistered configuration evaluated once on data the
+What would move the result is a genuinely point-in-time universe with delisted coins, a capacity and impact aware cost model, and a single preregistered configuration evaluated once on data the
 search never saw. Until then, the efficiency reading holds only for the liquid core we can measure. For the thin tail,
 where delisting risk concentrates, we cannot yet say.
+
+% =====================================================================
+% =====================================================================
+\section*{Replication}
+\label{sec:replication}
+
+Every quantitative claim in the paper is reproducible from the public repository at
+\url{https://github.com/samsam324/math-199-research}. The two screening-artifact placebos
+(Section~\ref{sec:artifacts}) are in \texttt{scratch/audit\_part1.py},
+\texttt{audit\_part1b.py}, and \texttt{audit\_part2.py}; the positive-control table
+(Table~\ref{tab:poscontrol}) is in \texttt{scratch/kalman\_positive\_control.py}; the
+$50\%$ circuit-breaker sensitivity sweep (Section~\ref{sec:survivor}) is in
+\texttt{scratch/threshold\_sweep.py}; the survivorship analysis with delisted coins is in
+\texttt{scratch/t2\_survivorship\_rerun.py} and \texttt{t2\_worstcase.py}; the L2 execution
+test (Table~\ref{tab:exec}) is in \texttt{scratch/exec\_value\_2024.py}. The figures in
+this paper were produced by \texttt{scratch/make\_figures\_v2.py}. The Level 2 dataset
+(Tardis Binance.com 2024, $\sim$$175$~GB) is in S3; query helpers are in
+\texttt{scripts/l2\_query.py} and a presigned-link generator is in
+\texttt{scripts/presign.py}.
 
 % =====================================================================
 \begin{thebibliography}{99}
@@ -886,7 +945,7 @@ Andersen, T.~G., \& Bondarenko, O. (2014). VPIN and the flash crash.
 
 \bibitem{bailey2014dsr}
 Bailey, D.~H., \& L\'opez de Prado, M. (2014). The deflated Sharpe ratio: correcting for
-selection bias, backtest overfitting, and non-normality. \emph{Journal of Portfolio
+selection bias, backtest-overfitting, and non-normality. \emph{Journal of Portfolio
 Management}, 40(5), 94--107.
 
 \bibitem{brauneis2018price}
@@ -894,7 +953,7 @@ Brauneis, A., \& Mestel, R. (2018). Price discovery of cryptocurrencies: Bitcoin
 \emph{Economics Letters}, 165, 58--61.
 
 \bibitem{cochrane1988random}
-Cochrane, J.~H. (1988). How big is the random walk in GNP? \emph{Journal of Political
+Cochrane, J.~H. (1988). How big is the random-walk in GNP? \emph{Journal of Political
 Economy}, 96(5), 893--920.
 
 \bibitem{contkukanovstoikov2014}
@@ -1198,7 +1257,7 @@ everything in the data except the mechanism in question. We use four.
 
 \emph{Random walks via cumulative sums.} Sample $\eta_t \sim \mathcal{N}(0, \sigma^2)$
 i.i.d.~and set $z_t = z_{t-1} + \eta_t$. This preserves nothing about the original series
-except the innovation variance; two independent random walks share no common trend.
+except the innovation variance; two independent random-walks share no common trend.
 
 \emph{Phase randomization.} Take the discrete Fourier transform $\tilde{z}_k =
 \mathcal{F}[z_t]$, replace each non-DC phase by a uniform draw on $[0, 2\pi)$ subject to
