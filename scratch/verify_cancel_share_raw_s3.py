@@ -1,9 +1,16 @@
 """
-Raw-L2 verification: re-derive the paper's "81-85% of best-level liquidity withdrawal is
-cancellations" claim from the S3 dataset, bypassing all intermediate scratch outputs.
+Raw-L2 verification: single-day spot check of the paper's "77-90% of best-level liquidity
+withdrawal is cancellations" claim from the S3 dataset, bypassing all intermediate scratch outputs.
+
+Methodology note: the paper's 77-90% headline uses a multi-day size-weighted denominator over
+all best-level size reductions in the sample (book_ofi_2024.log). This script uses a stricter
+single-day price-equality denominator (cancel-vs-trade share of size reductions at unchanged
+best price), which is more conservative and returns a lower share. On 2024-03-13 it gives
+BTC 63.6% / ETH 71.4%. The qualitative claim that cancels dominate trades holds under either
+denominator; the headline numerical range is denominator-specific.
 
 Pulls one BTC and one ETH 2024 day from S3 (no local cache), joins trades with book updates,
-computes the cancel-vs-trade share of best-level size reductions, and compares to the paper.
+computes the cancel-vs-trade share of best-level size reductions, and writes the result.
 
 Output: scratch/raw_s3_cancel_share.csv
 """
@@ -68,7 +75,8 @@ def cancel_share_one_day(con, symbol, date):
 def main():
     con = open_l2()
     print(f"S3 verification: best-level cancel-vs-trade share, raw L2")
-    print(f"Paper claim: 81-85% of best-level liquidity withdrawal is cancellations\n")
+    print(f"Paper headline: 77-90% of best-level liquidity withdrawal is cancellations (multi-day size-weighted denominator)\n")
+    print(f"This script uses a stricter single-day price-equality denominator; expect a lower share.\n")
     print(f"{'symbol':<10}{'date':<14}{'book updates':>14}{'trades':>10}{'cancel share %':>18}")
     print("-" * 70)
     rows = []
@@ -81,7 +89,8 @@ def main():
     out.to_csv(out_path, index=False)
     print(f"\nsaved -> {out_path}")
     print("Reading: this is a SINGLE-DAY spot check, not the paper's full multi-symbol average.")
-    print("If the share falls inside 70-90%, the paper's 81-85% range is supported at this resolution.")
+    print("Qualitative check: a single-day cancel share above 50% supports the paper's 'cancels dominate trades'")
+    print("claim. The headline 77-90% range is denominator-specific and is not the apples-to-apples target here.")
 
 
 if __name__ == "__main__":
