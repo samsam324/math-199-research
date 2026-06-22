@@ -1,12 +1,13 @@
-# 3-year Binance L2 on S3 — and how to analyze it
+# Binance L2 on S3, 2023 to mid-2026 — and how to analyze it
 
-Three full years (2023–2025) of Binance-spot Level-2 data for the top-50 USDT universe,
-pulled from Tardis.dev and stored as Hive-partitioned parquet so you can query any
-symbol/date range with DuckDB without downloading the whole thing.
+Binance-spot Level-2 data for the top-50 USDT universe, spanning January 2023 through
+mid-June 2026, pulled from Tardis.dev and stored as Hive-partitioned parquet so you can
+query any symbol/date range with DuckDB without downloading the whole thing.
 
 - **Bucket:** `s3://math199-l2-873750256216/` (region `us-west-2`, **private**)
-- **Size:** ~1.1 TB (Standard-IA, ~$15/mo). Do not make public — Tardis-licensed.
-- **Coverage:** 50 symbols × 2023-01-01…2025-12-31 × {`book_snapshot_25`, `trades`}.
+- **Size:** ~1.56 TB across 126,354 objects (Standard-IA, ~$19/mo). Do not make public — Tardis-licensed.
+- **Coverage:** 50 symbols × 2023-01-01…2026-06-19 × {`book_snapshot_25`, `trades`}.
+  Each fully listed symbol has 365/366/365/170 days for 2023/2024/2025/2026.
   `nodata` gaps exist where a coin was not yet listed (e.g. FLOKI in early 2023).
 
 ## Layout

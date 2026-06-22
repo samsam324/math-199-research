@@ -48,10 +48,11 @@ pdflatex main.tex && pdflatex main.tex   # two passes for refs; 22 pages, 0 warn
 
 ## Extended L2 dataset (beyond the paper)
 
-Three full years (2023–2025) of Binance-spot Level-2 (book + trades, top-50 USDT) are pulled to a
-private S3 bucket as Hive-partitioned parquet for follow-on analysis — separate from the paper's
-2024 sample. Query any symbol/date range with DuckDB via `scripts/l2_query.py` (no download). Pull
-tooling is `scripts/tardis_to_s3.py` + `scripts/aws/launch_ec2_pull.sh`. See
+Binance-spot Level-2 (book + trades, top-50 USDT) spanning January 2023 through mid-June 2026
+(~1.56 TB, 126,354 objects) is pulled to a private S3 bucket as Hive-partitioned parquet for
+follow-on analysis — separate from the paper's 2024 sample. Query any symbol/date range with DuckDB
+via `scripts/l2_query.py` (no download). Pull tooling is `scripts/tardis_to_s3.py` +
+`scripts/aws/launch_ec2_pull.sh`. See
 [`docs/L2_DATASET.md`](docs/L2_DATASET.md). A reviewer-facing copy of the paper with the L2-breadth
 and Kalman-anchor robustness additions lives at `main_proposed.tex` (not yet merged into `main.tex`).
 

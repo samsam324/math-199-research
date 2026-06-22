@@ -106,9 +106,10 @@ disjoint quarterly t0 (2023-07 through 2024-07), 90/30 window, with Wilson 95% C
 placebos pass the Kalman ADF at 99-100% while clean Engle-Granger stays 1-8%. The 2024-01-01 anchor
 reproduces the committed Table 1 pattern (real ~ placebo ~ 100%, EG ~2%).
 
-## 3-year L2 dataset on S3 (analysis data, not a paper number)
+## L2 dataset on S3, 2023 to mid-2026 (analysis data, not a paper number)
 
-Independent of the paper: `s3://math199-l2-873750256216/` holds 2023-2025 x top-50 Binance L2
-(book + trades) as Hive-partitioned parquet, pulled by `scripts/tardis_to_s3.py` via the EC2
-launcher `scripts/aws/launch_ec2_pull.sh`. Query with `scripts/l2_query.py` (DuckDB over S3). See
-`docs/L2_DATASET.md`. The puller is idempotent, so the pull is re-runnable / extendable.
+Independent of the paper: `s3://math199-l2-873750256216/` holds 2023-01-01 through 2026-06-19 x
+top-50 Binance L2 (book + trades), ~1.56 TB across 126,354 Hive-partitioned parquet objects,
+pulled by `scripts/tardis_to_s3.py` via the EC2 launcher `scripts/aws/launch_ec2_pull.sh`
+(2026-H1 added with `scratch/aws/userdata_2026.sh`). Query with `scripts/l2_query.py` (DuckDB over
+S3). See `docs/L2_DATASET.md`. The puller is idempotent, so the pull is re-runnable / extendable.
