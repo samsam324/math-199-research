@@ -53,8 +53,8 @@ Binance-spot Level-2 (book + trades, top-50 USDT) spanning January 2023 through 
 follow-on analysis — separate from the paper's 2024 sample. Query any symbol/date range with DuckDB
 via `scripts/l2_query.py` (no download). Pull tooling is `scripts/tardis_to_s3.py` +
 `scripts/aws/launch_ec2_pull.sh`. See
-[`docs/L2_DATASET.md`](docs/L2_DATASET.md). A reviewer-facing copy of the paper with the L2-breadth
-and Kalman-anchor robustness additions lives at `main_proposed.tex` (not yet merged into `main.tex`).
+[`docs/L2_DATASET.md`](docs/L2_DATASET.md). The L2-breadth additions have since been merged into the
+canonical `main.tex` (the former `main_proposed.tex` draft was merged and removed).
 
 ## What still needs a human
 

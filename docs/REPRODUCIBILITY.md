@@ -75,7 +75,7 @@ generating output is committed, so each is now one-command reproducible:
   ratio is still sourced from the writeup; the components are consistent with the reimplementation
   runs but a dedicated random-pair placebo log is not separately committed.
 
-## Universe-wide L2 robustness (supports `main_proposed.tex`, not the canonical paper)
+## Universe-wide L2 robustness (merged into the canonical `main.tex`)
 
 The proposed paper extends the three Section 5 L2 tests from the four event-level majors to the full
 top-50 universe, over the same regime-spanning 2024 days (7 days for OFI, 13 for execution/impact).
@@ -92,13 +92,14 @@ Headline: the OFI-decay and execution nulls hold across all 50 (1s-ahead forecas
 every symbol; the signal-timed execution rule is costlier than crossing in 50/50). Size-to-impact
 holds on the liquid names (39/50, all of the top 10) but turns noisy on the thinnest, so the proposed
 paper keeps Table 5 to four majors. The breadth additions were adversarially verified (numbers,
-overclaim, voice, consistency) before being written into `main_proposed.tex` via the deterministic
+overclaim, voice, consistency) before being written into the proposed draft (since merged into
+`main.tex`) via the deterministic
 `scratch/apply_proposed*.py` transforms. The 114 MB intermediate `scratch/exec_broad_orders.csv` is
 gitignored; `book_exec_broad.py` rebuilds or reuses it.
 
-## Flagship Kalman artifact, multi-anchor robustness (supports `main_proposed.tex`)
+## Flagship Kalman artifact, multi-anchor robustness (standalone check, not in `main.tex`)
 
-Table 1 reports the placebo-equality at a single anchor (t0 = 2024-01-01). `main_proposed.tex` adds
+Table 1 reports the placebo-equality at a single anchor (t0 = 2024-01-01). The proposed draft added
 a 5-anchor table to show it is not start-date specific. `scratch/book_kalman_anchors.py` re-runs the
 identical screen (reusing `scratch/audit_part1.py`'s exact Kalman/ADF/placebo functions) at five
 disjoint quarterly t0 (2023-07 through 2024-07), 90/30 window, with Wilson 95% CIs; output
