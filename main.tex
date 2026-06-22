@@ -204,8 +204,8 @@ survive to a tradable horizon.
 Each of this paper's three contributions is bounded against prior art. We list what we add
 on top of the cited literature, not what is unconditionally new. First, the screen-level
 placebo audit of the Kalman dynamic hedge plus ADF cointegration pipeline. The mechanism
-that drives our finding (quasi-maximum likelihood, QMLE, Kalman absorbing integrated error into the time-varying
-state estimate) is documented at the cointegrating-vector level by Ero\u{g}lu, Miller,
+that drives our finding --- the quasi-maximum-likelihood (QMLE) Kalman absorbing integrated error into the time-varying
+state estimate --- is documented at the cointegrating-vector level by Ero\u{g}lu, Miller,
 and Yi\u{g}it~\cite{eroglu2022tvc}; the screen-level empirical consequence we report (the
 specific Kalman-plus-ADF tradability filter passes random walk, phase-randomized, and
 block-shuffled placebos at the same near-$100\%$ rate as real pairs, and a positive
@@ -232,9 +232,10 @@ St\"ockl~\cite{ammann2022survivorship} and Liu, Tsyvinski, and Wu~\cite{liu2022c
 and a leg-level structural-break circuit breaker that halts a pair when one leg moves more
 than $50\%$ adversely (break-aware stops on equity pair spreads appear in Lu and
 Lai~\cite{lu2021structural}). The breaker preserves roughly $96\%$ of monthly Sharpe at an
-$8\%$/year breakage rate consistent with historical crypto delisting frequency. To our
-knowledge, this joint treatment on crypto pair spreads is new, though each ingredient has
-prior art in adjacent domains.
+$8\%$/year breakage rate consistent with historical crypto delisting frequency. The novel
+element here is the joint application of these two ingredients on crypto pair spreads; we
+do not claim the combination is unprecedented and each ingredient has prior art in adjacent
+domains as cited.
 
 % =====================================================================
 \section{Data and market setting}
@@ -261,9 +262,9 @@ number.
 
 A few conventions hold throughout. Inference uses Newey-West HAC standard
 errors~\cite{newey1987hac} (Appendix~\ref{app:hac}), because overlapping
-targets and month long holds make naive errors far too small. In one case a spurious five minute
+targets and month-long holds make naive errors far too small. In one case a spurious five minute
 reversal collapsed from $t = -22.8$ to $t = -1.4$ under HAC. Evaluation is strict walk forward,
-six month train and three month test (Appendix~\ref{app:wf}), with hedge ratios and pair selection fit on the train
+six month train and three-month test (Appendix~\ref{app:wf}), with hedge ratios and pair selection fit on the train
 window only. And every positive claim is checked against a matched placebo, a random walk,
 phase-randomized, block-shuffled, or random-pair null built to reproduce the claim if it is
 mechanical (Appendix~\ref{app:placebo}). Selection across many configurations is corrected with a deflated Sharpe
@@ -323,8 +324,8 @@ covariance $Q$ by quasi-maximum likelihood on a training window, then forward-ro
 filter with frozen parameters on a test window of length $T$. Then at the QMLE
 pseudo-true parameters the integrated component of $y_t - \beta_t x_t$ is absorbed into
 the state estimate $\hat\beta_t$, so the one-step innovations $\{e_t\}$ inherit no
-integrated component, and an augmented Dickey-Fuller test on $\{e_t\}$ has asymptotic
-power approaching $1$ against the unit-root null as $T \to \infty$.}
+integrated component, and an augmented Dickey-Fuller test on $\{e_t\}$ rejects the unit
+root with probability approaching $1$ as $T \to \infty$.}
 
 \emph{Sketch.} The QMLE pseudo-true $(Q^\star, R^\star)$ drives the recursive state
 updates to absorb the integrated component of $y_t - \beta_t x_t$ into the state estimate
@@ -344,6 +345,7 @@ screen-level pipeline we audit, which is the binary decision ``does this pair pa
 ADF screen?'' The correct screen-level response to the artifact is what we run here: a
 matched placebo. Engineering a one-shot pass/fail filter that inherits their estimator's
 discrimination is left for future work.
+
 An earlier draft of this project defended the result on the grounds that the
 parameters were fit on training data only and never refit on test. That defense misses the
 mechanism. The whitening holds out-of-sample too, because the filter keeps adapting on the
@@ -467,8 +469,7 @@ Daily  & $100.0\%$ & $70.0\%$  & $100.0\%$ & $68.3\%$  & $5.0\%$  & $8.3\%$ \\
 \caption{Placebo gap by frequency. The Kalman screen's (real minus random-walk placebo) pass rate
 gap is essentially zero at every cadence, while the clean Engle-Granger test's gap is large and
 frequency dependent. The clean test's random-walk placebo passes at its nominal $5\%$ size. This reshaped view makes visible what
-Table~\ref{tab:kalman-freq}'s percentages only imply: a flat zero line is the diagnostic. (Note:
-this replaces the original bar chart version that simply duplicated the table.)}
+Table~\ref{tab:kalman-freq}'s percentages only imply: a flat zero line is the diagnostic.}
 \label{fig:freq}
 \end{figure}
 
@@ -547,7 +548,7 @@ statistical regularity that does not turn into money. We take the clearest case 
 \subsection{Reversion speed ranks pairs but does not pay}
 
 Mean reversion persists out-of-sample even though cointegration does not. Across nine disjoint
-walk forward splits (six month train, three month test), a pair's in-sample OU reversion speed (Appendix~\ref{app:ou})
+walk forward splits (six month train, three-month test), a pair's in-sample OU reversion speed (Appendix~\ref{app:ou})
 predicts its out-of-sample \emph{excess} reversion, net of the rolling $z$ floor of
 Section~\ref{sec:rollingz}: Spearman rank correlation $\rho = 0.46$ (95\% CI $[0.37, 0.54]$, $p<0.001$), positive
 in every one of the nine splits. The top quintile shows about $0.69z$ more excess reversion than
@@ -714,10 +715,10 @@ limits, since they matter more than the headline number.
 
 Selecting pairs by reversion speed and holding the spread to convergence, with a static
 train window hedge and $z$ score (not the rolling $z$ of Section~\ref{sec:rollingz}), produces a
-positive, market-neutral return. It is diversified: beta to an equal weight crypto index is about $-0.06$,
+positive, market-neutral return. It is diversified: beta to an equal-weight crypto index is about $-0.06$,
 and the top ten principal component portfolios explain only $1.7\%$ of its return, so it is not a
 hidden factor bet. It replicates on an independent exchange (Coinbase, USD quoted) and under four
-from scratch reimplementations that share none of our pipeline, none of which found look ahead,
+from-scratch reimplementations that share none of our pipeline, none of which found look ahead,
 so the effect is not a coding artifact.
 
 \subsection{It exists only without a stop}
@@ -735,13 +736,13 @@ The naive Binance Sharpe was first reported near $2.5$, and four independent rei
 it at $2.0$ to $2.2$. Neither is the honest figure. Month long holds make hourly returns heavily
 autocorrelated (Figure~\ref{fig:hac-inflation}), so a Newey-West correction~\cite{newey1987hac}
 drops the monthly Binance number to about $1.4$, and
-on the independent Coinbase venue it is about $0.85$ to $0.90$. The HAC and venue honest figure
-is near $1.0$ (Table~\ref{tab:venue-comparison}), and the edge concentrates in recent, high volatility periods.
+on the independent Coinbase venue it is about $0.85$ to $0.90$. The HAC- and venue- honest figure
+is near $1.0$ (Table~\ref{tab:venue-comparison}), and the edge concentrates in recent, high-volatility periods.
 
 \begin{table}[h]
 \centering
 \caption{Naive vs HAC adjusted monthly Sharpe on
-Binance.US and Coinbase for the no stop reversion strategy. Reading: the venue gap
+Binance.US and Coinbase for the no-stop reversion strategy. Reading: the venue gap
 ($\sim$$2.2$ Binance vs $\sim$$0.88$ Coinbase) and the serial correlation adjustment
 (Binance naive $2.18 \to$ HAC $1.4$) together center the honest figure at $\sim$$1.0$.}
 \label{tab:venue-comparison}
@@ -771,14 +772,14 @@ A preregistered, held-out test makes the fragility concrete. We locked the confi
 running (Section~\ref{sec:methods} records the lock) and evaluated it once on held-out data,
 from June 2025 to May 2026. The literal result was a monthly Sharpe near $5$, \emph{higher} than the
 in-sample figure, and it is not a tradable edge. It is inflation spread broadly across
-high volatility microcap alts: individual pair windows post $+300$ to $+517\%$ in three months
+high-volatility microcap alts: individual pair windows post $+300$ to $+517\%$ in three-months
 under a flat 15 bps cost that badly understates the true cost of trading those names, with
-unit notional accounting that ignores capacity. A $+517\%$ three month leg implies roughly a
+unit notional accounting that ignores capacity. A $+517\%$ three-month leg implies roughly a
 $150\times$ gross return, not realizable at any size. Those names are barely traded
 (Figure~\ref{fig:microcap-adv}): on Binance.US
 the held-out microcaps (WAXP, ZIL, VTHO, ACH, EGLD) turn over a median of tens to a few
 thousand dollars a day, roughly three to four thousand times less than the majors, so the
-deployable notional is negligible and a flat, size independent cost is indefensible. The same
+deployable notional is negligible and a flat, size-independent cost is indefensible. The same
 machinery on a venue without those microcaps returns the $\sim 1.0$ figure. So the held-out test does not confirm an alpha. It
 shows the raw backtest is untrustworthy, and our own surviving result fails the same test the rest
 of the paper applies to everything else.
@@ -789,22 +790,26 @@ of the paper applies to everything else.
 \caption{Median daily USD volume on Binance.US, log scale. The preregistered held-out microcaps
 (WAXP, ZIL, VTHO, ACH, EGLD; red) trade at tens to a few thousand dollars per day, three to
 four orders of magnitude below the majors (blue) whose costs the backtest assumes. A flat,
-size independent transaction cost is therefore indefensible on these names.}
+size-independent transaction cost is therefore indefensible on these names.}
 \label{fig:microcap-adv}
 \end{figure}
 
 The preregistration had a second arm, which we report in full. A single selection over all data
 before June 2025 qualified only two pairs (long-horizon reversion in the tradable band is
-rare), and they posted a monthly Sharpe of $1.60$, with a HAC hourly-annualized Sharpe of $0.95$ whose $95\%$
-confidence interval $[-0.21, 1.89]$ spans zero. So the preregistered test confirms the inflation and gives no significant
-evidence for a deployable edge. The $\sim 1.0$ figure is itself exploratory, adjusted for HAC and
+rare), and they posted a monthly Sharpe of $1.60$. The HAC-corrected, hourly-annualized
+Sharpe on the same series is $0.95$ with $95\%$ confidence interval $[-0.21, 1.89]$, which
+spans zero. The unit change (monthly vs hourly-annualized) reflects the inference: the
+monthly statistic does not have enough observations on a single 11-month tail to compute a
+defensible HAC interval, so the confidence statement is reported on the
+hourly-annualized series where HAC at lag $240$ is well-defined. Either way, the test
+confirms the inflation and gives no significant evidence for a deployable edge. The $\sim 1.0$ figure is itself exploratory, adjusted for HAC and
 venue after the search, and was never preregistered.
 
 \subsection{What would have to be true}
 
 The effect is also selection sensitive and survivorship fragile. A deflated Sharpe correction
-(Section~\ref{sec:methods}) survives the no stop family of configurations but fails the whole
-stop versus no stop search, and
+(Section~\ref{sec:methods}) survives the no-stop family of configurations but fails the whole
+stop versus no-stop search, and
 the supports we might cite for it (the $t$ statistic, the $\rho = 0.46$ of
 Section~\ref{sec:real}, the market-neutrality) share the same universe, selection, and windows,
 so they are correlated rather than independent confirmations. Its survivorship robustness rests
@@ -821,7 +826,7 @@ real reversion) and stays at $\sim$$1.00$--$1.02$ for $K \ge 50\%$, while the wo
 loss climbs from $-131\%$ at $K = 50\%$ to $-207\%$ at $K = 90\%$. So $50\%$ is the sweet spot,
 not an arbitrary cutoff. The breaker blunts the tail but does not remove it, and at the book
 level it is what separates a bounded delisting risk from an unbounded one. We also inject permanent delisting scale breaks into a
-fraction of the 40 pairs each quarter (Figure~\ref{fig:circuit-breaker}). Without the breaker the no stop book's monthly Sharpe falls
+fraction of the 40 pairs each quarter (Figure~\ref{fig:circuit-breaker}). Without the breaker the no-stop book's monthly Sharpe falls
 to zero and then negative as the break rate rises. With the breaker it stays positive across the
 whole range, keeping about $96\%$ of its monthly Sharpe at an $8\%$/yr break rate and $88\%$ at
 $19\%$/yr.
@@ -829,7 +834,7 @@ $19\%$/yr.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{fig_forced_collapse_perpair}
-\caption{Per pair P\&L when the no stop rule is forced to hold through three real delisting
+\caption{Per pair P\&L when the no-stop rule is forced to hold through three real delisting
 collapses (LUNA-May 2022, UST-May 2022, FTT-Nov 2022). Without the circuit breaker, losses run
 $-117\%$ to $-258\%$ per-pair (a leg can lose more than $100\%$ on the log spread accounting);
 with the $50\%$ single leg breaker, losses are capped at $-65\%$ to $-91\%$.}
@@ -839,7 +844,7 @@ with the $50\%$ single leg breaker, losses are capped at $-65\%$ to $-91\%$.}
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.8\linewidth]{fig_circuit_breaker_retention}
-\caption{Monthly Sharpe of the no stop reversion book as a function of injected delisting rate,
+\caption{Monthly Sharpe of the no-stop reversion book as a function of injected delisting rate,
 with and without the structural-break circuit breaker. Without the breaker, the Sharpe declines steadily and crosses zero only near a $50\%$/year
 break rate. With the breaker, it retains $\approx 96\%$ of its Sharpe at the
 $8\%$/year rate consistent with historical liquid major attrition.}
@@ -1013,8 +1018,9 @@ Kyle, A.~S. (1985). Continuous auctions and insider trading.
 L\'opez de Prado, M. (2018). \emph{Advances in Financial Machine Learning}. Wiley.
 
 \bibitem{lu2021structural}
-Lu, C.-Y., Lai, S.-C., et~al. (2021). Structural break-aware pairs trading strategy using
-deep reinforcement learning. \emph{Journal of Supercomputing}, 78, 3843--3882.
+Lu, J.-Y., Lai, H.-C., Shih, W.-Y., Chen, Y.-F., Huang, S., Chang, H.-H., Wang, J.-Z.,
+Huang, J.-L., \& Dai, T.-S. (2022). Structural break-aware pairs trading strategy using
+deep reinforcement learning. \emph{Journal of Supercomputing}, 78(3), 3843--3882.
 
 \bibitem{makarov2020trading}
 Makarov, I., \& Schoar, A. (2020). Trading and arbitrage in cryptocurrency markets.
