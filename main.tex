@@ -68,7 +68,10 @@ with a continuously traded market and a rapidly changing set of listed coins. Ou
 relationships exist in crypto, ``as a way of gaining a deeper understanding of market efficiency
 and information flow.'' This paper answers that question, and the answer is mostly negative.
 
-We claim three contributions, each bounded against prior work as cited. First, two standard pair screening tools manufacture the appearance of
+We claim three contributions, each bounded against prior work as cited. The first rests on
+empirical demonstration plus a conjectural transfer of the Ero\u{g}lu, Miller, and Yi\u{g}it
+mechanism to the frozen-filter innovation sequence; a formal proof at that level is
+open. With that caveat: first, two standard pair screening tools manufacture the appearance of
 structure on data that cannot carry it. A Kalman dynamic hedge cointegration test passes
 random walk, phase-randomized, and block-shuffled placebos at the same near-$100\%$ rate it
 passes real pairs, and a positive control of constructed cointegrated pairs passes at the
@@ -316,25 +319,41 @@ below, which show that even genuinely cointegrated pairs look like random-walks 
 We can state the screen-level consequence formally:
 
 \begin{quote}
-\textbf{Proposition (screen-level corollary of \cite{eroglu2022tvc}).}
-\emph{Let $y_t$ and $x_t$ be $I(1)$ processes, cointegrated or not. Fit a Kalman
-dynamic-hedge model $y_t = \alpha_t + \beta_t x_t + v_t$ with non-degenerate state-evolution
-covariance $Q$ by quasi-maximum likelihood on a training window, then forward-roll the
-filter with frozen parameters on a test window of length $T$. Then at the QMLE
-pseudo-true parameters the integrated component of $y_t - \beta_t x_t$ is absorbed into
-the state estimate $\hat\beta_t$, so the one-step innovations $\{e_t\}$ inherit no
-integrated component, and an augmented Dickey-Fuller test on $\{e_t\}$ rejects the unit
-root with probability approaching $1$ as $T \to \infty$.}
-
-\emph{Sketch.} The QMLE pseudo-true $(Q^\star, R^\star)$ drives the recursive state
-updates to absorb the integrated component of $y_t - \beta_t x_t$ into the state estimate
-$\hat\beta_t$~\cite{eroglu2022tvc, harvey1989structural}, leaving stationary
-innovations. Standard ADF asymptotics~\cite{saiddickey1984} then give rejection
-probability $\to 1$ against the stationary alternative.
+\emph{Conjecture (screen-level analogue, motivated by \cite{eroglu2022tvc}).}
+For $I(1)$ processes $y_t$ and $x_t$, cointegrated or not, fit a Kalman dynamic-hedge
+model $y_t = \alpha_t + \beta_t x_t + v_t$ by quasi-maximum likelihood on a training
+window, then forward-roll the filter with frozen parameters on a test window of length
+$T$. We conjecture that the test-window one-step innovations $\{e_t\}$ inherit no
+integrated component, so an ADF test on $\{e_t\}$ rejects the unit root with probability
+approaching $1$ as $T$ grows, regardless of whether $y_t$ and $x_t$ are cointegrated.
 \end{quote}
 
-The proposition makes precise why the screen carries no cointegration information. The
-empirical demonstration is below.
+We do not prove this. The reasoning is by analogy. Ero\u{g}lu, Miller, and
+Yi\u{g}it~\cite{eroglu2022tvc} prove that QMLE time-varying-parameter state-space
+estimation absorbs the integrated error into the estimated state at the
+\emph{cointegrating-vector-estimator} level. The screen we audit applies ADF one level
+downstream, to the one-step innovation sequence of the same filter under frozen
+parameters; transferring their absorption result to that innovation sequence is the natural
+analogue and is what our placebos (Table~\ref{tab:kalman-placebo},
+Table~\ref{tab:kalman-anchors}) and positive control (Table~\ref{tab:poscontrol}) are
+consistent with, but we do not write down a proof. A formal transfer through the frozen
+forward-rolled filter's steady-state Kalman gain, with Said-Dickey regularity verified on
+the resulting innovations, is left for future work. The
+empirical demonstration is what carries the screen-level claim in this paper.
+
+\emph{Diagnostic note on $q_\beta$.} The fitted process variance is small: median
+$q_\beta \approx 2 \times 10^{-9}$ on the positive control. Two readings are consistent with
+this. (i) Standard textbook Kalman: even at very small $q_\beta > 0$, the filter is still
+operating in steady-state-whitening mode~\cite{harvey1989structural}; the steady state is
+reached with only modest updates per step. The Eroğlu et al absorption mechanism applies.
+(ii) Near-degenerate Kalman: $q_\beta$ this small means the filter is barely adapting on
+test, and an alternative interpretation is that the innovation sequence behaves close to
+a noise-smoothed static residual, with the rejection driven by something other than the
+Kalman state recursion. We cannot distinguish these readings in the present data. What we
+can say is that the screen's failure on the placebos is independent of which interpretation
+holds: the placebos pass at the same rate as real pairs whatever the underlying mechanism,
+so the cointegration claim does not go through regardless. Mechanism aside, the screen
+carries no information.
 
 Ero\u{g}lu, Miller, and Yi\u{g}it~\cite{eroglu2022tvc} also propose a correction. Their
 remedy operates at the cointegrating-vector level: an estimator that recovers a (possibly
@@ -386,6 +405,36 @@ Real top 50 pairs & $100.0\%$ & $96.4\%$ \\
 (c) Real pair, one leg block-shuffled & $100.0\%$ & $95.0\%$ \\
 \midrule
 Clean tests (EG and static OLS, test window) & $2$ to $3\%$ & n/a \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The artifact does not depend on that single start date. We re-ran the identical screen at
+five disjoint quarterly anchors from mid-2023 to mid-2024
+(Table~\ref{tab:kalman-anchors}). At every one, real pairs and all three placebos pass the
+Kalman innovation ADF at $99$ to $100\%$, with Wilson $95\%$ intervals that never fall
+below $95\%$, while the clean Engle-Granger benchmark stays between $1$ and $8\%$. The
+screen reports the same near-total cointegration whether the input can be cointegrated or
+not, at every start date we tried.
+
+\begin{table}[h]
+\centering
+\caption{The artifact is not specific to one start date: the identical screen at five
+disjoint quarterly anchors. Real pairs and all three placebos (independent random walk,
+phase-randomized, block-shuffled) pass the Kalman innovation ADF at $p<0.05$ at nearly
+$100\%$ (Wilson $95\%$ intervals in brackets; $n \approx 120$ real, $80$ per placebo),
+while the clean Engle-Granger test stays low. $90$-day train / $30$-day test at each
+$t_0$.}
+\label{tab:kalman-anchors}
+\begin{tabular}{lccr}
+\toprule
+Anchor $t_0$ & Real Kalman & All placebos & Clean EG \\
+\midrule
+2023-07-01 & $100\%$ $[97,100]$ & $100\%$ & $3.8\%$ \\
+2023-10-01 & $99.2\%$ $[95,100]$ & $100\%$ & $1.4\%$ \\
+2024-01-01 & $100\%$ $[97,100]$ & $100\%$ & $2.1\%$ \\
+2024-04-01 & $100\%$ $[97,100]$ & $100\%$ & $8.1\%$ \\
+2024-07-01 & $100\%$ $[97,100]$ & $100\%$ & $6.4\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -895,7 +944,21 @@ gap is venue and quote currency rather than overfitting. We have not tested othe
 currencies or a broader set of venues.
 \item \emph{Costs and capacity.} Costs are a flat per-leg charge. We do not model market impact
 or capacity, which is exactly what inflates the held-out microcap backtest of
-Section~\ref{sec:survivor}.
+Section~\ref{sec:survivor}. The corollary is that every Sharpe in the paper is a
+unit-notional, capacity-unbounded figure: the no-stop reversion strategy's
+$\sim$$1.0$ HAC-and-venue-corrected Sharpe is the right order of magnitude for the
+qualitative claim but is not a defensible estimate of what a sized book would earn after
+realistic impact. An impact-aware sized run is the constructive next step we have not done.
+
+\item \emph{Execution-simulator fill model.} The L2 execution test of
+Section~\ref{sec:real} runs $29{,}952$ simulated parent orders against the historical book,
+but the fill model is intentionally simple: a posted limit order is filled when the inside
+quote crosses it within the test horizon, with no queue-position tracking, no latency-to-cancel
+budget, and no separate adverse-selection-conditional-on-fill treatment. This understates
+the true cost of passive execution (good fills are taken first; sticky orders accumulate
+adverse selection), so the negative finding for signal-timed posting is robust to making
+the fill model more realistic. The perfect-foresight oracle is unaffected because it is
+computed under the same fill model.
 \end{itemize}
 
 % =====================================================================
@@ -934,7 +997,12 @@ test (Table~\ref{tab:exec}) is in \texttt{scratch/exec\_value\_2024.py}. The fig
 this paper were produced by \texttt{scratch/make\_figures\_v2.py}. The Level 2 dataset
 (Tardis Binance.com 2024, $\sim$$175$~GB) is in S3; query helpers are in
 \texttt{scripts/l2\_query.py} and a presigned-link generator is in
-\texttt{scripts/presign.py}.
+\texttt{scripts/presign.py}. All stochastic procedures (the $200$ random-walk surrogates,
+$60$ constructed positive-control pairs, phase-randomized and block-shuffled placebos, the
+$29{,}952$ simulated parent orders, block-bootstrap resamples) use fixed seeds set at the
+top of each script (default \texttt{seed=42} unless documented otherwise in the script
+header); rerunning a script produces the same number to the rounding precision reported in
+the paper.
 
 % =====================================================================
 \begin{thebibliography}{99}
