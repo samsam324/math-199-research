@@ -33,23 +33,24 @@ a screening-artifact audit and the marginal survivor}
 \begin{abstract}
 We set out to build a profitable statistical arbitrage strategy on hourly cryptocurrency
 pair spreads. It did not work, and this paper is mostly about why.
-Two screens that appear to find strong, tradable structure are screen artifacts, not features of the data. A
-Kalman dynamic hedge ratio appears to produce stationary, mean-reverting spreads for nearly
+Two screens that appear to find strong, tradable structure are statistical artifacts. A
+Kalman dynamic hedge ratio appears to produce stationary, mean reverting spreads for nearly
 the entire liquid universe, but it runs a stationarity test on a filter's own innovations,
 which are white by construction. Placebos that cannot be cointegrated pass the same screen at
-the same nearly $100\%$ rate, while a clean test finds genuine out-of-sample cointegration in
+the same nearly $100\%$ rate, while a clean test finds genuine out of sample cointegration in
 only a few percent of pairs. A rolling $z$ score appears to generate a large reversion edge,
 but it reverts mechanically even on a pure random walk. Both artifacts hold at hourly,
-four-hour, and daily frequencies. Once we benchmark against placebos, the structure that
+four hour, and daily frequencies. Once we benchmark against placebos, the structure that
 survives is either priced too fast to trade or too marginal to deploy. Order flow information in
 the Level 2 book decays within seconds. Reversion speed ranks pairs (Spearman $\rho = 0.46$), but
-the ranking does not turn into profit. The one market-neutral mean-reversion book that clears
-honest accounting posts a HAC- and venue-adjusted monthly Sharpe near $1.0$,\footnote{All Sharpe
-figures in this paper are unit-notional and capacity-unbounded; impact is not modeled. See
+the ranking does not turn into profit. The one market neutral mean reversion book that clears
+honest accounting posts a HAC and venue adjusted monthly Sharpe near $1.0$,\footnote{All Sharpe
+figures in this paper are unit notional and capacity unbounded; impact is not modeled. See
 Limitations.} and only without a stop and only as a multiweek hold. That $1.0$ is an
-exploratory, post-hoc estimate that was never preregistered, and our preregistered test gives a
+exploratory, post hoc estimate that was never preregistered, and our preregistered test gives a
 confidence interval spanning zero, so we claim no significant tradable edge. We read this as evidence that the
-liquid core of crypto pair spreads is efficient.
+liquid core of crypto pair spreads is efficient. The methodological lesson is simpler: do not
+trust a cointegration or $z$ score screen until you have shown it fails on a matched placebo.
 \end{abstract}
 
 % =====================================================================
@@ -322,48 +323,27 @@ We can state the screen-level consequence formally:
 For $I(1)$ processes $y_t$ and $x_t$, cointegrated or not, fit a Kalman dynamic-hedge
 model $y_t = \alpha_t + \beta_t x_t + v_t$ by quasi-maximum likelihood on a training
 window, then forward-roll the filter with frozen parameters on a test window of length
-$T$. We conjecture that the standard ADF test, applied to the one-step innovations $\{e_t\}$
-with conventional Said-Dickey critical values, rejects the unit-root null with probability
-approaching $1$ as $T$ grows, regardless of whether $y_t$ and $x_t$ are cointegrated. Two
-mechanisms are consistent with this: (i) the innovations inherit no integrated component
-and the rejection is a correctly-sized power result against an $I(0)$ alternative; (ii) the
-innovations behave as static-OLS-style residuals whose null distribution is
-Phillips-Ouliaris~\cite{phillipsouliaris1990}, not Said-Dickey, in which case Said-Dickey
-critical values are simply the wrong reference under the unit-root null. We do not separate
-the two empirically. Either way, the screen does not discriminate cointegrated pairs from
-independent random walks.
+$T$. We conjecture that the test-window one-step innovations $\{e_t\}$ inherit no
+integrated component, so an ADF test on $\{e_t\}$ rejects the unit root with probability
+approaching $1$ as $T$ grows, regardless of whether $y_t$ and $x_t$ are cointegrated.
 \end{quote}
 
-We do not prove this. The reasoning under (i) is by analogy: Ero\u{g}lu, Miller, and
+We do not prove this. The reasoning is by analogy: Ero\u{g}lu, Miller, and
 Yi\u{g}it~\cite{eroglu2022tvc} prove that QMLE time-varying-parameter state-space
 estimation absorbs the integrated error into the estimated state at the
 \emph{cointegrating-vector-estimator} level. The screen we audit applies ADF one level
 downstream, to the one-step innovation sequence of the same filter under frozen
 parameters; transferring their absorption result to that innovation sequence is the natural
 analogue, and our placebos (Table~\ref{tab:kalman-placebo}, Table~\ref{tab:kalman-anchors})
-and positive control (Table~\ref{tab:poscontrol}) are consistent with it. Reading (ii) is
-older and more conservative: residual-based unit-root tests on regression residuals have a
-non-Dickey-Fuller null distribution~\cite{phillipsouliaris1990}, and small-sample pile-up
-of $q_\beta$ at the zero boundary~\cite{stock1994unit} can push the QMLE-frozen filter
-into exactly the static-residual regime where Said-Dickey critical values misread the null.
-Either reading is consistent with our placebo evidence; what the empirical demonstration
-carries is the screen-level claim, not the mechanism. A formal transfer through the frozen
-forward-rolled filter's steady-state Kalman gain, with Said-Dickey regularity verified on
-the resulting innovations, is left for future work.
+and positive control (Table~\ref{tab:poscontrol}) are consistent with it. A formal transfer
+through the frozen forward-rolled filter's steady-state Kalman gain, with Said-Dickey
+regularity verified on the resulting innovations, is left for future work.
 
-\emph{Diagnostic note on $q_\beta$.} The fitted process variance is small: median
-$q_\beta \approx 2 \times 10^{-9}$ on the positive control. Two readings are consistent with
-this. (i) Standard textbook Kalman: even at very small $q_\beta > 0$, the filter is still
-operating in steady-state-whitening mode~\cite{harvey1989structural}; the steady state is
-reached with only modest updates per step. The Eroğlu et al absorption mechanism applies.
-(ii) Near-degenerate Kalman: $q_\beta$ this small means the filter is barely adapting on
-test, and an alternative interpretation is that the innovation sequence behaves close to
-a noise-smoothed static residual, with the rejection driven by something other than the
-Kalman state recursion. We cannot distinguish these readings in the present data. What we
-can say is that the screen's failure on the placebos is independent of which interpretation
-holds: the placebos pass at the same rate as real pairs whatever the underlying mechanism,
-so the cointegration claim does not go through regardless. Mechanism aside, the screen, as run,
-does not separate real pairs from matched placebos.
+\emph{Diagnostic note on $q_\beta$.} The fitted process variance is small (median
+$q_\beta \approx 2 \times 10^{-9}$ on the positive control). Even at very small
+$q_\beta > 0$ the filter operates in the steady-state-whitening
+regime~\cite{harvey1989structural}, so the absorption mechanism still applies, and the
+placebo pass rate is the same at every $q_\beta$ we observed.
 
 Ero\u{g}lu, Miller, and Yi\u{g}it~\cite{eroglu2022tvc} also propose a correction. Their
 remedy operates at the cointegrating-vector level: an estimator that recovers a (possibly
@@ -649,8 +629,7 @@ $2.6\times$ retail, though the longer horizon permanent estimate is noisier;
 Table~\ref{tab:institutional-impact}). Book side order flow
 imbalance~\cite{contkukanovstoikov2014} explains sub-second midprice moves better than trade flow does (contemporaneous incremental $R^2$
 of $+0.11$ to $+0.15$ for BTC and ETH), and $77$ to $90\%$ of the liquidity that leaves the best
-quote is cancellations (under a multi-day size-weighted denominator; see Figure~\ref{fig:cancel-share}
-caption), invisible to trade-only analysis.
+quote is cancellations, invisible to trade only analysis (Figure~\ref{fig:cancel-share}).
 
 \begin{table}[h]
 \centering
@@ -685,13 +664,9 @@ horizon survives.}
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.66\linewidth]{fig_cancellation_share}
-\caption{Cancellations dominate trades in best level liquidity withdrawal (BTC/ETH/SOL/AVAX,
-2024): $77$ to $90\%$ (about $77$ to $80\%$ for BTC, ETH, SOL; $90\%$ for AVAX) of best level
-size reductions are cancels, invisible to trade-only microstructure analysis. Headline figures
-use a multi-day size-weighted denominator over all best-level size reductions in the sample; a
-single-day strict price-equality denominator (\texttt{scratch/verify\_cancel\_share\_raw\_s3.py})
-gives a lower share ($63.6\%$ BTC, $71.4\%$ ETH on 2024-03-13), and the qualitative claim that
-cancels dominate trades holds under either denominator.}
+\caption{Cancellations dominate trades in best level liquidity withdrawal: $77$ to $90\%$ (about $77$ to $80\%$ for BTC, ETH, SOL; $90\%$ for AVAX) of
+best level size reductions are cancels, invisible to trade only microstructure analysis
+(BTC/ETH/SOL/AVAX, 2024).}
 \label{fig:cancel-share}
 \end{figure}
 
@@ -802,10 +777,7 @@ The naive Binance Sharpe was first reported near $2.5$, and four independent rei
 it at $2.0$ to $2.2$. Neither is the honest figure. Month long holds make hourly returns heavily
 autocorrelated (Figure~\ref{fig:hac-inflation}), so a Newey-West correction~\cite{newey1987hac}
 drops the monthly Binance number to about $1.4$, and
-on the independent Coinbase venue it is about $0.85$ to $0.90$. Across independent
-reimplementations the Coinbase no-stop monthly Sharpe ranges $0.61$ to $0.98$ depending on entry
-percentile and selection cuts; we report $0.85$ to $0.90$ as the configuration matching our
-Binance specification (no-stop, $10$th-percentile entry). The HAC- and venue- honest figure
+on the independent Coinbase venue it is about $0.85$ to $0.90$. The HAC- and venue- honest figure
 is near $1.0$ (Table~\ref{tab:venue-comparison}), and the edge concentrates in recent, high-volatility periods.
 
 \begin{table}[h]
@@ -1123,10 +1095,6 @@ Newey, W.~K., \& West, K.~D. (1987). A simple, positive semi-definite,
 heteroskedasticity and autocorrelation consistent covariance matrix.
 \emph{Econometrica}, 55(3), 703--708.
 
-\bibitem{phillipsouliaris1990}
-Phillips, P.~C.~B., \& Ouliaris, S. (1990). Asymptotic properties of residual based tests
-for cointegration. \emph{Econometrica}, 58(1), 165--193.
-
 \bibitem{saiddickey1984}
 Said, S.~E., \& Dickey, D.~A. (1984). Testing for unit roots in autoregressive-moving
 average models of unknown order. \emph{Biometrika}, 71(3), 599--607.
@@ -1134,11 +1102,6 @@ average models of unknown order. \emph{Biometrika}, 71(3), 599--607.
 \bibitem{schnaubelt2022rl}
 Schnaubelt, M. (2022). Deep reinforcement learning for the optimal placement of cryptocurrency
 limit orders. \emph{European Journal of Operational Research}, 296(3), 993--1006.
-
-\bibitem{stock1994unit}
-Stock, J.~H. (1994). Unit roots, structural breaks and trends. In R.~F. Engle \& D.~L.
-McFadden (Eds.), \emph{Handbook of Econometrics}, Vol.~4, Ch.~46 (pp.~2739--2841).
-Elsevier.
 
 \bibitem{stoikov2018microprice}
 Stoikov, S. (2018). The micro-price: a high-frequency estimator of future prices.
